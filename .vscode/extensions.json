@@ -1,5 +1,3 @@
 {
-  "recommendations": [
-    "biomjs.biome"
-  ]
+	"recommendations": ["biomjs.biome"]
 }
