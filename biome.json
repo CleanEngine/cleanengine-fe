@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["node_modules", "dist", "tsconfig.*.json"]
+		"ignore": ["node_modules", "dist", "tsconfig.json", "tsconfig.*.json"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -19,12 +19,53 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"suspicious": {
+				"noConsole": "error",
+				"noEvolvingTypes": "info"
+			},
+			"style": {
+				"useFilenamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						"requireAscii": true,
+						"filenameCases": ["camelCase", "export"]
+					}
+				}
+			}
 		}
 	},
+	"overrides": [
+		{
+			"include": [
+				"test/**/*",
+				"*.test.{ts,tsx,js,jsx}",
+				"*.spec.{ts,tsx,js,jsx}"
+			],
+			"linter": {
+				"rules": {
+					"style": {
+						"useFilenamingConvention": "off"
+					}
+				}
+			}
+		}
+	],
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "single"
+		}
+	},
+	"css": {
+		"parser": {
+			"cssModules": true
+		},
+		"formatter": {
+			"indentStyle": "tab"
+		},
+		"linter": {
+			"enabled": true
 		}
 	}
 }

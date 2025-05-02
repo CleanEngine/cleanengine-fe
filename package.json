@@ -11,7 +11,7 @@
 		"postinstall": "husky"
 	},
 	"lint-staged": {
-		"*.{js,jsx,ts,tsx}": "biome check --write ."
+		"*.{js,jsx,ts,tsx,css}": "biome check --write ."
 	},
 	"dependencies": {
 		"react": "^19.0.0",
