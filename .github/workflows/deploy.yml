@@ -1,6 +1,6 @@
-name: Deploy nginx
+name: Deploy remix app
 
-run-name: Deploy nginx as reverse proxy image to docker hub by ${{github.actor}}
+run-name: Deploy remix app to docker hub by ${{github.actor}}
 
 on:
   push:

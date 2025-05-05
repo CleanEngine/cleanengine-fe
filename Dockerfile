@@ -10,9 +10,12 @@ COPY . /app
 
 RUN yarn run build
 
-FROM nginx
+FROM node:alpine
 
-COPY --from=build /app/dist /usr/share/nginx/html
+WORKDIR /app
 
-EXPOSE 80
+COPY --from=build /app/ /app/
 
+ENTRYPOINT [ "yarn", "run", "start" ]
+
+EXPOSE 3000

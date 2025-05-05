@@ -1,13 +1,21 @@
 {
 	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
 	"vcs": {
-		"enabled": false,
+		"enabled": true,
 		"clientKind": "git",
-		"useIgnoreFile": false
+		"useIgnoreFile": true
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["node_modules", "dist", "tsconfig.json", "tsconfig.*.json"]
+		"ignore": [
+			"node_modules",
+			"build",
+			"tsconfig.json",
+			"tsconfig.*.json",
+			".react-router/*",
+			"react-router.config.ts",
+			"vite-env.d.ts"
+		]
 	},
 	"formatter": {
 		"enabled": true,
