@@ -590,6 +590,13 @@
   dependencies:
     "@react-router/node" "7.5.3"
 
+"@react-router/fs-routes@^7.5.3":
+  version "7.5.3"
+  resolved "https://registry.yarnpkg.com/@react-router/fs-routes/-/fs-routes-7.5.3.tgz#a0fa9ea6607a5a73ac975275f623e8c9c267463b"
+  integrity sha512-Vhgu9LPYFiJiffNfbMPOwZSp1o+nHLB4gjkTDUFp2bgwzDm6HsTgalb0Qn1jNqtJKAhuqTV51ZYctQyWUYL/SA==
+  dependencies:
+    minimatch "^9.0.0"
+
 "@react-router/node@7.5.3", "@react-router/node@^7.5.3":
   version "7.5.3"
   resolved "https://registry.yarnpkg.com/@react-router/node/-/node-7.5.3.tgz#6219a570f2d847e8bbd48582a5a7806580aac2cb"
@@ -1832,7 +1839,7 @@ mimic-function@^5.0.0:
   resolved "https://registry.npmjs.org/mimic-function/-/mimic-function-5.0.1.tgz"
   integrity sha512-VP79XUPxV2CigYP3jWwAUFSku2aKqBH7uTAapFWCBqutsbmDo96KY5o8uh6U+/YSIn5OxJnXp73beVkpqMIGhA==
 
-minimatch@^9.0.4:
+minimatch@^9.0.0, minimatch@^9.0.4:
   version "9.0.5"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.5.tgz#d74f9dd6b57d83d8e98cfb82133b03978bc929e5"
   integrity sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==
