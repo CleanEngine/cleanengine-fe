@@ -66,4 +66,6 @@
 
 @theme {
 	--font-display: "Pretendard", "arial", "sans-serif";
+
+	--color-primary: #2272eb;
 }
