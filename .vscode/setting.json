@@ -1,6 +1,12 @@
 {
 	"editor.defaultFormatter": "biomjs.biome",
 	"editor.formatOnSave": true,
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
 	"codeActionsOnSave": {
 		"source.fixAll": "always",
 		"source.organizeImports.biome": "explicit"
