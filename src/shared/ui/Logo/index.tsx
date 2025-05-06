@@ -12,7 +12,7 @@ export default function Logo({ isBlack }: LogoProps) {
 		<img
 			src={logo}
 			alt="서비스 로고"
-			className="h-full aspect-square object-center object-cover"
+			className="aspect-square h-full object-cover object-center"
 		/>
 	);
 }

@@ -11,7 +11,7 @@ export default function LogoWithTitle({
 	return (
 		<div className="flex items-center gap-1">
 			<Logo isBlack={isBlack} />
-			<h1 className="text-xl font-medium text-gray-900">{serviceName}</h1>
+			<h1 className="font-medium text-gray-900 text-xl">{serviceName}</h1>
 		</div>
 	);
 }

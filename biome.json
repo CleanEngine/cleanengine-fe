@@ -41,6 +41,9 @@
 						"filenameCases": ["camelCase", "export"]
 					}
 				}
+			},
+			"nursery": {
+				"useSortedClasses": "error"
 			}
 		}
 	},

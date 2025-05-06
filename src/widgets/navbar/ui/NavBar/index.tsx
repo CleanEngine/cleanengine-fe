@@ -15,11 +15,11 @@ export default function NavBar({
 	isBlack,
 	isLoggedIn,
 }: NavBarProps) {
-	const buttonLink = isLoggedIn ? '/profile' : '/login';
+	const buttonLink = isLoggedIn ? '/trade/profile' : '/trade/login';
 	const buttonText = isLoggedIn ? '프로필' : '로그인';
 
 	return (
-		<nav className="flex items-center justify-between h-[60px] px-4">
+		<nav className="flex h-[60px] items-center justify-between px-4">
 			<Link to={to}>
 				<LogoWithTitle serviceName={serviceName} isBlack={isBlack} />
 			</Link>

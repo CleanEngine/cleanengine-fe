@@ -9,7 +9,7 @@ export default function Button({ children, type = 'button' }: ButtonProps) {
 	return (
 		<button
 			type={type}
-			className="h-8 px-4 flex items-center justify-center bg-primary rounded-lg text-white text-sm cursor-pointer"
+			className="flex h-8 cursor-pointer items-center justify-center rounded-lg bg-primary px-4 text-sm text-white"
 		>
 			{children}
 		</button>
