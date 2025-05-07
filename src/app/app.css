@@ -68,4 +68,8 @@
 	--font-display: "Pretendard", "arial", "sans-serif";
 
 	--color-primary: #2272eb;
+
+	--color-kakao: #fee500;
+	--color-kakao-label: rgba(0, 0, 0, 85%);
+	--color-kakao-symbol: #000;
 }
