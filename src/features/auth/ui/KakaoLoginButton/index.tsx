@@ -4,7 +4,7 @@ export default function KakaoLoginButton() {
 	//TODO: 카카오 로그인 URL 교체할 것
 	return (
 		<a
-			href="https://naver.com"
+			href={import.meta.env.VITE_OAUTH_URL}
 			className="relative flex h-8 w-max items-center justify-center rounded-md bg-kakao px-10 hover:bg-kakao/80 active:bg-kakao/90"
 		>
 			<IconKakao className="absolute left-0.5 aspect-square h-max w-8 fill-black px-2 text-black" />
