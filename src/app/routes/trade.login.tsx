@@ -1,4 +1,4 @@
-import LoginModal from '~/widgets/auth/ui/LoginModal';
+import { LoginModal } from '~/widgets/auth';
 
 export default function LoginRouteComponent() {
 	return <LoginModal />;

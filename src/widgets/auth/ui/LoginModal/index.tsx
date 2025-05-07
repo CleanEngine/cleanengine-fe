@@ -1,11 +1,12 @@
 import { useRef } from 'react';
 import { useNavigate } from 'react-router';
-import CloudLogo from '~/assets/images/cloud.webp';
-import KakaoLoginButton from '~/features/auth/ui/KakaoLoginButton';
 
+import { KakaoLoginButton } from '~/features/auth';
 import useClickOutside from '~/shared/hooks/useClickOutside';
 import Backdrop from '~/shared/ui/Backdrop';
 import Modal from '~/shared/ui/Modal';
+
+import CloudLogo from '~/assets/images/cloud.webp';
 
 export default function LoginModal() {
 	const navigate = useNavigate();
