@@ -25,10 +25,10 @@ export default function CoinListItem({
 	const sign = isBull ? '+' : '-';
 
 	return (
-		<Link to={to} className="block">
+		<Link to={to} className="block px-2">
 			<button
 				type="button"
-				className="flex w-[clamp(200px,100%,320px)] items-center"
+				className="flex w-[max(320px,100%)] items-center py-1"
 			>
 				<div className="flex-1">
 					<CoinWithIconAndName

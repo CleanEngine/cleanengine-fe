@@ -1,0 +1,59 @@
+import { type ChangeEvent, useState } from 'react';
+
+import { IconMagnifying } from '~/assets/svgs';
+import type { CoinListItemProps } from '../CoinListItem';
+import CoinListItem from '../CoinListItem';
+
+type CoinListWithSearchBarProps = {
+	coinList: CoinListItemProps[];
+};
+
+export default function CoinListWithSearchBar({
+	coinList,
+}: CoinListWithSearchBarProps) {
+	const [searchQuery, setSearchQuery] = useState('');
+
+	const filteredCoinList = coinList.filter((coin) =>
+		coin.coinTicker.toLowerCase().includes(searchQuery.toLowerCase()),
+	);
+
+	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+		setSearchQuery(event.target.value);
+	};
+
+	return (
+		<div className="w-[clamp(320px,100%,380px)] rounded-md bg-white">
+			<div className="px-2 py-3">
+				<div className="relative w-full">
+					<input
+						type="text"
+						className="h-8 w-full rounded-sm bg-gray-100 px-3 pl-8"
+						placeholder="가상자산 검색"
+						onChange={handleSearchChange}
+						value={searchQuery}
+					/>
+					<IconMagnifying className="-translate-y-1/2 absolute top-1/2 left-2 w-4 object-center" />
+				</div>
+			</div>
+			<div className="flex items-center border-gray-200 border-t bg-gray-100 px-2 py-3">
+				<div className="flex-1 text-gray-500 text-sm">
+					<span>가상자산 명</span>
+				</div>
+				<div className="flex-1 text-right text-gray-500 text-sm">
+					<span>가격</span>
+				</div>
+				<div className="flex-1 text-right text-gray-500 text-sm">
+					<span>변동률</span>
+				</div>
+				<div className="flex-1 text-right text-gray-500 text-sm">
+					<span>거래량</span>
+				</div>
+			</div>
+			<div className="no-scrollbar max-h-[600px] min-h-[400px] overflow-y-scroll">
+				{filteredCoinList.map((coin) => (
+					<CoinListItem key={coin.coinTicker} {...coin} />
+				))}
+			</div>
+		</div>
+	);
+}
