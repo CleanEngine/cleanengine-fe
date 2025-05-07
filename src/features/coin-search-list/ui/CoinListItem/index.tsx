@@ -37,18 +37,18 @@ export default function CoinListItem({
 						CoinIcon={CoinIcon}
 					/>
 				</div>
-				<div className="flex-1">
+				<div className="flex-1 text-right text-sm">
 					<span className={isBull ? 'text-red-600' : 'text-blue-700'}>
 						{price}
 					</span>
 				</div>
-				<div className="flex-1">
+				<div className="flex-1 text-right text-sm">
 					<span className={isBull ? 'text-red-600' : 'text-blue-700'}>
 						{sign}
 						{fluctuationRate}%
 					</span>
 				</div>
-				<div className="flex-1">
+				<div className="flex-1 text-right text-sm">
 					<span>{transactionAmount}</span>
 				</div>
 			</button>
