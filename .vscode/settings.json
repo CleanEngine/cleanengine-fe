@@ -11,5 +11,8 @@
 		"quickfix.biome": "explicit",
 		"source.fixAll.biome": "always",
 		"source.organizeImports.biome": "explicit"
-	}
+	},
+	"tailwindCSS.experimental.classRegex": [
+		["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+	]
 }
