@@ -10,6 +10,12 @@
 		background-color: #ccc;
 		border-radius: 10px;
 	}
+
+	.input-number-hide::-webkit-inner-spin-button,
+	.input-number-hide::-webkit-outer-spin-button {
+		appearance: none;
+		-webkit-appearance: none;
+	}
 }
 
 @font-face {
