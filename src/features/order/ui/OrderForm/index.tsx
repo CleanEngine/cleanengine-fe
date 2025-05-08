@@ -1,14 +1,21 @@
 import { type ChangeEvent, useState } from 'react';
 
 import QuantityInput from '~/entities/order/ui/QuantityInput';
+import Switch from '~/shared/ui/Switch';
 import { isNegative, isUndefined } from '~/shared/utils';
 import { PRICE_STEP, QUANTITY_STEP } from '../../const';
+import type { OrderType } from '../../types';
 
 export default function OrderForm() {
+	const [orderType, setOrderType] = useState<OrderType>('지정가');
 	const [price, setPrice] = useState<number | undefined>();
 	const [quantity, setQuantity] = useState<number | undefined>();
 
 	const totalPrice = (price || 0) * (quantity || 0);
+
+	const handleOrderTypeChange = (orderType: OrderType) => {
+		setOrderType(orderType);
+	};
 
 	const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setPrice(Number(event.target.value));
@@ -52,12 +59,31 @@ export default function OrderForm() {
 		);
 	};
 
+	// TODO: API 연결하기
+	const handleSubmit = () => {};
+
 	return (
 		<form className="flex flex-col gap-2 pt-2 text-base">
 			<div className="flex items-center">
 				<span className="flex-1">구매 가격</span>
 				<div className="flex-2">
+					<Switch
+						value1="지정가"
+						value2="시장가"
+						text1="지정가"
+						text2="시장가"
+						onChange={handleOrderTypeChange}
+					/>
+				</div>
+			</div>
+			<div className="flex items-center">
+				<span className="flex-1" />
+				<div className="flex-2">
 					<QuantityInput
+						disabled={orderType === '시장가'}
+						placeholder={
+							orderType === '시장가' ? '최대한 빠른 가격' : '가격 입력'
+						}
 						onClickMinus={handlePriceMinus}
 						onClickPlus={handlePricePlus}
 						onChange={handlePriceChange}
