@@ -22,7 +22,7 @@ export default function CoinListWithSearchBar({
 	};
 
 	return (
-		<div className="w-[clamp(320px,100%,380px)] rounded-md bg-white">
+		<div className="flex flex-col overflow-hidden bg-white">
 			<div className="px-2 py-3">
 				<div className="relative w-full">
 					<input
@@ -35,7 +35,7 @@ export default function CoinListWithSearchBar({
 					<IconMagnifying className="-translate-y-1/2 absolute top-1/2 left-2 w-4 object-center" />
 				</div>
 			</div>
-			<div className="flex items-center border-gray-200 border-t bg-gray-100 px-2 py-3">
+			<div className="flex items-center border-gray-200 border-t px-2 py-3">
 				<div className="flex-1 text-gray-500 text-sm">
 					<span>가상자산 명</span>
 				</div>
@@ -49,7 +49,7 @@ export default function CoinListWithSearchBar({
 					<span>거래량</span>
 				</div>
 			</div>
-			<div className="scrollbar-custom max-h-[600px] min-h-[400px] overflow-y-scroll">
+			<div className="scrollbar-custom h-full min-h-[400px] flex-1 overflow-y-scroll">
 				{filteredCoinList.map((coin) => (
 					<CoinListItem key={coin.coinTicker} {...coin} />
 				))}

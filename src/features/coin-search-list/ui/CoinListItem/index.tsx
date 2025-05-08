@@ -28,7 +28,7 @@ export default function CoinListItem({
 		<Link to={to} className="block px-2">
 			<button
 				type="button"
-				className="flex w-[max(320px,100%)] items-center py-1"
+				className="flex w-[max(320px,100%)] cursor-pointer items-center py-1"
 			>
 				<div className="flex-1">
 					<CoinWithIconAndName
