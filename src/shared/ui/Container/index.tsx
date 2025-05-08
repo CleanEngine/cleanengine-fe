@@ -6,7 +6,7 @@ type ContainerProps = {
 
 export default function Container({ children }: ContainerProps) {
 	return (
-		<div className="inline-block min-h-60 w-auto min-w-[240px] rounded-xl bg-white">
+		<div className="inline-block min-h-60 w-auto min-w-[240px] rounded-xl bg-white p-4">
 			{children}
 		</div>
 	);

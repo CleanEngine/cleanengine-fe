@@ -20,8 +20,7 @@ export default function OrderBook({ orders }: OrderBookProps) {
 	);
 
 	return (
-		<div className="min-w-3xl p-4">
-			<ContainerTitle>실시간 시세</ContainerTitle>
+		<div className="min-w-3xl">
 			<div className="mt-1 text-sm">
 				<div className="flex p-2 font-normal">
 					<div className="flex-2 text-left text-gray-900">
