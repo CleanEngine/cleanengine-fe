@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 @layer utilities {
-	.no-scrollbar::-webkit-scrollbar {
-		display: none;
+	.scrollbar-custom::-webkit-scrollbar {
+		background-color: transparent;
+		width: 4px;
 	}
-	.no-scrollbar {
-		-ms-overflow-style: none;
-		scrollbar-width: none;
+
+	.scrollbar-custom::-webkit-scrollbar-thumb {
+		background-color: #ccc;
+		border-radius: 10px;
 	}
 }
 

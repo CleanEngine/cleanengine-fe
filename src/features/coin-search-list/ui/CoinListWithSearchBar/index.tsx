@@ -49,7 +49,7 @@ export default function CoinListWithSearchBar({
 					<span>거래량</span>
 				</div>
 			</div>
-			<div className="no-scrollbar max-h-[600px] min-h-[400px] overflow-y-scroll">
+			<div className="scrollbar-custom max-h-[600px] min-h-[400px] overflow-y-scroll">
 				{filteredCoinList.map((coin) => (
 					<CoinListItem key={coin.coinTicker} {...coin} />
 				))}
