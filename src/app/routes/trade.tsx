@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router';
+import { ClientOnly } from 'remix-utils/client-only';
 
 import {
 	type CoinListItemProps,
@@ -9,6 +10,7 @@ import type { Order } from '~/features/orderbook/type/order';
 import OrderBook from '~/features/orderbook/ui/OrderBook';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
+import StockChart from '~/widgets/chart/ui/StockChart';
 import { NavBar } from '~/widgets/navbar';
 
 const MOCK_ORDER: Order[] = [
@@ -354,6 +356,12 @@ export default function TradeRouteComponent() {
 					<Container>
 						<ContainerTitle>가상화폐 리스트</ContainerTitle>
 						<CoinListWithSearchBar coinList={MOCK_COIN_LIST} />
+					</Container>
+				</div>
+				<div>
+					<Container>
+						<ContainerTitle>실시긴 차트</ContainerTitle>
+						<ClientOnly>{() => <StockChart />}</ClientOnly>
 					</Container>
 				</div>
 			</div>
