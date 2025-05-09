@@ -327,7 +327,7 @@ const MOCK_COIN_LIST: CoinListItemProps[] = [
 		price: 2300,
 		fluctuationRate: 2.2,
 		transactionAmount: 4100,
-		coinName: '테조스',
+		coinName: '마지막',
 		coinTicker: 'XTZ',
 		CoinIcon: <span>🪙</span>,
 	},

@@ -22,7 +22,7 @@ export default function CoinListWithSearchBar({
 	};
 
 	return (
-		<div className="flex flex-col overflow-hidden bg-white">
+		<div className="flex h-full min-h-0 flex-1 flex-col bg-white">
 			<div className="px-2 py-3">
 				<div className="relative w-full">
 					<input
@@ -49,7 +49,7 @@ export default function CoinListWithSearchBar({
 					<span>거래량</span>
 				</div>
 			</div>
-			<div className="scrollbar-custom h-full min-h-[400px] flex-1 overflow-y-scroll">
+			<div className="scrollbar-custom min-h-0 flex-1 overflow-y-scroll">
 				{filteredCoinList.map((coin) => (
 					<CoinListItem key={coin.coinTicker} {...coin} />
 				))}
