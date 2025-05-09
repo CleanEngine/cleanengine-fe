@@ -6,4 +6,10 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
 	plugins: [svgr(), tailwindcss(), reactRouter(), tsconfigPaths()],
+	optimizeDeps: {
+		exclude: ['@amcharts/amcharts5'],
+	},
+	ssr: {
+		noExternal: ['@amcharts/amcharts5'],
+	},
 });
