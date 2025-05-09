@@ -1,5 +1,4 @@
 import { Outlet } from 'react-router';
-import { ClientOnly } from 'remix-utils/client-only';
 
 import {
 	type CoinListItemProps,
@@ -10,6 +9,7 @@ import type { Order } from '~/features/orderbook/type/order';
 import OrderBook from '~/features/orderbook/ui/OrderBook';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
+import RealTimeOrderBook from '~/widgets/chart/ui/Orderbook';
 import StockChart from '~/widgets/chart/ui/StockChart';
 import { NavBar } from '~/widgets/navbar';
 
@@ -346,10 +346,16 @@ export default function TradeRouteComponent() {
 						<OrderBook orders={MOCK_ORDER} />
 					</Container>
 				</div>
-				<div className="col-start-4 row-span-full">
+				<div className="col-start-4 row-span-1 row-start-1">
 					<Container>
 						<ContainerTitle>주문 하기</ContainerTitle>
 						<OrderForm />
+					</Container>
+				</div>
+				<div className="col-start-4 row-span-full row-start-2">
+					<Container>
+						<ContainerTitle>실시간 호가</ContainerTitle>
+						<RealTimeOrderBook />
 					</Container>
 				</div>
 				<div className="col-start-1 row-span-2 row-start-1">
@@ -358,10 +364,10 @@ export default function TradeRouteComponent() {
 						<CoinListWithSearchBar coinList={MOCK_COIN_LIST} />
 					</Container>
 				</div>
-				<div>
+				<div className="col-span-2 col-start-2 row-start-1">
 					<Container>
 						<ContainerTitle>실시긴 차트</ContainerTitle>
-						<ClientOnly>{() => <StockChart />}</ClientOnly>
+						<StockChart />
 					</Container>
 				</div>
 			</div>
