@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router';
+
 import {
 	type CoinListItemProps,
 	CoinListWithSearchBar,
@@ -8,7 +9,6 @@ import type { Order } from '~/features/orderbook/type/order';
 import OrderBook from '~/features/orderbook/ui/OrderBook';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
-import Switch from '~/shared/ui/Switch';
 import { NavBar } from '~/widgets/navbar';
 
 const MOCK_ORDER: Order[] = [

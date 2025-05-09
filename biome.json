@@ -32,6 +32,9 @@
 				"noConsole": "error",
 				"noEvolvingTypes": "info"
 			},
+			"correctness": {
+				"noUnusedImports": "error"
+			},
 			"style": {
 				"useFilenamingConvention": {
 					"level": "error",
