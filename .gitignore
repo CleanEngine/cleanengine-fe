@@ -21,6 +21,7 @@ dist-ssr
 *.sln
 *.sw?
 .windsurfrules
+.windsurf
 
 # React Router
 /.react-router/
