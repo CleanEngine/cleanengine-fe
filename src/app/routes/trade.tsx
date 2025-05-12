@@ -5,12 +5,10 @@ import {
 	CoinListWithSearchBar,
 } from '~/features/coin-search-list/ui';
 import { OrderForm } from '~/features/order';
-import type { Order } from '~/features/orderbook/type/order';
-import OrderBook from '~/features/orderbook/ui/OrderBook';
+import { ExecutionList, type Order } from '~/features/order-execution-list';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
-import RealTimeOrderBook from '~/widgets/chart/ui/Orderbook';
-import StockChart from '~/widgets/chart/ui/StockChart';
+import { Orderbook, StockChart } from '~/widgets/chart';
 import { NavBar } from '~/widgets/navbar';
 
 const MOCK_ORDER: Order[] = [
@@ -342,8 +340,8 @@ export default function TradeRouteComponent() {
 			<div className="grid h-[calc(100dvh-60px)] grid-cols-4 grid-rows-2 gap-4 p-4">
 				<div className="col-span-2 col-start-2 row-start-2">
 					<Container>
-						<ContainerTitle>실시간 시세</ContainerTitle>
-						<OrderBook orders={MOCK_ORDER} />
+						<ContainerTitle>실시간 체결 목록</ContainerTitle>
+						<ExecutionList orders={MOCK_ORDER} />
 					</Container>
 				</div>
 				<div className="col-start-4 row-span-1 row-start-1">
@@ -355,7 +353,7 @@ export default function TradeRouteComponent() {
 				<div className="col-start-4 row-span-full row-start-2">
 					<Container>
 						<ContainerTitle>실시간 호가</ContainerTitle>
-						<RealTimeOrderBook />
+						<Orderbook />
 					</Container>
 				</div>
 				<div className="col-start-1 row-span-2 row-start-1">

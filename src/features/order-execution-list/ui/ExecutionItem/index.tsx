@@ -1,16 +1,16 @@
 import clsx from 'clsx';
 import type { Order } from '../../type/order';
 
-export type OrderItemProps = { isGray?: boolean } & Order;
+export type ExecutionItemProps = { isGray?: boolean } & Order;
 
-export default function OrderItem({
+export default function ExecutionItem({
 	executionPrice,
 	executionVolume,
 	fluctuationRate,
 	transactionAmount,
 	time,
 	isGray,
-}: OrderItemProps) {
+}: ExecutionItemProps) {
 	return (
 		<div
 			className={clsx(

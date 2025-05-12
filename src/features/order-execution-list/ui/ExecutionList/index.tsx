@@ -1,14 +1,14 @@
 import type { Order } from '../../type/order';
-import OrderItem from '../OrderItem';
+import ExecutionItem from '../ExecutionItem';
 
-interface OrderBookProps {
+interface ExecutionListProps {
 	orders: Order[];
 }
 
-export default function OrderBook({ orders }: OrderBookProps) {
+export default function ExecutionList({ orders }: ExecutionListProps) {
 	const orderList = orders?.length ? (
 		orders.map((order, index) => (
-			<OrderItem
+			<ExecutionItem
 				key={order.executionPrice}
 				isGray={index % 2 === 0}
 				{...order}
