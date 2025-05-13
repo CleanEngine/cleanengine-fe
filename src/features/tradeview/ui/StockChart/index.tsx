@@ -106,15 +106,24 @@ export default function StockChart() {
 	const stockChartRef = useRef<am5stock.StockChart>(null);
 
 	useEffect(() => {
-		if (!valueSeriesRef.current || !sbSeriesRef.current || !realTimeData)
+		if (!isFirstRendered.current) return;
+		if (!valueSeriesRef.current || !sbSeriesRef.current || !pastTimeData.length)
 			return;
 
-		if (isFirstRendered.current) {
-			valueSeriesRef.current.data.setAll(pastTimeData);
-			sbSeriesRef.current.data.setAll(pastTimeData);
-			isFirstRendered.current = false;
+		valueSeriesRef.current.data.setAll(pastTimeData);
+		sbSeriesRef.current.data.setAll(pastTimeData);
+
+		isFirstRendered.current = false;
+	}, [pastTimeData]);
+
+	useEffect(() => {
+		if (
+			!valueSeriesRef.current ||
+			!sbSeriesRef.current ||
+			!realTimeData ||
+			!pastTimeData.length
+		)
 			return;
-		}
 
 		const lastDataObject = valueSeriesRef.current.data.values.at(
 			-1,
@@ -127,7 +136,6 @@ export default function StockChart() {
 		}
 
 		const {
-			Close,
 			High,
 			Low,
 			Open,
