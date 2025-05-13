@@ -1,4 +1,4 @@
-import { Link, type LinkProps, NavLink } from 'react-router';
+import { Link, type LinkProps, NavLink, useSubmit } from 'react-router';
 import Button from '~/shared/ui/Button';
 import LogoWithTitle, {
 	type LogoWithTitleProps,
@@ -15,8 +15,19 @@ export default function NavBar({
 	isBlack,
 	isLoggedIn,
 }: NavBarProps) {
-	const buttonLink = isLoggedIn ? '/trade/profile' : '/trade/login';
-	const buttonText = isLoggedIn ? '프로필' : '로그인';
+	const submit = useSubmit();
+
+	const handleLogout = () => {
+		submit(null, { action: '/trade', method: 'post' });
+	};
+
+	const LoginButton = () => (
+		<NavLink to="/trade/login">
+			<Button>로그인</Button>
+		</NavLink>
+	);
+
+	const LogoutButton = () => <Button onClick={handleLogout}>로그아웃</Button>;
 
 	return (
 		<>
@@ -24,9 +35,7 @@ export default function NavBar({
 				<Link to={to}>
 					<LogoWithTitle serviceName={serviceName} isBlack={isBlack} />
 				</Link>
-				<NavLink to={buttonLink}>
-					<Button>{buttonText}</Button>
-				</NavLink>
+				{isLoggedIn ? <LogoutButton /> : <LoginButton />}
 			</nav>
 			<div className="h-[60px]" />
 		</>
