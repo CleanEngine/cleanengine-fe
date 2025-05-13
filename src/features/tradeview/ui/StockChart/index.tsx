@@ -1,39 +1,45 @@
-// biome-ignore-file
-
 import * as am5 from '@amcharts/amcharts5';
 import * as am5stock from '@amcharts/amcharts5/stock';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import useRealTimeData, { type CandlestickData } from '../../hooks/useRealTimeData';
 import usePastTimeData from '../../hooks/usePastTimeData';
+import useRealTimeData, {
+	type CandlestickData,
+} from '../../hooks/useRealTimeData';
 
 // 시리즈 설정을 추출하는 함수
-function getNewSettings(series: any): Record<string, any> {
-	const newSettings: Record<string, any> = {};
-	am5.array.each(
-		[
-			'name',
-			'valueYField',
-			'highValueYField',
-			'lowValueYField',
-			'openValueYField',
-			'calculateAggregates',
-			'valueXField',
-			'xAxis',
-			'yAxis',
-			'legendValueText',
-			'legendRangeValueText',
-			'stroke',
-			'fill',
-		],
-		(setting) => {
-			newSettings[setting] = series.get(setting);
-		},
-	);
-	return newSettings;
-}
+function getNewSettings<
+	T extends am5xy.XYSeries,
+	K extends keyof T['_settings'],
+>(series: T): Pick<T['_settings'], K> {
+	const settingsToCopy: K[] = [
+		'name',
+		'valueYField',
+		'highValueYField',
+		'lowValueYField',
+		'openValueYField',
+		'calculateAggregates',
+		'valueXField',
+		'xAxis',
+		'yAxis',
+		'legendValueText',
+		'legendRangeValueText',
+		'stroke',
+		'fill',
+	] as K[];
 
+	const newSettings: Partial<Pick<T['_settings'], K>> = {};
+
+	am5.array.each(settingsToCopy, (setting) => {
+		const value = series.get(setting);
+		if (value !== undefined) {
+			newSettings[setting] = value;
+		}
+	});
+
+	return newSettings as Pick<T['_settings'], K>;
+}
 // 차트에 이벤트 마커를 생성하는 함수
 function makeEvent(
 	root: am5.Root,
@@ -100,76 +106,101 @@ export default function StockChart() {
 	const stockChartRef = useRef<am5stock.StockChart>(null);
 
 	useEffect(() => {
-		if (!valueSeriesRef.current || !sbSeriesRef.current || !realTimeData) return;
+		if (!valueSeriesRef.current || !sbSeriesRef.current || !realTimeData)
+			return;
 
-		if(isFirstRendered.current){
+		if (isFirstRendered.current) {
 			valueSeriesRef.current.data.setAll(pastTimeData);
 			sbSeriesRef.current.data.setAll(pastTimeData);
 			isFirstRendered.current = false;
 			return;
 		}
 
-		const lastDataObject = valueSeriesRef.current.data.values.at(-1) as CandlestickData;
-		
+		const lastDataObject = valueSeriesRef.current.data.values.at(
+			-1,
+		) as CandlestickData;
 
-		console.log(lastDataObject)
-
-		if(!lastDataObject){
+		if (!lastDataObject) {
 			valueSeriesRef.current.data.push(realTimeData);
 			sbSeriesRef.current.data.push(realTimeData);
 			return;
 		}
 
-		const { Close, High, Low, Open, Volume, Timestamp: PrevTimestamp } = lastDataObject;
-const { Close: CurrentClose, Volume: CurrentVolume, Timestamp: CurrentTimestamp } = realTimeData;
+		const {
+			Close,
+			High,
+			Low,
+			Open,
+			Volume,
+			Timestamp: PrevTimestamp,
+		} = lastDataObject;
+		const {
+			Close: CurrentClose,
+			Volume: CurrentVolume,
+			Timestamp: CurrentTimestamp,
+		} = realTimeData;
 
-if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
-	// 새로운 분봉 시작
-	const newCandlestickData = {
-		Open: CurrentClose,
-		High: CurrentClose,
-		Low: CurrentClose,
-		Close: CurrentClose,
-		Volume: CurrentVolume,
-		Timestamp: CurrentTimestamp,
-	};
-	valueSeriesRef.current.data.push(newCandlestickData);
-	sbSeriesRef.current.data.push(newCandlestickData);
-} else {
-	// 기존 분봉 업데이트
-	const newCandlestickData = {
-		Open: Open,
-		High: Math.max(High, CurrentClose),
-		Low: Math.min(Low, CurrentClose),
-		Close: CurrentClose,
-		Volume: Volume + CurrentVolume,
-		Timestamp: CurrentTimestamp,
-	};
-	valueSeriesRef.current.data.setIndex(valueSeriesRef.current.data.length - 1, newCandlestickData);
-	sbSeriesRef.current.data.setIndex(sbSeriesRef.current.data.length - 1, newCandlestickData);
-}
+		if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
+			// 새로운 분봉 시작
+			const newCandlestickData = {
+				Open: CurrentClose,
+				High: CurrentClose,
+				Low: CurrentClose,
+				Close: CurrentClose,
+				Volume: CurrentVolume,
+				Timestamp: CurrentTimestamp,
+			};
+			valueSeriesRef.current.data.push(newCandlestickData);
+			sbSeriesRef.current.data.push(newCandlestickData);
+		} else {
+			// 기존 분봉 업데이트
+			const newCandlestickData = {
+				Open: Open,
+				High: Math.max(High, CurrentClose),
+				Low: Math.min(Low, CurrentClose),
+				Close: CurrentClose,
+				Volume: Volume + CurrentVolume,
+				Timestamp: CurrentTimestamp,
+			};
+			valueSeriesRef.current.data.setIndex(
+				valueSeriesRef.current.data.length - 1,
+				newCandlestickData,
+			);
+			sbSeriesRef.current.data.setIndex(
+				sbSeriesRef.current.data.length - 1,
+				newCandlestickData,
+			);
+		}
 
-		if(!currentValueDataRef.current)return;
+		if (!currentValueDataRef.current) return;
 
 		const currentLabel = currentValueDataRef.current.get('label');
 		if (currentLabel) {
-			currentValueDataRef.current.animate({ key: "value", to: realTimeData.Close, duration: 500, easing: am5.ease.out(am5.ease.cubic) });
-			currentLabel.set("text", stockChartRef.current?.getNumberFormatter().format(realTimeData.Close));
-			let bg = currentLabel.get("background");
+			currentValueDataRef.current.animate({
+				key: 'value',
+				to: realTimeData.Close,
+				duration: 500,
+				easing: am5.ease.out(am5.ease.cubic),
+			});
+			currentLabel.set(
+				'text',
+				stockChartRef.current?.getNumberFormatter().format(realTimeData.Close),
+			);
+			const bg = currentLabel.get('background');
 			if (bg) {
-			  if (realTimeData.Close < realTimeData.Open) {
-				bg.set("fill", rootRef.current?.interfaceColors.get("negative"));
-			  }
-			  else {
-				bg.set("fill", rootRef.current?.interfaceColors.get("positive"));
-			  }
+				if (realTimeData.Close < realTimeData.Open) {
+					bg.set('fill', rootRef.current?.interfaceColors.get('negative'));
+				} else {
+					bg.set('fill', rootRef.current?.interfaceColors.get('positive'));
+				}
 			}
-		  }
-	}, [realTimeData,pastTimeData]);
+		}
+	}, [realTimeData, pastTimeData]);
 
 	useLayoutEffect(() => {
 		// 루트 요소 생성
 		rootRef.current = am5.Root.new('chartdiv');
+		if (!rootRef.current) return;
 
 		const myTheme = am5.Theme.new(rootRef.current);
 
@@ -177,7 +208,10 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 			visible: false,
 		});
 
-		rootRef.current.setThemes([am5themes_Animated.new(rootRef.current), myTheme]);
+		rootRef.current.setThemes([
+			am5themes_Animated.new(rootRef.current),
+			myTheme,
+		]);
 
 		// 스톡 차트 생성
 		stockChartRef.current = rootRef.current.container.children.push(
@@ -246,7 +280,9 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 		// 메인 값 시리즈 설정
 		stockChartRef.current?.set('stockSeries', valueSeriesRef.current);
 
-		currentValueDataRef.current = valueAxis.createAxisRange(valueAxis.makeDataItem({value:0}));
+		currentValueDataRef.current = valueAxis.createAxisRange(
+			valueAxis.makeDataItem({ value: 0 }),
+		);
 
 		// 스톡 범례 추가
 		const valueLegend = mainPanel.plotContainer.children.push(
@@ -318,44 +354,45 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 
 		seriesSwitcher.events.on('selected', (ev) => {
 			// Handle the case where item can be string or IDropdownListItem
-			const itemValue = typeof ev.item === 'string' ? ev.item : (ev.item as any).id;
+			const itemValue = typeof ev.item === 'string' ? ev.item : ev.item.id;
 			setSeriesType(itemValue);
 		});
 
 		// 시리즈 타입을 전환하는 함수
 		const setSeriesType = (seriesType: string) => {
+			if (!rootRef.current || !stockChartRef.current) return;
 			// 현재 시리즈와 설정 가져오기
-			const currentSeries = stockChartRef.current?.get('stockSeries');
+			const currentSeries = stockChartRef.current.get('stockSeries');
+			if (!currentSeries) return;
+
 			const newSettings = getNewSettings(currentSeries);
 
 			// 이전 시리즈 제거
-			const data = currentSeries?.data.values;
-			if (currentSeries) {
-				mainPanel.series.removeValue(currentSeries);
-			}
+			const data = currentSeries.data.values;
+			mainPanel.series.removeValue(currentSeries);
 
 			// 새 시리즈 생성
 			let series: am5xy.LineSeries | am5xy.CandlestickSeries | am5xy.OHLCSeries;
 			switch (seriesType) {
 				case 'line':
 					series = mainPanel.series.push(
-						am5xy.LineSeries.new(rootRef.current!, newSettings as am5xy.ILineSeriesSettings),
+						am5xy.LineSeries.new(rootRef.current, newSettings),
 					);
 					break;
 				case 'candlestick':
 				case 'procandlestick':
-					newSettings.clustered = false;
+					// newSettings.clustered = false;
 					series = mainPanel.series.push(
-						am5xy.CandlestickSeries.new(rootRef.current!, newSettings as am5xy.ICandlestickSeriesSettings),
+						am5xy.CandlestickSeries.new(rootRef.current, newSettings),
 					);
 					if (seriesType === 'procandlestick') {
 						series?.columns?.template?.get('themeTags')?.push('pro');
 					}
 					break;
 				case 'ohlc':
-					newSettings.clustered = false;
+					// newSettings.clustered = false;
 					series = mainPanel.series.push(
-						am5xy.OHLCSeries.new(rootRef.current!, newSettings as am5xy.IOHLCSeriesSettings),
+						am5xy.OHLCSeries.new(rootRef.current, newSettings),
 					);
 					break;
 			}
@@ -363,7 +400,7 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 			// 새 시리즈를 stockSeries로 설정
 			if (series) {
 				valueLegend.data.removeValue(currentSeries);
-				series.data.setAll(data as any);
+				series.data.setAll(data);
 				stockChartRef.current?.set('stockSeries', series);
 				const cursor = mainPanel.get('cursor');
 				if (cursor) {
@@ -374,32 +411,32 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 		};
 
 		// 스톡 툴바
-		const toolbar = am5stock.StockToolbar.new(rootRef.current!, {
+		const toolbar = am5stock.StockToolbar.new(rootRef.current, {
 			// biome-ignore lint/style/noNonNullAssertion: <explanation>
 			container: chartControlRef.current!,
 			stockChart: stockChartRef.current,
 			controls: [
-				am5stock.IndicatorControl.new(rootRef.current!, {
+				am5stock.IndicatorControl.new(rootRef.current, {
 					stockChart: stockChartRef.current,
 					legend: valueLegend,
 				}),
-				am5stock.DateRangeSelector.new(rootRef.current!, {
+				am5stock.DateRangeSelector.new(rootRef.current, {
 					stockChart: stockChartRef.current,
 				}),
-				am5stock.PeriodSelector.new(rootRef.current!, {
+				am5stock.PeriodSelector.new(rootRef.current, {
 					stockChart: stockChartRef.current,
 				}),
 				seriesSwitcher,
-				am5stock.DrawingControl.new(rootRef.current!, {
+				am5stock.DrawingControl.new(rootRef.current, {
 					stockChart: stockChartRef.current,
 				}),
-				am5stock.DataSaveControl.new(rootRef.current!, {
+				am5stock.DataSaveControl.new(rootRef.current, {
 					stockChart: stockChartRef.current,
 				}),
-				am5stock.ResetControl.new(rootRef.current!, {
+				am5stock.ResetControl.new(rootRef.current, {
 					stockChart: stockChartRef.current,
 				}),
-				am5stock.SettingsControl.new(rootRef.current!, {
+				am5stock.SettingsControl.new(rootRef.current, {
 					stockChart: stockChartRef.current,
 				}),
 			],
@@ -408,7 +445,7 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 		// 추가 데이터 샘플로 계속할 수 있습니다
 
 		// 사용자 정의 툴팁 생성
-		const tooltip = am5.Tooltip.new(rootRef.current!, {
+		const tooltip = am5.Tooltip.new(rootRef.current, {
 			getStrokeFromSprite: false,
 			getFillFromSprite: false,
 		});
@@ -422,7 +459,7 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 
 		// 차트에 이벤트 추가
 		makeEvent(
-			rootRef.current!,
+			rootRef.current,
 			dateAxis,
 			1619006400000,
 			'S',
@@ -430,7 +467,7 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 			'Split 4:1',
 		);
 		makeEvent(
-			rootRef.current!,
+			rootRef.current,
 			dateAxis,
 			1619006400000,
 			'D',
@@ -438,13 +475,13 @@ if (am5.time.checkChange(CurrentTimestamp, PrevTimestamp, 'minute')) {
 			'Dividends paid',
 		);
 		makeEvent(
-			rootRef.current!,
+			rootRef.current,
 			dateAxis,
 			1634212800000,
 			'D',
 			am5.color(0x00ff00),
 			'Dividends paid',
-		);	
+		);
 
 		// 컴포넌트 언마운트시 차트 정리
 		return () => {

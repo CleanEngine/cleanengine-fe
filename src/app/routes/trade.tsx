@@ -6,9 +6,9 @@ import {
 } from '~/features/coin-search-list/ui';
 import { OrderForm } from '~/features/order';
 import { ExecutionList, type Order } from '~/features/order-execution-list';
+import { Orderbook, StockChart } from '~/features/tradeview';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
-import { Orderbook, StockChart } from '~/widgets/chart';
 import { NavBar } from '~/widgets/navbar';
 
 const MOCK_ORDER: Order[] = [

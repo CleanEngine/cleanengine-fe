@@ -14,8 +14,7 @@
 			"tsconfig.*.json",
 			".react-router/*",
 			"react-router.config.ts",
-			"vite-env.d.ts",
-			"src/widgets/chart/ui/StockChart/index.tsx"
+			"vite-env.d.ts"
 		]
 	},
 	"formatter": {
