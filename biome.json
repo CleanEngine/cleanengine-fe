@@ -15,8 +15,7 @@
 			".react-router/*",
 			"react-router.config.ts",
 			"vite-env.d.ts",
-			"public/mockServiceWorker.js",
-			"**/entry.*"
+			"public/mockServiceWorker.js"
 		]
 	},
 	"formatter": {
