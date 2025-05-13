@@ -16,7 +16,10 @@ class ApiClientImpl implements ApiClient {
 	private readonly client;
 
 	constructor() {
-		this.client = ky.create({ prefixUrl: import.meta.env.VITE_API_URL });
+		this.client = ky.create({
+			prefixUrl: import.meta.env.VITE_API_URL,
+			credentials: 'include',
+		});
 	}
 
 	get<T>(url: string, init?: RequestInit): ResponsePromise<T> {
