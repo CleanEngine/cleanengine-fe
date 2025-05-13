@@ -6,8 +6,13 @@ import type { RenderToPipeableStreamOptions } from 'react-dom/server';
 import { renderToPipeableStream } from 'react-dom/server';
 import type { AppLoadContext, EntryContext } from 'react-router';
 import { ServerRouter } from 'react-router';
+import { server } from '../mocks/server';
 
 export const streamTimeout = 5_000;
+
+if (process.env.NODE_ENV === 'development') {
+	server.listen({ onUnhandledRequest: 'bypass' });
+}
 
 export default function handleRequest(
 	request: Request,
@@ -52,11 +57,13 @@ export default function handleRequest(
 					reject(error);
 				},
 				onError(error: unknown) {
+					// biome-ignore lint/style/noParameterAssign: <explanation>
 					responseStatusCode = 500;
 					// Log streaming rendering errors from inside the shell.  Don't log
 					// errors encountered during initial shell rendering since they'll
 					// reject and get logged in handleDocumentRequest.
 					if (shellRendered) {
+						// biome-ignore lint/suspicious/noConsole: <explanation>
 						console.error(error);
 					}
 				},
