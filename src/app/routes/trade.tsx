@@ -1,5 +1,8 @@
+import * as cookie from 'cookie';
 import { Outlet } from 'react-router';
+import type { Route } from './+types/trade';
 
+import { api } from '~/entities/session';
 import {
 	type CoinListItemProps,
 	CoinListWithSearchBar,
@@ -10,6 +13,21 @@ import { Orderbook, StockChart } from '~/features/tradeview';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
 import { NavBar } from '~/widgets/navbar';
+
+export async function loader({ request }: Route.LoaderArgs) {
+	const rawCookie = request.headers.get('Cookie');
+	const cookies = cookie.parse(rawCookie || '');
+	const isAccessTokenExists = !!cookies.access_token;
+
+	return { isLoggedIn: isAccessTokenExists };
+}
+
+import { redirect } from 'react-router';
+
+export async function action() {
+	await api.logout();
+	return redirect('/trade/login');
+}
 
 const MOCK_ORDER: Order[] = [
 	{
@@ -333,10 +351,14 @@ const MOCK_COIN_LIST: CoinListItemProps[] = [
 	},
 ];
 
-export default function TradeRouteComponent() {
+export default function TradeRouteComponent({
+	loaderData,
+}: Route.ComponentProps) {
+	const isLoggedIn = loaderData.isLoggedIn;
+
 	return (
 		<div className="h-full bg-gray-100">
-			<NavBar to="/" serviceName="IF" isBlack />
+			<NavBar to="/" serviceName="IF" isBlack isLoggedIn={isLoggedIn} />
 			<div className="grid h-[calc(100dvh-60px)] grid-cols-4 grid-rows-2 gap-4 p-4">
 				<div className="col-span-2 col-start-2 row-start-2">
 					<Container>
