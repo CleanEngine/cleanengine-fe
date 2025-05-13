@@ -3,7 +3,7 @@ import { Outlet } from 'react-router';
 import {
 	type CoinListItemProps,
 	CoinListWithSearchBar,
-} from '~/features/coin-search-list/ui';
+} from '~/features/coin-search-list';
 import { OrderForm } from '~/features/order';
 import { ExecutionList, type Order } from '~/features/order-execution-list';
 import { Orderbook, StockChart } from '~/features/tradeview';

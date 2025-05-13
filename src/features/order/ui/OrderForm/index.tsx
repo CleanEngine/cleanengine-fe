@@ -1,6 +1,6 @@
 import { type ChangeEvent, useState } from 'react';
 
-import QuantityInput from '~/entities/order/ui/QuantityInput';
+import { QuantityInput } from '~/entities/order';
 import Switch from '~/shared/ui/Switch';
 import { isNegative, isUndefined } from '~/shared/utils';
 import { PRICE_STEP, QUANTITY_STEP } from '../../const';

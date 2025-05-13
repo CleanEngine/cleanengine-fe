@@ -1,16 +1,16 @@
 import { IconMinus, IconPlus } from '~/assets/svgs';
 import NumberInput, { type NumberInputProps } from '~/shared/ui/NumberInput';
 
-export type PriceQuantityInputProps = {
+export type QuantityInputProps = {
 	onClickPlus: VoidFunction;
 	onClickMinus: VoidFunction;
 } & NumberInputProps;
 
-export default function PriceQuantityInput({
+export default function QuantityInput({
 	onClickPlus,
 	onClickMinus,
 	...props
-}: PriceQuantityInputProps) {
+}: QuantityInputProps) {
 	return (
 		<div className="relative">
 			<NumberInput
