@@ -24,9 +24,13 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 import { redirect } from 'react-router';
 
-export async function action() {
-	await api.logout();
-	return redirect('/trade/login');
+export async function clientAction() {
+	try {
+		await api.logout();
+	} catch (error) {
+		console.error(error);
+	}
+	return redirect('/trade');
 }
 
 const MOCK_ORDER: Order[] = [
