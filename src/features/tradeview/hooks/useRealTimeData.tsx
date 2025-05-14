@@ -1,80 +1,44 @@
 import { useEffect, useState } from 'react';
-
-type RowData = {
-	acc_ask_volume: number;
-	acc_bid_volume: number;
-	acc_trade_price: number;
-	acc_trade_price_24h: number;
-	acc_trade_volume: number;
-	acc_trade_volume_24h: number;
-	ask_bid: 'ASK' | 'BID';
-	change: 'RISE' | 'FALL' | 'EVEN';
-	change_price: number;
-	change_rate: number;
-	code: string;
-	delisting_date: string | null;
-	high_price: number;
-	highest_52_week_date: string;
-	highest_52_week_price: number;
-	is_trading_suspended: boolean;
-	low_price: number;
-	lowest_52_week_date: string;
-	lowest_52_week_price: number;
-	market_state: 'ACTIVE' | 'INACTIVE';
-	market_warning: 'NONE' | string;
-	opening_price: number;
-	prev_closing_price: number;
-	signed_change_price: number;
-	signed_change_rate: number;
-	stream_type: 'REALTIME';
-	timestamp: number;
-	trade_date: string;
-	trade_price: number;
-	trade_time: string;
-	trade_timestamp: number;
-	trade_volume: number;
-	type: 'ticker';
-};
-
-export type CandlestickData = {
-	Timestamp: number;
-	Close: number;
-	High: number;
-	Low: number;
-	Open: number;
-	Volume: number;
-};
+import stompClient from '~/shared/api/stompClient';
+import type { CandlestickData, RowData } from '../types/tradeview.type';
 
 export default function useRealTimeData() {
 	const [data, setData] = useState<CandlestickData | null>(null);
 
 	useEffect(() => {
-		const websocket = new WebSocket('wss://api.upbit.com/websocket/v1');
-
-		websocket.onopen = () => {
-			websocket.send(
-				JSON.stringify([
-					{ ticket: 'invest-future' },
-					{ type: 'ticker', codes: ['KRW-BTC'] },
-				]),
-			);
+		stompClient.onConnect = () => {
+			stompClient.publish({
+				destination: '/app/subscribe/realTimeOhlc',
+				body: JSON.stringify({ ticker: 'BTC' }),
+			});
+			stompClient.subscribe('/topic/realTimeOhlc/BTC', (message) => {
+				const parsedData = JSON.parse(message.body) as RowData;
+				setData({
+					Timestamp: Date.parse(parsedData.timestamp),
+					Close: Number.parseFloat(parsedData.close),
+					High: Number.parseFloat(parsedData.high),
+					Low: Number.parseFloat(parsedData.low),
+					Open: Number.parseFloat(parsedData.open),
+					Volume: Number.parseFloat(parsedData.volume),
+				});
+			});
 		};
 
-		websocket.onmessage = (event: MessageEvent) => {
-			const reader = new FileReader();
-			reader.onload = () => {
-				const data = JSON.parse(reader.result as string) as RowData;
-				setData({
-					Close: data.trade_price,
-					Timestamp: data.trade_timestamp,
-					High: data.high_price,
-					Low: data.low_price,
-					Open: data.opening_price,
-					Volume: data.acc_trade_volume,
-				});
-			};
+		stompClient.onWebSocketError = (error) => {
+			console.error('onWebSocketError');
+			console.error(`error:${error}`);
+		};
 
-			reader.readAsText(event.data);
+		stompClient.onStompError = (frame) => {
+			console.error('onStompError');
+			console.error(`Broker reported error: ${frame.headers.message}`);
+			console.error(`Additional details: ${frame.body}`);
+		};
+
+		stompClient.activate();
+
+		return () => {
+			stompClient.deactivate();
 		};
 	}, []);
 

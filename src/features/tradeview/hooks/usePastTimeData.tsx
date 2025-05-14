@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { CandlestickData } from './useRealTimeData';
+import api from '../api/tradeview.endpoints';
+import type { CandlestickData } from '../types/tradeview.type';
 
 export type UpbitCandle = {
 	market: string;
@@ -19,18 +20,17 @@ export default function usePastTimeData() {
 	const [pastTimeData, setPastTimeData] = useState<CandlestickData[]>([]);
 
 	const fetchData = useCallback(async () => {
-		const response = await fetch(
-			'https://api.upbit.com/v1/candles/minutes/1?market=KRW-BTC&count=200',
-		);
-		const data: UpbitCandle[] = await response.json();
+		const response = await api.getPastData();
+		const data = await response.json();
+
 		setPastTimeData(
 			data.map((datum) => ({
-				Timestamp: datum.timestamp,
-				Close: datum.trade_price,
-				High: datum.high_price,
-				Low: datum.low_price,
-				Open: datum.opening_price,
-				Volume: datum.candle_acc_trade_volume,
+				Timestamp: Date.parse(datum.timestamp),
+				Close: Number.parseFloat(datum.close),
+				High: Number.parseFloat(datum.high),
+				Low: Number.parseFloat(datum.low),
+				Open: Number.parseFloat(datum.open),
+				Volume: Number.parseFloat(datum.volume),
 			})),
 		);
 	}, []);

@@ -4,9 +4,8 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import usePastTimeData from '../../hooks/usePastTimeData';
-import useRealTimeData, {
-	type CandlestickData,
-} from '../../hooks/useRealTimeData';
+import useRealTimeData from '../../hooks/useRealTimeData';
+import type { CandlestickData } from '../../types/tradeview.type';
 
 // 시리즈 설정을 추출하는 함수
 function getNewSettings<
