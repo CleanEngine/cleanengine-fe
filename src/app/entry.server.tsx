@@ -6,13 +6,12 @@ import type { RenderToPipeableStreamOptions } from 'react-dom/server';
 import { renderToPipeableStream } from 'react-dom/server';
 import type { AppLoadContext, EntryContext } from 'react-router';
 import { ServerRouter } from 'react-router';
-import { server } from '../mocks/server';
 
 export const streamTimeout = 5_000;
 
-if (process.env.NODE_ENV === 'development') {
-	server.listen({ onUnhandledRequest: 'bypass' });
-}
+// if (process.env.NODE_ENV === 'development') {
+// 	server.listen({ onUnhandledRequest: 'bypass' });
+// }
 
 export default function handleRequest(
 	request: Request,
