@@ -1,4 +1,4 @@
-import ApiClient from '~/shared/api/client';
+import ApiClient from '~/shared/api/httpClient';
 import type { TokenCheckResponse } from '../types/api';
 
 export default {
