@@ -4,14 +4,19 @@ import { QuantityInput } from '~/entities/order';
 import Switch from '~/shared/ui/Switch';
 import { isNegative, isUndefined } from '~/shared/utils';
 import { PRICE_STEP, QUANTITY_STEP } from '../../const';
-import type { OrderType } from '../../types';
+import type { OrderType, TradeType } from '../../types';
 
 export default function OrderForm() {
+	const [tradeType, setTradeType] = useState<TradeType>('매수');
 	const [orderType, setOrderType] = useState<OrderType>('지정가');
 	const [price, setPrice] = useState<number | undefined>();
 	const [quantity, setQuantity] = useState<number | undefined>();
 
 	const totalPrice = (price || 0) * (quantity || 0);
+
+	const handleTradeTypeChange = (tradeType: TradeType) => {
+		setTradeType(tradeType);
+	};
 
 	const handleOrderTypeChange = (orderType: OrderType) => {
 		setOrderType(orderType);
@@ -64,6 +69,13 @@ export default function OrderForm() {
 
 	return (
 		<form className="flex flex-col gap-2 pt-2 text-base">
+			<Switch
+				value1="매수"
+				value2="매도"
+				text1="매수"
+				text2="매도"
+				onChange={handleTradeTypeChange}
+			/>
 			<div className="flex items-center">
 				<span className="flex-1">구매 가격</span>
 				<div className="flex-2">

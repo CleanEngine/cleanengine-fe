@@ -35,7 +35,7 @@ export default function Switch<T extends Value>({
 			<div
 				className={clsx(
 					selected === 'left' ? 'left-[25%]' : 'left-[75%]',
-					'-translate-x-1/2 absolute top-1 z-0 h-6 w-[45%] rounded-md bg-white shadow transition-all duration-200',
+					'-translate-x-1/2 absolute top-1 z-0 h-6 w-[48%] rounded-md bg-white shadow transition-all duration-200',
 				)}
 			/>
 			<button
