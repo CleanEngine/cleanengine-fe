@@ -26,17 +26,14 @@ export default function OrderForm() {
 				: '시장가격에 매도';
 
 	const handleTradeTypeChange = (tradeType: TradeType) => {
-		console.log(tradeType);
 		send({ type: 'SWITCH_TRADE_TYPE', tradeType });
 	};
 
 	const handleOrderTypeChange = (orderType: OrderType) => {
-		console.log(orderType);
 		send({ type: 'SWITCH_ORDER_TYPE', orderType });
 	};
 
 	const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-		console.log(`price: ${event.target.value}`);
 		const price = Number(event.target.value);
 		send({ type: 'CHANGE_BUY_PRICE', price });
 	};
