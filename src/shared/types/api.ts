@@ -10,12 +10,8 @@ type ApiError = {
 	fieldErrorDetails?: FieldErrorDetail[];
 } | null;
 
-export type Response<T> =
-	| {
-			isSuccess: true;
-			data: T;
-	  }
-	| {
-			isSuccess: false;
-			error: ApiError;
-	  };
+export type Response<T> = {
+	isSuccess: boolean;
+	data: T;
+	error: ApiError;
+};

@@ -26,15 +26,11 @@ class ApiClientImpl implements ApiClient {
 		return this.client.get(url, init);
 	}
 
-	post<T>(
-		url: string,
-		body?: BodyInit,
-		init?: RequestInit,
-	): ResponsePromise<T> {
+	post<T>(url: string, body?: unknown, init?: RequestInit): ResponsePromise<T> {
 		return this.client.post(url, { ...init, json: body });
 	}
 
-	put<T>(url: string, body?: BodyInit, init?: RequestInit): ResponsePromise<T> {
+	put<T>(url: string, body?: unknown, init?: RequestInit): ResponsePromise<T> {
 		return this.client.put(url, { ...init, json: body });
 	}
 
@@ -44,7 +40,7 @@ class ApiClientImpl implements ApiClient {
 
 	patch<T>(
 		url: string,
-		body?: BodyInit,
+		body?: unknown,
 		init?: RequestInit,
 	): ResponsePromise<T> {
 		return this.client.patch(url, { ...init, json: body });
