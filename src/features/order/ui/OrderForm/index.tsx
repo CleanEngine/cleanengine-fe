@@ -1,67 +1,65 @@
-import { type ChangeEvent, useState } from 'react';
+import type { ChangeEvent } from 'react';
 
+import { useMachine } from '@xstate/react';
 import { QuantityInput } from '~/entities/order';
 import Switch from '~/shared/ui/Switch';
-import { isNegative, isUndefined } from '~/shared/utils';
+import { formatCurrencyKR } from '~/shared/utils';
 import { PRICE_STEP, QUANTITY_STEP } from '../../const';
-import type { OrderType, TradeType } from '../../types';
+import { formMachine } from '../../model/form.machine';
+import type { OrderType, TradeType } from '../../types/order.endpoint';
 
 export default function OrderForm() {
-	const [tradeType, setTradeType] = useState<TradeType>('매수');
-	const [orderType, setOrderType] = useState<OrderType>('지정가');
-	const [price, setPrice] = useState<number | undefined>();
-	const [quantity, setQuantity] = useState<number | undefined>();
-
-	const totalPrice = (price || 0) * (quantity || 0);
+	const [state, send] = useMachine(formMachine, {});
+	const quantityLabel =
+		state.context.tradeType === '매수' ? '구매가능 금액' : '매도가능 수량';
+	const quantityValue =
+		state.context.tradeType === '매수'
+			? `${formatCurrencyKR(state.context.deposit || 0)}원`
+			: `${state.context.holdings || 0}개`;
+	const totalOrderPrice =
+		state.context.tradeType === '매수'
+			? state.context.orderType === '지정가'
+				? `${formatCurrencyKR((state.context.price || 0) * (state.context.quantity || 0))}원`
+				: '시장가격에 매수'
+			: state.context.orderType === '지정가'
+				? `${formatCurrencyKR((state.context.price || 0) * (state.context.quantity || 0))}원`
+				: '시장가격에 매도';
 
 	const handleTradeTypeChange = (tradeType: TradeType) => {
-		setTradeType(tradeType);
+		console.log(tradeType);
+		send({ type: 'SWITCH_TRADE_TYPE', tradeType });
 	};
 
 	const handleOrderTypeChange = (orderType: OrderType) => {
-		setOrderType(orderType);
+		console.log(orderType);
+		send({ type: 'SWITCH_ORDER_TYPE', orderType });
 	};
 
 	const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-		setPrice(Number(event.target.value));
+		console.log(`price: ${event.target.value}`);
+		const price = Number(event.target.value);
+		send({ type: 'CHANGE_BUY_PRICE', price });
 	};
 
 	const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
-		setQuantity(Number(event.target.value));
+		const quantity = Number(event.target.value);
+		send({ type: 'CHANGE_BUY_QUANTITY', quantity });
 	};
 
 	const handlePriceMinus = () => {
-		setPrice((prevPrice) => {
-			if (isUndefined(prevPrice)) return undefined;
-
-			const nextPrice = prevPrice - PRICE_STEP;
-			if (isNegative(nextPrice)) return prevPrice;
-
-			return nextPrice;
-		});
+		send({ type: 'DECREMENT_PRICE' });
 	};
 
 	const handlePricePlus = () => {
-		setPrice((prevPrice) =>
-			!isUndefined(prevPrice) ? prevPrice + PRICE_STEP : undefined,
-		);
+		send({ type: 'INCREMENT_PRICE' });
 	};
 
 	const handleQuantityMinus = () => {
-		setQuantity((prevQuantity) => {
-			if (isUndefined(prevQuantity)) return undefined;
-
-			const nextQuantity = prevQuantity - QUANTITY_STEP;
-			if (isNegative(nextQuantity)) return prevQuantity;
-
-			return nextQuantity;
-		});
+		send({ type: 'DECREMENT_QUANTITY' });
 	};
 
 	const handleQuantityPlus = () => {
-		setQuantity((prevQuantity) =>
-			!isUndefined(prevQuantity) ? prevQuantity + QUANTITY_STEP : undefined,
-		);
+		send({ type: 'INCREMENT_QUANTITY' });
 	};
 
 	// TODO: API 연결하기
@@ -92,15 +90,21 @@ export default function OrderForm() {
 				<span className="flex-1" />
 				<div className="flex-2">
 					<QuantityInput
-						disabled={orderType === '시장가'}
+						disabled={
+							state.context.tradeType === '매도' &&
+							state.context.orderType === '시장가'
+						}
 						placeholder={
-							orderType === '시장가' ? '최대한 빠른 가격' : '가격 입력'
+							state.context.tradeType === '매도' &&
+							state.context.orderType === '시장가'
+								? '최대한 빠른 가격'
+								: '가격 입력'
 						}
 						onClickMinus={handlePriceMinus}
 						onClickPlus={handlePricePlus}
 						onChange={handlePriceChange}
 						step={PRICE_STEP}
-						value={price}
+						value={state.context.price ?? ''}
 						min={0}
 					/>
 				</div>
@@ -109,12 +113,21 @@ export default function OrderForm() {
 				<span className="flex-1">수량</span>
 				<div className="flex-2">
 					<QuantityInput
-						placeholder="수량 입력"
+						disabled={
+							state.context.tradeType === '매수' &&
+							state.context.orderType === '시장가'
+						}
+						placeholder={
+							state.context.tradeType === '매수' &&
+							state.context.orderType === '시장가'
+								? '가능한 수량'
+								: '수량 입력'
+						}
 						onClickMinus={handleQuantityMinus}
 						onClickPlus={handleQuantityPlus}
 						step={QUANTITY_STEP}
 						onChange={handleQuantityChange}
-						value={quantity}
+						value={state.context.quantity ?? ''}
 						min={0}
 					/>
 				</div>
@@ -122,12 +135,12 @@ export default function OrderForm() {
 			<div className="my-3 h-[1px] w-full bg-gray-200" />
 			<div className="flex flex-col gap-2">
 				<div className="flex items-stretch font-medium text-sm">
-					<span className="flex-1 text-left">구매가능 금액</span>
-					<span className="flex-1 text-right">{totalPrice}원</span>
+					<span className="flex-1 text-left">{quantityLabel}</span>
+					<span className="flex-1 text-right">{quantityValue}</span>
 				</div>
 				<div className="flex items-stretch font-medium text-sm">
 					<span className="flex-1 text-left">총 주문 금액</span>
-					<span className="flex-1 text-right">{totalPrice}원</span>
+					<span className="flex-1 text-right">{totalOrderPrice}</span>
 				</div>
 			</div>
 			<button
@@ -136,6 +149,7 @@ export default function OrderForm() {
 			>
 				주문하기
 			</button>
+			{state.context.errorMessage}
 		</form>
 	);
 }
