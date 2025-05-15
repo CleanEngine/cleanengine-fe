@@ -7,7 +7,7 @@ import {
 	type CoinListItemProps,
 	CoinListWithSearchBar,
 } from '~/features/coin-search-list';
-import { OrderForm } from '~/features/order';
+import { OrderForm, OrderFormFallback } from '~/features/order';
 import { ExecutionList, type Order } from '~/features/order-execution-list';
 import { Orderbook, StockChart } from '~/features/tradeview';
 import Container from '~/shared/ui/Container';
@@ -373,7 +373,7 @@ export default function TradeRouteComponent({
 				<div className="col-start-4 row-span-1 row-start-1">
 					<Container>
 						<ContainerTitle>주문 하기</ContainerTitle>
-						<OrderForm />
+						{isLoggedIn ? <OrderForm /> : <OrderFormFallback />}
 					</Container>
 				</div>
 				<div className="col-start-4 row-span-full row-start-2">
