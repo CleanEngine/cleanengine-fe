@@ -1,6 +1,7 @@
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
+import type { OrderBookUnit } from '../../types/orderbook.type';
 
 const THEME = {
 	bull: {
@@ -14,7 +15,7 @@ const THEME = {
 };
 
 export type OrderbookChartProps = {
-	data: { offerPrice: string; quantity: number }[];
+	data: OrderBookUnit[];
 	type?: 'bull' | 'bear';
 };
 
@@ -28,13 +29,22 @@ export default function OrderbookChart({
 	const chartRef = useRef<am5xy.XYChart>(null);
 	const rootRef = useRef<am5.Root>(null);
 
-	useLayoutEffect(() => {
-		yAxisRef.current?.data.setAll(data);
+	useEffect(() => {
+		if (!chartRef.current || !yAxisRef.current || !seriesRef.current) return;
 
-		seriesRef.current?.data.setAll(data);
-		seriesRef.current?.appear();
+		const formattedData = data.map((item) => ({
+			price: item.price.toString(),
+			size: item.size,
+			priceY: item.price,
+			sizeX: item.size,
+		}));
 
-		chartRef.current?.appear();
+		yAxisRef.current.data.setAll(formattedData);
+		seriesRef.current.data.setAll(formattedData);
+
+		chartRef.current.series.each((series) => {
+			series.appear(1000);
+		});
 	}, [data]);
 
 	useLayoutEffect(() => {
@@ -63,30 +73,36 @@ export default function OrderbookChart({
 				fillOpacity: 0.05,
 			}),
 		);
-		yAxisRef.current = chartRef.current.yAxes.push(
-			am5xy.CategoryAxis.new(rootRef.current, {
-				categoryField: 'offerPrice',
-				renderer: am5xy.AxisRendererY.new(rootRef.current, {
-					inversed: type === 'bull',
-					cellStartLocation: 0,
-					cellEndLocation: 1,
-				}),
-			}),
-		);
+		const yRenderer = am5xy.AxisRendererY.new(rootRef.current, {
+			inversed: type === 'bull',
+			cellStartLocation: 0,
+			cellEndLocation: 1,
+		});
 
-		yAxisRef.current?.get('renderer').labels.template.setAll({
+		yRenderer.labels.template.setAll({
 			textAlign: 'center',
 			centerY: am5.p50,
 		});
 
+		yAxisRef.current = chartRef.current.yAxes.push(
+			am5xy.CategoryAxis.new(rootRef.current, {
+				categoryField: 'price',
+				renderer: yRenderer,
+			}),
+		);
+
 		xAxisRef.current = chartRef.current.xAxes.push(
 			am5xy.ValueAxis.new(rootRef.current, {
 				renderer: am5xy.AxisRendererX.new(rootRef.current, {
-					strokeOpacity: 0.1,
+					strokeOpacity: 1,
+					stroke: am5.color('#cccccc'),
+					strokeWidth: 1,
 				}),
 				min: 0,
-				visible: false,
+				visible: true,
 				strictMinMax: true,
+				max: undefined,
+				autoZoom: true,
 			}),
 		);
 
@@ -95,23 +111,27 @@ export default function OrderbookChart({
 				name: '실시간 호가',
 				xAxis: xAxisRef.current,
 				yAxis: yAxisRef.current,
-				valueXField: 'quantity',
-				categoryYField: 'offerPrice',
+				valueXField: 'size',
+				categoryYField: 'price',
 				sequencedInterpolation: true,
 				tooltip: am5.Tooltip.new(rootRef.current, {
 					pointerOrientation: 'horizontal',
-					labelText: '[bold]{categoryY}원 {valueX}개',
+					labelText: '[bold]{priceY}원 {sizeX}개',
 				}),
 				paddingBottom: 0,
 				paddingTop: 0,
+				visible: true,
 			}),
 		);
 
 		seriesRef.current.columns.template.setAll({
 			height: am5.p100,
-			strokeOpacity: 0.1,
-			fillOpacity: 0.4,
+			strokeOpacity: 1,
+			stroke: THEME[type].barColor,
+			strokeWidth: 0.5,
+			fillOpacity: 0.8,
 			fill: THEME[type].barColor,
+			width: am5.p100,
 		});
 
 		seriesRef.current?.bullets.push(() => {
@@ -121,7 +141,7 @@ export default function OrderbookChart({
 				locationY: 0.5,
 				sprite: am5.Label.new(rootRef.current, {
 					centerY: am5.p50,
-					text: '{valueX}',
+					text: '{sizeX}',
 					populateText: true,
 					fill: THEME[type].textColor,
 				}),
@@ -141,5 +161,11 @@ export default function OrderbookChart({
 		};
 	}, [type]);
 
-	return <div id={`orderbook-${type}`} className="h-full w-full" />;
+	return (
+		<div
+			id={`orderbook-${type}`}
+			className="h-full w-full"
+			style={{ minHeight: '200px' }}
+		/>
+	);
 }
