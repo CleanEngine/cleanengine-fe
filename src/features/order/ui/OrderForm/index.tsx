@@ -72,8 +72,7 @@ export default function OrderForm() {
 				onChange={handleTradeTypeChange}
 			/>
 			<div className="flex items-center">
-				<span className="flex-1">구매 가격</span>
-				<div className="flex-2">
+				<div className="flex-1">
 					<Switch
 						value1="지정가"
 						value2="시장가"
@@ -84,7 +83,7 @@ export default function OrderForm() {
 				</div>
 			</div>
 			<div className="flex items-center">
-				<span className="flex-1" />
+				<span className="flex-1">구매 가격</span>
 				<div className="flex-2">
 					<QuantityInput
 						disabled={
@@ -146,7 +145,6 @@ export default function OrderForm() {
 			>
 				주문하기
 			</button>
-			{state.context.errorMessage}
 		</form>
 	);
 }
