@@ -1,2 +1,2 @@
-export const PRICE_STEP = 1000;
+export const PRICE_STEP = 1;
 export const QUANTITY_STEP = 1;
