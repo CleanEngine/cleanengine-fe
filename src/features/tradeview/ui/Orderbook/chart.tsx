@@ -99,7 +99,7 @@ export default function OrderbookChart({
 					strokeWidth: 1,
 				}),
 				min: 0,
-				visible: true,
+				visible: false,
 				strictMinMax: true,
 				max: undefined,
 				autoZoom: true,
