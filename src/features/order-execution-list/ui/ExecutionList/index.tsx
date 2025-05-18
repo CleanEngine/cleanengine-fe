@@ -1,17 +1,15 @@
-import type { Order } from '../../type/order';
+import useExecutionListData from '../../hooks/useExecutionListData';
 import ExecutionItem from '../ExecutionItem';
 
-interface ExecutionListProps {
-	orders: Order[];
-}
+export default function ExecutionList() {
+	const executionList = useExecutionListData();
 
-export default function ExecutionList({ orders }: ExecutionListProps) {
-	const orderList = orders?.length ? (
-		orders.map((order, index) => (
+	const orderList = executionList.length ? (
+		executionList.map((execution, index) => (
 			<ExecutionItem
-				key={order.executionPrice}
+				key={execution.transactionId}
 				isGray={index % 2 === 0}
-				{...order}
+				{...execution}
 			/>
 		))
 	) : (
@@ -21,7 +19,7 @@ export default function ExecutionList({ orders }: ExecutionListProps) {
 	return (
 		<div className="flex min-h-0 min-w-xs flex-1 flex-col text-sm">
 			<div className="flex p-2 font-normal">
-				<div className="flex-2 text-left text-gray-900">
+				<div className="flex-1 text-left text-gray-900">
 					<span>체결가</span>
 				</div>
 				<div className="flex-1 text-right text-gray-900">
@@ -30,9 +28,9 @@ export default function ExecutionList({ orders }: ExecutionListProps) {
 				<div className="flex-1 text-right text-gray-900">
 					<span>등락률</span>
 				</div>
-				<div className="flex-1 text-right text-gray-900">
+				{/* <div className="flex-1 text-right text-gray-900">
 					<span>거래량</span>
-				</div>
+				</div> */}
 				<div className="flex-1 text-right text-gray-900">
 					<span>시간</span>
 				</div>

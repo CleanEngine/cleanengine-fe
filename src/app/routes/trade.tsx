@@ -8,7 +8,6 @@ import {
 	CoinListWithSearchBar,
 } from '~/features/coin-search-list';
 import { OrderForm, OrderFormFallback } from '~/features/order';
-import { ExecutionList, type Order } from '~/features/order-execution-list';
 import { Orderbook, StockChart } from '~/features/tradeview';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
@@ -23,6 +22,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 import { redirect } from 'react-router';
+import { ExecutionList } from '~/features/order-execution-list';
 
 export async function clientAction() {
 	try {
@@ -33,142 +33,13 @@ export async function clientAction() {
 	return redirect('/trade');
 }
 
-const MOCK_ORDER: Order[] = [
-	{
-		executionPrice: 10000,
-		executionVolume: 10,
-		fluctuationRate: 0.1,
-		transactionAmount: 100,
-		time: '10:27:04',
-	},
-	{
-		executionPrice: 10020,
-		executionVolume: 7,
-		fluctuationRate: -0.05,
-		transactionAmount: 70,
-		time: '10:26:04',
-	},
-	{
-		executionPrice: 9980,
-		executionVolume: 15,
-		fluctuationRate: 0.03,
-		transactionAmount: 150,
-		time: '10:25:04',
-	},
-	{
-		executionPrice: 10050,
-		executionVolume: 5,
-		fluctuationRate: 0.08,
-		transactionAmount: 50,
-		time: '10:24:04',
-	},
-	{
-		executionPrice: 9970,
-		executionVolume: 12,
-		fluctuationRate: -0.12,
-		transactionAmount: 120,
-		time: '10:23:04',
-	},
-	{
-		executionPrice: 10010,
-		executionVolume: 8,
-		fluctuationRate: 0.06,
-		transactionAmount: 80,
-		time: '10:22:04',
-	},
-	{
-		executionPrice: 10030,
-		executionVolume: 9,
-		fluctuationRate: -0.02,
-		transactionAmount: 90,
-		time: '10:21:04',
-	},
-	{
-		executionPrice: 10012,
-		executionVolume: 11,
-		fluctuationRate: 0.04,
-		transactionAmount: 110,
-		time: '10:20:04',
-	},
-	{
-		executionPrice: 9995,
-		executionVolume: 6,
-		fluctuationRate: -0.09,
-		transactionAmount: 60,
-		time: '10:19:04',
-	},
-	{
-		executionPrice: 10025,
-		executionVolume: 13,
-		fluctuationRate: 0.07,
-		transactionAmount: 130,
-		time: '10:18:04',
-	},
-	{
-		executionPrice: 10005,
-		executionVolume: 14,
-		fluctuationRate: -0.03,
-		transactionAmount: 140,
-		time: '10:17:04',
-	},
-	{
-		executionPrice: 10040,
-		executionVolume: 8,
-		fluctuationRate: 0.09,
-		transactionAmount: 80,
-		time: '10:16:04',
-	},
-	{
-		executionPrice: 9988,
-		executionVolume: 10,
-		fluctuationRate: -0.07,
-		transactionAmount: 100,
-		time: '10:15:04',
-	},
-	{
-		executionPrice: 10018,
-		executionVolume: 7,
-		fluctuationRate: 0.02,
-		transactionAmount: 70,
-		time: '10:14:04',
-	},
-	{
-		executionPrice: 10035,
-		executionVolume: 12,
-		fluctuationRate: 0.05,
-		transactionAmount: 120,
-		time: '10:13:04',
-	},
-	{
-		executionPrice: 10008,
-		executionVolume: 5,
-		fluctuationRate: -0.11,
-		transactionAmount: 50,
-		time: '10:12:04',
-	},
-	{
-		executionPrice: 10028,
-		executionVolume: 9,
-		fluctuationRate: 0.01,
-		transactionAmount: 90,
-		time: '10:11:04',
-	},
-	{
-		executionPrice: 9990,
-		executionVolume: 8,
-		fluctuationRate: -0.06,
-		transactionAmount: 80,
-		time: '10:10:04',
-	},
-];
-
 const MOCK_COIN_LIST: CoinListItemProps[] = [
 	{
 		to: '/trade/BTC',
 		price: 71234000,
 		fluctuationRate: 1.2,
 		transactionAmount: 1530,
-		coinName: '비트코인',
+		coinName: '',
 		coinTicker: 'BTC',
 		CoinIcon: <span>🪙</span>,
 	},
@@ -367,7 +238,7 @@ export default function TradeRouteComponent({
 				<div className="col-span-2 col-start-2 row-start-2">
 					<Container>
 						<ContainerTitle>실시간 체결 목록</ContainerTitle>
-						<ExecutionList orders={MOCK_ORDER} />
+						<ExecutionList />
 					</Container>
 				</div>
 				<div className="col-start-4 row-span-1 row-start-1">

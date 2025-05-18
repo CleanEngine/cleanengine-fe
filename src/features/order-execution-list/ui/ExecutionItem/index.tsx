@@ -1,16 +1,22 @@
 import clsx from 'clsx';
-import type { Order } from '../../type/order';
+import { useMemo } from 'react';
+import { formatCurrencyKR } from '~/shared/utils';
+import type { Execution } from '../../types/execution.type';
 
-export type ExecutionItemProps = { isGray?: boolean } & Order;
+export type ExecutionItemProps = { isGray?: boolean } & Execution;
 
 export default function ExecutionItem({
-	executionPrice,
-	executionVolume,
-	fluctuationRate,
-	transactionAmount,
-	time,
+	price,
+	size,
+	timestamp,
 	isGray,
 }: ExecutionItemProps) {
+	const isPositive = useMemo(() => Math.random() > 0.5, []);
+	const changeRate = useMemo(
+		() => Math.random() * (isPositive ? 1 : -1),
+		[isPositive],
+	);
+
 	return (
 		<div
 			className={clsx(
@@ -18,25 +24,31 @@ export default function ExecutionItem({
 				'flex rounded-lg p-2 py-1.5 font-normal text-gray-500 text-sm',
 			)}
 		>
-			<div className="flex-2 text-left">
-				<span>{executionPrice}원</span>
+			<div className="flex-1 text-left">
+				<span>{formatCurrencyKR(price)}원</span>
 			</div>
 			<div className="flex-1 text-right">
-				<span>{executionVolume}</span>
+				<span>{size}</span>
 			</div>
 			<div
 				className={clsx(
-					fluctuationRate > 0 ? 'text-red-600' : 'text-blue-700',
+					changeRate > 0 ? 'text-red-600' : 'text-blue-700',
 					'flex-1 text-right',
 				)}
 			>
-				<span>{fluctuationRate}%</span>
+				<span>{changeRate.toFixed(2)}%</span>
 			</div>
-			<div className="flex-1 text-right">
+			{/* <div className="flex-1 text-right">
 				<span>{transactionAmount}</span>
-			</div>
+			</div> */}
 			<div className="flex-1 text-right text-gray-400">
-				<span>{time}</span>
+				<span>
+					{Intl.DateTimeFormat('ko-KR', {
+						hour: 'numeric',
+						minute: 'numeric',
+						second: 'numeric',
+					}).format(new Date(timestamp))}
+				</span>
 			</div>
 		</div>
 	);
