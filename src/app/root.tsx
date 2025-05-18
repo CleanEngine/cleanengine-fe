@@ -6,6 +6,8 @@ import {
 	ScrollRestoration,
 	isRouteErrorResponse,
 } from 'react-router';
+import { ToastContainer } from 'react-toastify/unstyled';
+import 'react-toastify/ReactToastify.css';
 import type { Route } from './+types/root';
 
 import './app.css';
@@ -42,7 +44,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-	return <Outlet />;
+	return (
+		<>
+			<Outlet />
+			<ToastContainer />
+		</>
+	);
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

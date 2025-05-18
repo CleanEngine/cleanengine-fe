@@ -1,4 +1,4 @@
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 
 import { useMachine } from '@xstate/react';
 import { QuantityInput } from '~/entities/order';
@@ -60,10 +60,16 @@ export default function OrderForm() {
 	};
 
 	// TODO: API 연결하기
-	const handleSubmit = () => {};
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		send({ type: 'SUBMIT_FORM' });
+	};
 
 	return (
-		<form className="flex flex-col gap-2 pt-2 text-base">
+		<form
+			className="flex flex-col gap-2 pt-2 text-base"
+			onSubmit={handleSubmit}
+		>
 			<Switch
 				value1="매수"
 				value2="매도"
@@ -140,11 +146,12 @@ export default function OrderForm() {
 				</div>
 			</div>
 			<button
-				type="button"
+				type="submit"
 				className="mt-4 cursor-pointer rounded-lg bg-red-500 py-1.5 text-white hover:opacity-80 active:opacity-90"
 			>
 				주문하기
 			</button>
+			{state.context.errorMessage}
 		</form>
 	);
 }

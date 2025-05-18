@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify/unstyled';
 import { assertEvent, assign, fromPromise, setup } from 'xstate';
 import { api as userApi } from '~/entities/user';
 import orderApi from '../api/order.endpoint';
@@ -24,7 +25,10 @@ export const formMachine = setup({
 			| { type: 'INCREMENT_PRICE' }
 			| { type: 'DECREMENT_PRICE' }
 			| { type: 'INCREMENT_QUANTITY' }
-			| { type: 'DECREMENT_QUANTITY' },
+			| { type: 'DECREMENT_QUANTITY' }
+			| { type: 'SUBMIT_FORM' }
+			| { type: 'SHOW_SUCCESS_MESSAGE' }
+			| { type: 'SHOW_ERROR_MESSAGE' },
 	},
 	actors: {
 		loadDepositAndHoldings: fromPromise(async () => {
@@ -51,9 +55,8 @@ export const formMachine = setup({
 				};
 			}) => {
 				if (input.errorMessage) throw new Error(input.errorMessage);
-
-				await orderApi.order({
-					ticker: input.ticker,
+				return orderApi.order({
+					ticker: 'TRUMP',
 					side: input.side,
 					orderType: input.orderType,
 					orderSize: input.orderSize,
@@ -220,6 +223,15 @@ export const formMachine = setup({
 			quantity: undefined,
 			errorMessage: '',
 		}),
+		showToastMessage: ({ context, event }) => {
+			if (event.type === 'SHOW_SUCCESS_MESSAGE') {
+				toast(
+					`주문이 성공하였습니다.\n ${context.tradeType}, 주문 유형: ${context.orderType}`,
+				);
+			} else if (event.type === 'SHOW_ERROR_MESSAGE') {
+				toast(`주문이 실패하였습니다.\n ${context.errorMessage}`);
+			}
+		},
 	},
 }).createMachine({
 	/** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDCYBiB7VAtgLLoDGAFgJYB2YAdAKIEAOyAngAQBCArp3oQDEAZQDqASQAqAYQASAfUkAlAIIARBooCaABQYBtAAwBdRKGa5YlZJVzUzIAB6IAzABYArHTcAOAJwePh5+fgDsAIzhAGw+ADQgbK4+hnR+hm5+4cF+AEyZOVEAvoXxaJg4+MRkVLSMLOzcfBwCBCISMgoA8koaStp6RqZIIBZWNnYOzgihPnSGhoEuHoahLoYuOaHxiQibXuGGPgehUVk+oTnhxaUYWC0kFDT0TKycvPyVgnIqAHIA4pouABVLTyHRKcTSAwmByjay2ezDKbuLy+AJBEIRaJxBKISKrOYXGYBAJ5GbXEBlO6VB41Z71N5NFpfWS-AHyYGggCKQN+kikWkGsMs8ImSNcnm8-kC2SxMW2eJWoTooT8yXCPjcnkMOS1FKpFUItKedVeHGEYAANpbmp8xFI5IpVBp+tChuYReNEaApj4XMrljMPLqQwdwgrdv6VVFQh41m5wqEk1Edfrboaqo9ai8GhbrbahPaOvJur1XULhnCvZNFTE6AcdcswkFdRGDn4XHR3NFwm5Qm5Nm5DFcSpT0-dqiac5w8zbmd9-pphAwADIrsEQqEVj1jBE1hDhHL+OgeGYHTxHCJRHJtw7hOg+KJDqLLFO6qIuNPlCdZ+lm2cFq0C7ssua7yDyfICtuIyenu4oHkefgnme6SBIm0Q3riB6Jsq4QuD4frXgcHjhAEX7Ukak61NI5DoNQMAQI0HyFu0jrKOomiSLobrCruYo+ogfoBisRyGLkHgfqsbZZEhJweH2QQkSsbjkRmxrUbR9GQExgFtA6XQ9AwfRcQMMKVrB-FOIgKadicA5+DGMZqr2t4BHQURpDMmqHvMviqT+dJ0DRdEMTp86souHIghukI8eZfHelZCAprMmq6kmh6xocmE7A2KQJimiYFImLiJv5NJUfQwVaYx7y6cBgLRRBPz8lx0FVnBAkIME94ZI+apuKc-pbFhaT7Am76RL2MrlZRv5BZpoV1cy4g-NISgMEQDAtTFW5mTuoqJVMpxRF2L45O4UQxnhHgRskSGPk+-YOZEQSfqOBoBSa1VLUynwaOtm3bZIu1xQd1bwUNqS5NEIQ6h5I07BEbgnpkoTrKJ+Qjjc34VfNP3actnyrYDW07c1rWCvtMEJfu2RzJcngpsO8z4RGpxIaVHkbFdhgfn4s2ZoFBO1X9QgAxtZMgxTUHUx1llTMEp1PpqGyrCR+FRBGwYo+kF3DhJyQZDkgvqVVi3aQBzJFmxzqcdx7UWUdeKlZzAQXHhHbzDiOxHF2ORHuj7ZXR5Him5VC0hZbVpznarEGWWJlgzTh37lkT7ePJGxxiGfaucqQ4nKsySxi4-rh-jFuMVbnwNfIoHruCsWO7T8Hp8qZekREF3BB4fe3jq9Zl3ryN+G4LgCx94548LVfmjH9URSBq7rjLbVy07afyUhao+DkOpj1qMa3aNfMPoEmzp4N6M+BXs9R9XC8rWtkvA6DLep23p7KgswYbGJY8sR3UiCeQiQ4+z73unfb6c8a7iwYKTN+Tc9ruhThDLqWR+zuT3qRTUgQHJHgjFeLshx+obA1EqaBGkH7z3zM-RB5NeQtVlqg+WzsDx91kpEYMKY+5pRcOzS4cx3BiUvFkFEVDzY0Lga0CWQNGGQXXqwzeX9TxdnwuPYcMY+y+G1jkLwsYOybB1IeU4KkKTUFwFgeAwxPozyeLxT+XUAC04YsLOKKFPXGc1ArTjCpURx6Ckp5ywv6Lw+FNj4RvoNUi5icYUSFlOBktDY6EECZ1JK7ZOz4RCDEAiYkxI5TxKRTsJ18L4LWHhd68S1IRxFv4tJ8UnFJVOLMGIRElidP0X4aSbkHLyVIssTwY9PE1K+tQmqKTALpIVniU8O8YhBxfAmTIbhenKhiLqLU7sS7FGKEAA */
@@ -334,6 +346,9 @@ export const formMachine = setup({
 					target: 'Changed Buy Form',
 					actions: 'decrementQuantity',
 				},
+				SUBMIT_FORM: {
+					target: 'Submitting Form',
+				},
 			},
 		},
 		'Changed Sell Form': {
@@ -370,6 +385,9 @@ export const formMachine = setup({
 					target: 'Changed Sell Form',
 					actions: 'decrementQuantity',
 				},
+				SUBMIT_FORM: {
+					target: 'Submitting Form',
+				},
 			},
 		},
 		'Submitting Form': {
@@ -377,13 +395,30 @@ export const formMachine = setup({
 				src: 'submitForm',
 				input: ({ context }) => ({
 					ticker: '',
-					side: context.tradeType === '매수' ? 'ask' : 'bid',
+					side: context.tradeType === '매수' ? 'bid' : 'ask',
 					orderType: context.orderType === '지정가' ? 'limit' : 'market',
 					orderSize: context.quantity,
 					price: context.price,
 					errorMessage: context.errorMessage,
 				}),
-				// TODO: 에러핸들링
+				onDone: {
+					target: 'Showing Success Message',
+				},
+				onError: {
+					target: 'Showing Error Message',
+				},
+			},
+		},
+		'Showing Success Message': {
+			always: {
+				target: 'Empty Buy Form',
+				actions: ['showToastMessage', 'resetForm'],
+			},
+		},
+		'Showing Error Message': {
+			always: {
+				target: 'Empty Buy Form',
+				actions: ['showToastMessage', 'resetForm'],
 			},
 		},
 	},
