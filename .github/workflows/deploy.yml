@@ -14,6 +14,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Create env file
+        run: |
+          echo "VITE_OAUTH_URL=${{ secrets.VITE_OAUTH_URL }}" > .env
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
+          echo "VITE_STOMP_URL=${{ secrets.VITE_STOMP_URL }}" >> .env
       - name: Build image
         run: |
           docker build -t ${{secrets.DOCKER_USERNAME}}/if-fe:latest .
