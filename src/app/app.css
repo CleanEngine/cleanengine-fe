@@ -1,15 +1,93 @@
 @import "tailwindcss";
 
-@theme {
-	--font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+@layer utilities {
+	.scrollbar-custom::-webkit-scrollbar {
+		background-color: transparent;
+		width: 4px;
+	}
+
+	.scrollbar-custom::-webkit-scrollbar-thumb {
+		background-color: #ccc;
+		border-radius: 10px;
+	}
+
+	.input-number-hide::-webkit-inner-spin-button,
+	.input-number-hide::-webkit-outer-spin-button {
+		appearance: none;
+		-webkit-appearance: none;
+	}
 }
 
-html,
-body {
-	@apply bg-white dark:bg-gray-950;
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-Thin.woff2") format("woff2");
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-ExtraLight.woff2") format("woff2");
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-Light.woff2") format("woff2");
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-Medium.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-SemiBold.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-ExtraBold.woff2") format("woff2");
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Pretendard";
+	src: url("/fonts/Pretendard-Black.woff2") format("woff2");
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
 
-	@media (prefers-color-scheme: dark) {
-		color-scheme: dark;
-	}
+@theme {
+	--font-display: "Pretendard", "arial", "sans-serif";
+
+	--color-primary: #2272eb;
+
+	--color-kakao: #fee500;
+	--color-kakao-label: rgba(0, 0, 0, 85%);
+	--color-kakao-symbol: #000;
 }

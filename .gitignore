@@ -20,7 +20,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.windsurfrules
+.windsurf
 
 # React Router
 /.react-router/
 /build/
+
+.env

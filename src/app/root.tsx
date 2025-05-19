@@ -6,8 +6,10 @@ import {
 	ScrollRestoration,
 	isRouteErrorResponse,
 } from 'react-router';
-
+import { ToastContainer } from 'react-toastify/unstyled';
+import 'react-toastify/ReactToastify.css';
 import type { Route } from './+types/root';
+
 import './app.css';
 
 export const links: Route.LinksFunction = () => [
@@ -21,7 +23,36 @@ export const links: Route.LinksFunction = () => [
 		rel: 'stylesheet',
 		href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
 	},
+	{
+		rel: 'manifest',
+		href: '/site.webmanifest',
+	},
+	{
+		rel: 'apple-touch-icon',
+		href: '/apple-touch-icon.png',
+		sizes: '180x180',
+	},
+	{
+		rel: 'icon',
+		href: '/favicon-16x16.png',
+		type: 'image/png',
+		sizes: '16x16',
+	},
+	{
+		rel: 'icon',
+		href: '/favicon-32x32.png',
+		type: 'image/png',
+		sizes: '32x32',
+	},
 ];
+
+export function meta() {
+	return [
+		{
+			title: 'Invest Future',
+		},
+	];
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
@@ -32,7 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Meta />
 				<Links />
 			</head>
-			<body>
+			<body className="h-dvh font-display">
 				{children}
 				<ScrollRestoration />
 				<Scripts />
@@ -42,7 +73,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-	return <Outlet />;
+	return (
+		<>
+			<Outlet />
+			<ToastContainer />
+		</>
+	);
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -62,11 +98,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 	}
 
 	return (
-		<main className="pt-16 p-4 container mx-auto">
+		<main className="container mx-auto p-4 pt-16">
 			<h1>{message}</h1>
 			<p>{details}</p>
 			{stack && (
-				<pre className="w-full p-4 overflow-x-auto">
+				<pre className="w-full overflow-x-auto p-4">
 					<code>{stack}</code>
 				</pre>
 			)}

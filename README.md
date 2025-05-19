@@ -1,54 +1,69 @@
-# React + TypeScript + Vite
+# Invest Future
+> 만약에 이때(<strong>IF</strong>) 투자했다면 지금 얼마를 벌었을까? <br/>
+>
+> 항상 저희는 상상을 하곤 합니다. ~~(이 때 돈 넣었으면 지금 4배는 벌었는데)~~<br/>
+> 하지만 현실은 돈이 부족하기 떄문에 투자를 하기 쉽지 않습니다. <br/>
+> <br/>
+> IF에서는 모의투자를 통해 투자에 대한 경험을 쌓고, 투자에 대한 이해를 높일 수 있습니다. <br/>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+https://investfuture.my
 
-Currently, two official plugins are available:
+## 다른 모의투자 서비스와의 차이점
+> 많은 모의투자서비스는 3가지 유형이 있습니다.
+> 1. 턴제 모의투자
+> 2. 자체 시장 모의투자
+> 3. 실시간 모의투자 (거래가 차트에 반영되지 않음)
+>
+> 기존 모의투자 서비스는 실제 시장의 추세를 따라가지 않거나, 따라가더라도 사용자의 투자 행동이 차트에 반영되지 않는 문제가 있었습니다. <br/>
+> 
+> Invest Future(<strong>IF</strong>)는 실제 시장의 추세를 따라가고, 사용자의 투자 행동이 차트에 반영되는 모의투자 서비스입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How it works?
+> 기존 실시간 모의투자 서비스에서 사용자의 투자 행동이 차트에 반영되지 않는 이유는 사용자의 투자 행동이 차트에 반영될경우 시간이 지날수록 실제 시장의 차트와 모의투자 서비스의 차트의 괴리가 커지기 때문입니다. <br/>
+> 비유하자면 시간이 지날수록 멀티버스가 발생합니다.
+>
+> Invest Future(<strong>IF</strong>)는 사용자의 투자 행동으로 서비스의 차트와 실제 시장의 차트의 괴리가 커지면 <u>자체 매수봇과 매도봇이 매수 매도를 하면서 <strong>실제 시장과의 차이를 보간</strong></u>합니다.
+<img width="1540" alt="chart" src="https://github.com/user-attachments/assets/3f007d49-9aff-4563-8c5f-3884de261e5b" />
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 프로젝트 특징
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+### 이벤트 드리븐 모델링 아키텍처
+컴포넌트 상태관리에서 이벤트 기반 모델링을 하고 구현체인 xstate를 사용했습니다.
+
+기존 상태 기반 모델링으로 컴포넌트를 설계할 경우 관리할 상태가 늘어날 경우 코드가 복잡해져 유지보수가 어려워진다는 단점이 있고, 기능이 추가되거나 변경될 경우 구현이 어렵다는 문제가 생깁니다.
+
+이를 이벤트 기반 모델링으로 복잡한 요구사항이 주어질때 구현과 기능 변경이 쉬워지기 때문에 이벤트 드리븐 모델링을 하였습니다.
+<img width="1131" alt="스크린샷 2025-05-19 오후 2 01 45" src="https://github.com/user-attachments/assets/1a1acee9-aab4-48ac-80eb-82b6f8da30af" />
+
+
+
+### FSD (Feature Sliced Design)
+프로젝트의 유지보수성과 확장성을 위해 FSD 아키텍처를 사용했습니다.
+
+기존 프론트엔드 아키텍처에서는 components, pages, hooks등 **본질별**로 파일을 분리했습니다.
+이렇게 했을 경우 단점은 파일들이 많아지면 파일을 찾기 어렵고 서로 참조 관계를 알수 없어 유지보수성이 떨어집니다.
+
+FSD 아키텍처를 사용하면 파일을 목적별로 분리하여 높은 응집도를 가질 수 있게 합니다.
+
+### React Router V7 (Framework mode)
+그래프와 호가창등 동적인 컴포넌트가 많은 `/trade` 페이지는 spa로 만드는 게 적절하지만, 후에 마이페이지나 랜딩페이지등을 ssr, ssg로 만들어 SEO와 빠른 로딩속도를 가져가기 위해 framework mode를 사용했습니다.
+
+### Amcharts + Stomp
+실시간 그래프 차트나 호가창은 amcahrts5를 사용하였습니다. <br/>
+highcharts나 recharts등 많은 차트라이브러리를 고려했는데 canvas api + 차트 툴팁 + 잘 정리된 공식문서에 부합하는 라이브러리가 amcharts여서 채택하였습니다.
+
+api 서버와의 실시간 통신은 서버의 구현에 따라 Stomp.js를 사용했습니다.
+
+
+
+## 1차 구현 [5.2 ~ 5.15]
+
+코인 한 개(트럼프 코인)을 매수 할 수 있습니다.
+사용자의 주문에 따라 그래프차트와 호가창, 실시간 체결창에 반영됩니다.
+
+https://github.com/user-attachments/assets/779b77f1-e778-4a53-b37f-d79a2dc187e8
+

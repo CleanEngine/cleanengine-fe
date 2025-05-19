@@ -14,7 +14,8 @@
 			"tsconfig.*.json",
 			".react-router/*",
 			"react-router.config.ts",
-			"vite-env.d.ts"
+			"vite-env.d.ts",
+			"public/mockServiceWorker.js"
 		]
 	},
 	"formatter": {
@@ -29,8 +30,16 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noConsole": "error",
+				"noConsole": {
+					"level": "error",
+					"options": {
+						"allow": ["error"]
+					}
+				},
 				"noEvolvingTypes": "info"
+			},
+			"correctness": {
+				"noUnusedImports": "error"
 			},
 			"style": {
 				"useFilenamingConvention": {
@@ -41,6 +50,9 @@
 						"filenameCases": ["camelCase", "export"]
 					}
 				}
+			},
+			"nursery": {
+				"useSortedClasses": "error"
 			}
 		}
 	},
