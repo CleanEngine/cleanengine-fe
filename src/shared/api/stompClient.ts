@@ -1,7 +1,7 @@
 import { Client } from '@stomp/stompjs';
 
 const client = new Client({
-	brokerURL: `${import.meta.env.VITE_STOMP_URL}/coin/realtime`,
+	brokerURL: `${import.meta.env.VITE_STOMP_URL}/api/coin/realtime`,
 	heartbeatOutgoing: 4000,
 });
 
