@@ -23,7 +23,36 @@ export const links: Route.LinksFunction = () => [
 		rel: 'stylesheet',
 		href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
 	},
+	{
+		rel: 'manifest',
+		href: '/site.webmanifest',
+	},
+	{
+		rel: 'apple-touch-icon',
+		href: '/apple-touch-icon.png',
+		sizes: '180x180',
+	},
+	{
+		rel: 'icon',
+		href: '/favicon-16x16.png',
+		type: 'image/png',
+		sizes: '16x16',
+	},
+	{
+		rel: 'icon',
+		href: '/favicon-32x32.png',
+		type: 'image/png',
+		sizes: '32x32',
+	},
 ];
+
+export function meta() {
+	return [
+		{
+			title: 'Invest Future',
+		},
+	];
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
