@@ -106,7 +106,7 @@ export default function OrderForm() {
 						onClickPlus={handlePricePlus}
 						onChange={handlePriceChange}
 						step={PRICE_STEP}
-						value={state.context.price ?? ''}
+						value={(state.context.price || '').toString()}
 						min={0}
 					/>
 				</div>
@@ -129,7 +129,7 @@ export default function OrderForm() {
 						onClickPlus={handleQuantityPlus}
 						step={QUANTITY_STEP}
 						onChange={handleQuantityChange}
-						value={state.context.quantity ?? ''}
+						value={(state.context.quantity || '').toString()}
 						min={0}
 					/>
 				</div>
