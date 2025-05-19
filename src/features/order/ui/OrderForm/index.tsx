@@ -5,7 +5,7 @@ import { QuantityInput } from '~/entities/order';
 import Switch from '~/shared/ui/Switch';
 import { formatCurrencyKR } from '~/shared/utils';
 import { PRICE_STEP, QUANTITY_STEP } from '../../const';
-import { formMachine } from '../../model/form.machine';
+import { formMachine } from '../../models/form.machine';
 import type { OrderType, TradeType } from '../../types/order.endpoint';
 
 export default function OrderForm() {
