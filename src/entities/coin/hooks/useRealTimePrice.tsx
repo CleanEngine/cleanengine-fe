@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 export default function useRealTimePrice(ticker = 'TRUMP') {
 	useEffect(() => {
 		const client = new Client({
-			brokerURL: `${import.meta.env.VITE_STOMP_URL}/coin/realtime`,
+			brokerURL: `${import.meta.env.VITE_STOMP_URL}/api/coin/realtime`,
 		});
 
 		client.onConnect = () => {
