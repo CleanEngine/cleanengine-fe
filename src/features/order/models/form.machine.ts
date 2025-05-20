@@ -7,6 +7,7 @@ import { PRICE_STEP, QUANTITY_STEP } from '../const';
 export const formMachine = setup({
 	types: {
 		context: {} as {
+			ticker: string;
 			tradeType: '매수' | '매도';
 			orderType: '지정가' | '시장가';
 			price?: number;
@@ -31,15 +32,22 @@ export const formMachine = setup({
 			| { type: 'SHOW_ERROR_MESSAGE' },
 	},
 	actors: {
-		loadDepositAndHoldings: fromPromise(async () => {
-			const response = await userApi.getUserInfo();
-			const { data } = await response.json();
+		loadDepositAndHoldings: fromPromise(
+			async ({ input }: { input: { ticker: string } }) => {
+				const response = await userApi.getUserInfo();
+				const { data } = await response.json();
 
-			return {
-				deposit: data.cash,
-				holdings: 0,
-			};
-		}),
+				const holdings = Number(
+					data.wallets.find((wallet) => wallet.ticker === input.ticker)?.size ||
+						0,
+				);
+
+				return {
+					deposit: data.cash,
+					holdings,
+				};
+			},
+		),
 
 		submitForm: fromPromise(
 			async ({
@@ -80,14 +88,14 @@ export const formMachine = setup({
 			price: ({ event, context }) => {
 				assertEvent(event, 'SWITCH_ORDER_TYPE');
 
-				if (event.orderType === '시장가') return undefined;
+				if (context.tradeType === '매도') return undefined;
 
 				return context.price;
 			},
 			quantity: ({ event, context }) => {
 				assertEvent(event, 'SWITCH_ORDER_TYPE');
 
-				if (event.orderType === '시장가') return undefined;
+				if (context.tradeType === '매수') return undefined;
 
 				return context.quantity;
 			},
@@ -222,6 +230,8 @@ export const formMachine = setup({
 			price: undefined,
 			quantity: undefined,
 			errorMessage: '',
+			tradeType: '매수',
+			orderType: '지정가',
 		}),
 		showToastMessage: ({ context, event }) => {
 			if (event.type === 'SHOW_SUCCESS_MESSAGE') {
@@ -238,10 +248,18 @@ export const formMachine = setup({
 	id: 'tradeFormMachine',
 	initial: 'Empty Buy Form',
 
-	context: {
-		tradeType: '매수',
-		orderType: '지정가',
-		errorMessage: '',
+	context: (params) => {
+		const ticker =
+			typeof params.input === 'object' && params.input
+				? (params.input as { ticker?: string }).ticker || ''
+				: '';
+
+		return {
+			tradeType: '매수',
+			orderType: '지정가',
+			errorMessage: '',
+			ticker,
+		};
 	},
 	states: {
 		'Empty Buy Form': {
@@ -265,6 +283,7 @@ export const formMachine = setup({
 			},
 			invoke: {
 				src: 'loadDepositAndHoldings',
+				input: ({ context }) => ({ ticker: context.ticker }),
 				onDone: {
 					actions: assign({
 						deposit: ({ event }) => event.output.deposit,
@@ -299,6 +318,7 @@ export const formMachine = setup({
 			},
 			invoke: {
 				src: 'loadDepositAndHoldings',
+				input: ({ context }) => ({ ticker: context.ticker }),
 				onDone: {
 					actions: assign({
 						deposit: ({ event }) => event.output.deposit,

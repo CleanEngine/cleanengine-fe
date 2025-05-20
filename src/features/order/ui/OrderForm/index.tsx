@@ -3,20 +3,31 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { useMachine } from '@xstate/react';
 import { QuantityInput } from '~/entities/order';
 import Switch from '~/shared/ui/Switch';
-import { formatCurrencyKR } from '~/shared/utils';
+import { formatCurrencyKR, preventNonNumericInput } from '~/shared/utils';
 import { PRICE_STEP, QUANTITY_STEP } from '../../const';
 import { formMachine } from '../../models/form.machine';
 import type { OrderType, TradeType } from '../../types/order.endpoint';
 
-export default function OrderForm() {
-	const [state, send] = useMachine(formMachine, {});
+type OrderFormProps = {
+	ticker: string;
+};
+
+export default function OrderForm({ ticker }: OrderFormProps) {
+	const [state, send] = useMachine(formMachine, {
+		input: {
+			ticker,
+		},
+	});
+
+	const priceLabel =
+		state.context.tradeType === '매수' ? '구매 가격' : '판매 가격';
 	const quantityLabel =
 		state.context.tradeType === '매수' ? '구매가능 금액' : '매도가능 수량';
-	const quantityValue =
+	const quantityValueText =
 		state.context.tradeType === '매수'
 			? `${formatCurrencyKR(state.context.deposit || 0)}원`
-			: `${state.context.holdings || 0}개`;
-	const totalOrderPrice =
+			: `${state.context.holdings?.toFixed(2) || 0}개`;
+	const totalOrderPriceText =
 		state.context.tradeType === '매수'
 			? state.context.orderType === '지정가'
 				? `${formatCurrencyKR((state.context.price || 0) * (state.context.quantity || 0))}원`
@@ -34,13 +45,25 @@ export default function OrderForm() {
 	};
 
 	const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const price = Number(event.target.value);
-		send({ type: 'CHANGE_BUY_PRICE', price });
+		const value = event.currentTarget.value;
+
+		const price = Number(value);
+		if (state.context.tradeType === '매수') {
+			send({ type: 'CHANGE_BUY_PRICE', price });
+		} else {
+			send({ type: 'CHANGE_SELL_PRICE', price });
+		}
 	};
 
 	const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const quantity = Number(event.target.value);
-		send({ type: 'CHANGE_BUY_QUANTITY', quantity });
+		const value = event.currentTarget.value;
+
+		const quantity = Number(value);
+		if (state.context.tradeType === '매수') {
+			send({ type: 'CHANGE_BUY_QUANTITY', quantity });
+		} else {
+			send({ type: 'CHANGE_SELL_QUANTITY', quantity });
+		}
 	};
 
 	const handlePriceMinus = () => {
@@ -59,7 +82,6 @@ export default function OrderForm() {
 		send({ type: 'INCREMENT_QUANTITY' });
 	};
 
-	// TODO: API 연결하기
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		send({ type: 'SUBMIT_FORM' });
@@ -75,6 +97,7 @@ export default function OrderForm() {
 				value2="매도"
 				text1="매수"
 				text2="매도"
+				selected={state.context.tradeType}
 				onChange={handleTradeTypeChange}
 			/>
 			<div className="flex items-center">
@@ -84,12 +107,13 @@ export default function OrderForm() {
 						value2="시장가"
 						text1="지정가"
 						text2="시장가"
+						selected={state.context.orderType}
 						onChange={handleOrderTypeChange}
 					/>
 				</div>
 			</div>
 			<div className="flex items-center">
-				<span className="flex-1">구매 가격</span>
+				<span className="flex-1">{priceLabel}</span>
 				<div className="flex-2">
 					<QuantityInput
 						disabled={
@@ -108,6 +132,7 @@ export default function OrderForm() {
 						step={PRICE_STEP}
 						value={(state.context.price || '').toString()}
 						min={0}
+						onKeyDown={preventNonNumericInput}
 					/>
 				</div>
 			</div>
@@ -131,6 +156,7 @@ export default function OrderForm() {
 						onChange={handleQuantityChange}
 						value={(state.context.quantity || '').toString()}
 						min={0}
+						onKeyDown={preventNonNumericInput}
 					/>
 				</div>
 			</div>
@@ -138,11 +164,11 @@ export default function OrderForm() {
 			<div className="flex flex-col gap-2">
 				<div className="flex items-stretch font-medium text-sm">
 					<span className="flex-1 text-left">{quantityLabel}</span>
-					<span className="flex-1 text-right">{quantityValue}</span>
+					<span className="flex-1 text-right">{quantityValueText}</span>
 				</div>
 				<div className="flex items-stretch font-medium text-sm">
 					<span className="flex-1 text-left">총 주문 금액</span>
-					<span className="flex-1 text-right">{totalOrderPrice}</span>
+					<span className="flex-1 text-right">{totalOrderPriceText}</span>
 				</div>
 			</div>
 			<button

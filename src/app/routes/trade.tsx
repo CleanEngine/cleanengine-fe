@@ -244,7 +244,7 @@ export default function TradeRouteComponent({
 				<div className="col-start-4 row-span-1 row-start-1">
 					<Container>
 						<ContainerTitle>주문 하기</ContainerTitle>
-						{isLoggedIn ? <OrderForm /> : <OrderFormFallback />}
+						{isLoggedIn ? <OrderForm ticker="TRUMP" /> : <OrderFormFallback />}
 					</Container>
 				</div>
 				<div className="col-start-4 row-span-full row-start-2">
