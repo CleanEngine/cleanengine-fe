@@ -18,7 +18,7 @@ export default function useExecutionListData(ticker = 'TRUMP') {
 
 			client.subscribe(`/topic/realTimeTradeRate/${ticker}`, (message) => {
 				const parsedData = JSON.parse(message.body) as Execution;
-				setExecutionList((prev) => [parsedData, ...prev]);
+				setExecutionList((prev) => [parsedData, ...prev].slice(0, 30));
 			});
 		};
 
