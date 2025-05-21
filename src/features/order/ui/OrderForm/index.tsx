@@ -89,19 +89,21 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 
 	return (
 		<form
-			className="flex flex-col gap-2 pt-2 text-base"
+			className="flex flex-col gap-2 overflow-y-scroll pt-2 text-base"
 			onSubmit={handleSubmit}
 		>
-			<Switch
-				value1="매수"
-				value2="매도"
-				text1="매수"
-				text2="매도"
-				selected={state.context.tradeType}
-				onChange={handleTradeTypeChange}
-			/>
-			<div className="flex items-center">
-				<div className="flex-1">
+			<div className="flex flex-col items-stretch gap-2">
+				<div className="items-stretch">
+					<Switch
+						value1="매수"
+						value2="매도"
+						text1="매수"
+						text2="매도"
+						selected={state.context.tradeType}
+						onChange={handleTradeTypeChange}
+					/>
+				</div>
+				<div className="items-stretch">
 					<Switch
 						value1="지정가"
 						value2="시장가"
