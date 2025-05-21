@@ -4,7 +4,6 @@ import {
 	CoinWithIconAndName,
 	type CoinWithIconAndNameProps,
 } from '~/entities/coin';
-import useRealTimePrice from '~/entities/coin/hooks/useRealTimePrice';
 
 export type CoinListItemProps = {
 	to: LinkProps['to'];
@@ -24,7 +23,7 @@ export default function CoinListItem({
 }: CoinListItemProps) {
 	const isBull = fluctuationRate > 0;
 	const sign = isBull ? '+' : '-';
-	useRealTimePrice();
+	// useCurrentPrice();
 
 	return (
 		<Link to={to} className="block px-2">
