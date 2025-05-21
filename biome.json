@@ -61,7 +61,8 @@
 			"include": [
 				"test/**/*",
 				"*.test.{ts,tsx,js,jsx}",
-				"*.spec.{ts,tsx,js,jsx}"
+				"*.spec.{ts,tsx,js,jsx}",
+				"src/app/routes/*"
 			],
 			"linter": {
 				"rules": {
