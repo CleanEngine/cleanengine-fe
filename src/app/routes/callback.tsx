@@ -7,7 +7,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const isAccessTokenExists = !!cookies.access_token;
 
 	if (!isAccessTokenExists) {
-		return redirect('/trade/login');
+		return redirect('/trade/BTC/login');
 	}
 
 	return redirect('/trade');

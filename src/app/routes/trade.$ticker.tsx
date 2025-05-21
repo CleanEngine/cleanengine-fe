@@ -50,7 +50,13 @@ export default function TradeRouteComponent({
 
 	return (
 		<div className="h-full bg-gray-100">
-			<NavBar to="/" serviceName="IF" isBlack isLoggedIn={isLoggedIn} />
+			<NavBar
+				to="/"
+				serviceName="IF"
+				isBlack
+				isLoggedIn={isLoggedIn}
+				ticker={coinInfo?.ticker}
+			/>
 			{coinInfo && (
 				<CoinPriceWithName name={coinInfo?.name} ticker={coinInfo?.ticker} />
 			)}
@@ -67,7 +73,7 @@ export default function TradeRouteComponent({
 						{isLoggedIn && coinInfo ? (
 							<OrderForm ticker={coinInfo.ticker} />
 						) : (
-							<OrderFormFallback />
+							<OrderFormFallback ticker={coinInfo?.ticker || 'BTC'} />
 						)}
 					</Container>
 				</div>
