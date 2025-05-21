@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+
 import { useStompClient } from '~/app/provider/StompProvider';
+import type { CoinTicker } from '~/entities/coin';
 import type { CandlestickData, RowData } from '../types/tradeview.type';
 
-export default function useRealTimeData(ticker = 'TRUMP') {
+export default function useRealTimeData(ticker: CoinTicker) {
 	const { client, connected } = useStompClient();
 	const [data, setData] = useState<CandlestickData | null>(null);
 

@@ -18,7 +18,7 @@ export default function NavBar({
 	const submit = useSubmit();
 
 	const handleLogout = () => {
-		submit(null, { action: '/trade', method: 'post' });
+		submit(null, { action: '/trade.$ticker', method: 'post' });
 	};
 
 	const LoginButton = () => (

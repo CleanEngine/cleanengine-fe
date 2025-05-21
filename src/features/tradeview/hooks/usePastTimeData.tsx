@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
+
+import type { CoinTicker } from '~/entities/coin';
 import api from '../api/tradeview.endpoints';
 import type { CandlestickData } from '../types/tradeview.type';
 
@@ -16,11 +18,11 @@ export type UpbitCandle = {
 	unit: number;
 };
 
-export default function usePastTimeData() {
+export default function usePastTimeData(ticker: CoinTicker) {
 	const [pastTimeData, setPastTimeData] = useState<CandlestickData[]>([]);
 
 	const fetchData = useCallback(async () => {
-		const response = await api.getPastData();
+		const response = await api.getPastData(ticker);
 		const data = await response.json();
 
 		setPastTimeData(
@@ -33,7 +35,7 @@ export default function usePastTimeData() {
 				Volume: Number.parseFloat(datum.volume),
 			})),
 		);
-	}, []);
+	}, [ticker]);
 
 	useEffect(() => {
 		fetchData();
