@@ -89,7 +89,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 
 	return (
 		<form
-			className="flex flex-col gap-2 overflow-y-scroll pt-2 text-base"
+			className="scrollbar-custom flex flex-col gap-2 overflow-y-scroll pt-2 text-base"
 			onSubmit={handleSubmit}
 		>
 			<div className="flex flex-col items-stretch gap-2">
@@ -175,7 +175,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 			</div>
 			<button
 				type="submit"
-				className="mt-4 cursor-pointer rounded-lg bg-red-500 py-1.5 text-white hover:opacity-80 active:opacity-90"
+				className="mt-2 cursor-pointer rounded-lg bg-red-500 py-1.5 text-white hover:opacity-80 active:opacity-90"
 			>
 				주문하기
 			</button>
