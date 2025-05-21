@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useMemo } from 'react';
 import { formatCurrencyKR } from '~/shared/utils';
 import type { Execution } from '../../types/execution.type';
 
@@ -10,12 +9,14 @@ export default function ExecutionItem({
 	size,
 	timestamp,
 	isGray,
+	changeRate,
 }: ExecutionItemProps) {
-	const isPositive = useMemo(() => Math.random() > 0.5, []);
-	const changeRate = useMemo(
-		() => Math.random() * (isPositive ? 1 : -1),
-		[isPositive],
-	);
+	const color =
+		changeRate > 0
+			? 'text-red-600'
+			: changeRate < 0
+				? 'text-blue-700'
+				: 'text-gray-400';
 
 	return (
 		<div
@@ -30,12 +31,7 @@ export default function ExecutionItem({
 			<div className="flex-1 text-right">
 				<span>{size}</span>
 			</div>
-			<div
-				className={clsx(
-					changeRate > 0 ? 'text-red-600' : 'text-blue-700',
-					'flex-1 text-right',
-				)}
-			>
+			<div className={clsx(color, 'flex-1 text-right')}>
 				<span>{changeRate.toFixed(2)}%</span>
 			</div>
 			{/* <div className="flex-1 text-right">

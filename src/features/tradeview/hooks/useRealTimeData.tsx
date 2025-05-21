@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
-import stompClient from '~/shared/api/stompClient';
+import { useStompClient } from '~/app/provider/StompProvider';
 import type { CandlestickData, RowData } from '../types/tradeview.type';
 
 export default function useRealTimeData(ticker = 'TRUMP') {
+	const { client, connected } = useStompClient();
 	const [data, setData] = useState<CandlestickData | null>(null);
 
 	useEffect(() => {
-		stompClient.onConnect = () => {
-			stompClient.publish({
-				destination: '/app/subscribe/realTimeOhlc',
-				body: JSON.stringify({ ticker }),
-			});
+		if (!client || !connected) return;
 
-			stompClient.subscribe(`/topic/realTimeOhlc/${ticker}`, (message) => {
+		client.publish({
+			destination: '/app/subscribe/realTimeOhlc',
+			body: JSON.stringify({ ticker }),
+		});
+
+		const subscription = client.subscribe(
+			`/topic/realTimeOhlc/${ticker}`,
+			(message) => {
 				const parsedData = JSON.parse(message.body) as RowData;
 				setData({
 					Timestamp: Date.parse(parsedData.timestamp),
@@ -22,26 +26,13 @@ export default function useRealTimeData(ticker = 'TRUMP') {
 					Open: Number.parseFloat(parsedData.open),
 					Volume: Number.parseFloat(parsedData.volume),
 				});
-			});
-		};
-
-		stompClient.onWebSocketError = (error) => {
-			console.error('onWebSocketError');
-			console.error(`error:${error}`);
-		};
-
-		stompClient.onStompError = (frame) => {
-			console.error('onStompError');
-			console.error(`Broker reported error: ${frame.headers.message}`);
-			console.error(`Additional details: ${frame.body}`);
-		};
-
-		stompClient.activate();
+			},
+		);
 
 		return () => {
-			stompClient.deactivate();
+			subscription.unsubscribe();
 		};
-	}, [ticker]);
+	}, [client, connected, ticker]);
 
 	return data;
 }
