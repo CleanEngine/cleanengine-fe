@@ -1,24 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useStompClient } from '~/app/provider/StompProvider';
-import type { Execution } from '../types/execution.type';
 
-export default function useExecutionListData(ticker = 'TRUMP') {
+type CurrentPriceData = {
+	changeRate: number;
+	currentPrice: number;
+	prevClose: number;
+	ticker: string;
+	timestamp: string;
+};
+
+export default function useCurrentPrice(ticker: string) {
 	const { client, connected } = useStompClient();
-	const [executionList, setExecutionList] = useState<Execution[]>([]);
+	const [data, setData] = useState<CurrentPriceData | null>(null);
 
 	useEffect(() => {
 		if (!client || !connected) return;
 
 		client.publish({
-			destination: '/app/subscribe/realTimeTradeRate',
+			destination: `/app/subscribe/prevRate/${ticker}`,
 			body: JSON.stringify({ ticker }),
 		});
 
 		const subscription = client.subscribe(
-			`/topic/realTimeTradeRate/${ticker}`,
+			`/topic/prevRate/${ticker}`,
 			(message) => {
-				const parsedData = JSON.parse(message.body) as Execution;
-				setExecutionList((prev) => [parsedData, ...prev].slice(0, 30));
+				const parsedData = JSON.parse(message.body);
+				setData(parsedData);
 			},
 		);
 
@@ -27,5 +34,5 @@ export default function useExecutionListData(ticker = 'TRUMP') {
 		};
 	}, [client, connected, ticker]);
 
-	return executionList;
+	return data;
 }

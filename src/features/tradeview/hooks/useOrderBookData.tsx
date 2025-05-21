@@ -1,17 +1,20 @@
-import { Client } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
+import { useStompClient } from '~/app/provider/StompProvider';
 import type { OrderBookData, RawOrderBookData } from '../types/orderbook.type';
 
 export default function useOrderBookData(ticker = 'TRUMP') {
+	const { client, connected } = useStompClient();
 	const [data, setData] = useState<OrderBookData>();
 
 	useEffect(() => {
-		const client = new Client({
-			brokerURL: `${import.meta.env.VITE_STOMP_URL}/api/coin/realtime`,
+		if (!client || !connected) return;
+		client.publish({
+			destination: '/app/subscribe/orderbook',
+			body: JSON.stringify({ ticker }),
 		});
-
-		client.onConnect = () => {
-			client.subscribe(`/topic/orderbook/${ticker}`, (message) => {
+		const subscription = client.subscribe(
+			`/topic/orderbook/${ticker}`,
+			(message) => {
 				const parsedData = JSON.parse(message.body) as RawOrderBookData;
 				setData({
 					ticker: parsedData.ticker,
@@ -24,29 +27,13 @@ export default function useOrderBookData(ticker = 'TRUMP') {
 						size: Number(unit.size),
 					})),
 				});
-			});
-		};
-
-		client.onWebSocketError = (error) => {
-			console.error('onWebSocketError');
-			console.error(`error:${error}`);
-			if (error instanceof Error) {
-				console.error(error.message);
-			}
-		};
-
-		client.onStompError = (frame) => {
-			console.error('onStompError');
-			console.error(`Broker reported error: ${frame.headers.message}`);
-			console.error(`Additional details: ${frame.body}`);
-		};
-
-		client.activate();
+			},
+		);
 
 		return () => {
-			client.deactivate();
+			subscription.unsubscribe();
 		};
-	}, [ticker]);
+	}, [client, connected, ticker]);
 
 	return data;
 }
