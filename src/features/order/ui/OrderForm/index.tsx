@@ -1,6 +1,7 @@
-import type { ChangeEvent, FormEvent } from 'react';
+import { type ChangeEvent, type FormEvent, useEffect } from 'react';
 
 import { useMachine } from '@xstate/react';
+import { toast } from 'react-toastify/unstyled';
 import { QuantityInput } from '~/entities/order';
 import Switch from '~/shared/ui/Switch';
 import { formatCurrencyKR, preventNonNumericInput } from '~/shared/utils';
@@ -13,12 +14,11 @@ type OrderFormProps = {
 };
 
 export default function OrderForm({ ticker }: OrderFormProps) {
-	const [state, send] = useMachine(formMachine, {
+	const [state, send, actorRef] = useMachine(formMachine, {
 		input: {
 			ticker,
 		},
 	});
-
 	const priceLabel =
 		state.context.tradeType === '매수' ? '구매 가격' : '판매 가격';
 	const quantityLabel =
@@ -86,6 +86,23 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 		e.preventDefault();
 		send({ type: 'SUBMIT_FORM' });
 	};
+
+	useEffect(() => {
+		const subscription = actorRef.subscribe((snapshot) => {
+			if (
+				snapshot.value !== 'Showing Error Message' &&
+				snapshot.value !== 'Showing Success Message'
+			)
+				return;
+			const toastMessage =
+				snapshot.value === 'Showing Error Message'
+					? toast.error
+					: toast.success;
+			toastMessage(snapshot.context.message);
+		});
+
+		return subscription.unsubscribe;
+	}, [actorRef]);
 
 	return (
 		<form
@@ -179,7 +196,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 			>
 				주문하기
 			</button>
-			{state.context.errorMessage}
+			{state.context.message}
 		</form>
 	);
 }
