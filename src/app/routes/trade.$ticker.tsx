@@ -91,7 +91,7 @@ export default function TradeRouteComponent({
 				</div>
 				<div className="col-span-2 col-start-2 row-start-1">
 					<Container>
-						<ContainerTitle>실시긴 차트</ContainerTitle>
+						<ContainerTitle>실시간 차트</ContainerTitle>
 						{coinInfo && (
 							<StockChart key={coinInfo.ticker} ticker={coinInfo.ticker} />
 						)}
