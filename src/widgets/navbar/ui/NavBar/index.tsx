@@ -1,4 +1,5 @@
 import { Link, type LinkProps, NavLink, useSubmit } from 'react-router';
+import type { CoinTicker } from '~/entities/coin';
 import Button from '~/shared/ui/Button';
 import LogoWithTitle, {
 	type LogoWithTitleProps,
@@ -7,6 +8,7 @@ import LogoWithTitle, {
 export type NavBarProps = {
 	to: LinkProps['to'];
 	isLoggedIn?: boolean;
+	ticker?: CoinTicker;
 } & LogoWithTitleProps;
 
 export default function NavBar({
@@ -14,15 +16,16 @@ export default function NavBar({
 	serviceName,
 	isBlack,
 	isLoggedIn,
+	ticker,
 }: NavBarProps) {
 	const submit = useSubmit();
 
 	const handleLogout = () => {
-		submit(null, { action: '/trade', method: 'post' });
+		submit(null, { action: `/trade/${ticker}`, method: 'post' });
 	};
 
 	const LoginButton = () => (
-		<NavLink to="/trade/login">
+		<NavLink to={`/trade/${ticker}/login`}>
 			<Button>로그인</Button>
 		</NavLink>
 	);

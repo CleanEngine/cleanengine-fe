@@ -1,15 +1,14 @@
 import type { ReactElement } from 'react';
+import type { CoinInfo } from '../../types/coin.type';
 
 export type CoinWithIconAndNameProps = {
-	coinName: string;
-	coinTicker: string;
-	CoinIcon: ReactElement;
-};
+	coinIcon: ReactElement;
+} & CoinInfo;
 
 export default function CoinWithIconAndName({
-	coinName,
-	coinTicker,
-	CoinIcon: coinIcon,
+	name,
+	ticker,
+	coinIcon,
 }: CoinWithIconAndNameProps) {
 	return (
 		<div className="flex w-fit flex-col">
@@ -17,9 +16,9 @@ export default function CoinWithIconAndName({
 				<span className="inline-block h-fit w-fit overflow-visible">
 					{coinIcon}
 				</span>
-				<span className="font-semibold">{coinTicker}</span>
+				<span className="font-semibold">{ticker}</span>
 			</div>
-			<span className="px-1.5 text-gray-500 text-xs">{coinName}</span>
+			<span className="px-1.5 text-gray-500 text-xs">{name}</span>
 		</div>
 	);
 }

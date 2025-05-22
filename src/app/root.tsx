@@ -11,6 +11,7 @@ import 'react-toastify/ReactToastify.css';
 import type { Route } from './+types/root';
 
 import './app.css';
+import { Slide } from 'react-toastify';
 import StompProvider from './provider/StompProvider';
 
 export const links: Route.LinksFunction = () => [
@@ -79,7 +80,20 @@ export default function App() {
 			brokerURL={`${import.meta.env.VITE_STOMP_URL}/api/coin/realtime`}
 		>
 			<Outlet />
-			<ToastContainer />
+			<ToastContainer
+				position="top-center"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="light"
+				transition={Slide}
+				stacked
+			/>
 		</StompProvider>
 	);
 }

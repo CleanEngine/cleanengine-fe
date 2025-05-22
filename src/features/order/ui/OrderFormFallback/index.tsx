@@ -1,6 +1,11 @@
 import { Link } from 'react-router';
+import type { CoinTicker } from '~/entities/coin';
 
-export default function OrderFormFallback() {
+type OrderFormFallbackProps = {
+	ticker: CoinTicker;
+};
+
+export default function OrderFormFallback({ ticker }: OrderFormFallbackProps) {
 	return (
 		<div className="flex flex-col gap-2 pt-2 text-base">
 			<div className="flex flex-col items-center justify-center space-y-6 py-8">
@@ -13,7 +18,7 @@ export default function OrderFormFallback() {
 					</p>
 				</div>
 				<Link
-					to="/trade/login"
+					to={`/trade/${ticker}/login`}
 					className="w-full rounded-lg bg-red-500 py-1.5 text-center text-white hover:bg-red-600"
 				>
 					로그인

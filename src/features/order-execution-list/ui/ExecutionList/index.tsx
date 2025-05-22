@@ -1,8 +1,13 @@
+import type { CoinTicker } from '~/entities/coin';
 import useExecutionListData from '../../hooks/useExecutionListData';
 import ExecutionItem from '../ExecutionItem';
 
-export default function ExecutionList() {
-	const executionList = useExecutionListData();
+type ExecutionListProps = {
+	ticker: CoinTicker;
+};
+
+export default function ExecutionList({ ticker }: ExecutionListProps) {
+	const executionList = useExecutionListData(ticker);
 
 	const orderList = executionList.length ? (
 		executionList.map((execution, index) => (

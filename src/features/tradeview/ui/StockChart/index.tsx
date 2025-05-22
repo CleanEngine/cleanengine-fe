@@ -3,9 +3,15 @@ import * as am5stock from '@amcharts/amcharts5/stock';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import { useEffect, useLayoutEffect, useRef } from 'react';
+
+import type { CoinTicker } from '~/entities/coin';
 import usePastTimeData from '../../hooks/usePastTimeData';
 import useRealTimeData from '../../hooks/useRealTimeData';
 import type { CandlestickData } from '../../types/tradeview.type';
+
+type StockChartProps = {
+	ticker: CoinTicker;
+};
 
 // 시리즈 설정을 추출하는 함수
 function getNewSettings<
@@ -93,14 +99,14 @@ function makeEvent(
 	);
 }
 
-export default function StockChart() {
+export default function StockChart({ ticker }: StockChartProps) {
 	const chartControlRef = useRef<HTMLDivElement>(null);
 	const valueSeriesRef = useRef<am5xy.CandlestickSeries>(null);
 	const sbSeriesRef = useRef<am5xy.LineSeries>(null);
 	const currentValueDataRef = useRef<am5.DataItem<am5xy.IAxisDataItem>>(null);
 	const isFirstRendered = useRef(true);
-	const realTimeData = useRealTimeData();
-	const pastTimeData = usePastTimeData();
+	const realTimeData = useRealTimeData(ticker);
+	const pastTimeData = usePastTimeData(ticker);
 	const rootRef = useRef<am5.Root>(null);
 	const stockChartRef = useRef<am5stock.StockChart>(null);
 

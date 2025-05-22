@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+
 import { useStompClient } from '~/app/provider/StompProvider';
+import type { CoinTicker } from '~/entities/coin';
 import type { Execution } from '../types/execution.type';
 
-export default function useExecutionListData(ticker = 'TRUMP') {
+export default function useExecutionListData(ticker: CoinTicker) {
 	const { client, connected } = useStompClient();
 	const [executionList, setExecutionList] = useState<Execution[]>([]);
 

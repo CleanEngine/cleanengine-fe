@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+
 import { useStompClient } from '~/app/provider/StompProvider';
+import type { CoinTicker } from '~/entities/coin';
 import type { OrderBookData, RawOrderBookData } from '../types/orderbook.type';
 
-export default function useOrderBookData(ticker = 'TRUMP') {
+export default function useOrderBookData(ticker: CoinTicker) {
 	const { client, connected } = useStompClient();
 	const [data, setData] = useState<OrderBookData>();
 

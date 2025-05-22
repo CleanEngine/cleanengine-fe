@@ -1,6 +1,7 @@
-import type { ChangeEvent, FormEvent } from 'react';
+import { type ChangeEvent, type FormEvent, useEffect } from 'react';
 
 import { useMachine } from '@xstate/react';
+import { toast } from 'react-toastify/unstyled';
 import { QuantityInput } from '~/entities/order';
 import Switch from '~/shared/ui/Switch';
 import { formatCurrencyKR, preventNonNumericInput } from '~/shared/utils';
@@ -13,12 +14,11 @@ type OrderFormProps = {
 };
 
 export default function OrderForm({ ticker }: OrderFormProps) {
-	const [state, send] = useMachine(formMachine, {
+	const [state, send, actorRef] = useMachine(formMachine, {
 		input: {
 			ticker,
 		},
 	});
-
 	const priceLabel =
 		state.context.tradeType === '매수' ? '구매 가격' : '판매 가격';
 	const quantityLabel =
@@ -87,21 +87,40 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 		send({ type: 'SUBMIT_FORM' });
 	};
 
+	useEffect(() => {
+		const subscription = actorRef.subscribe((snapshot) => {
+			if (
+				snapshot.value !== 'Showing Error Message' &&
+				snapshot.value !== 'Showing Success Message'
+			)
+				return;
+			const toastMessage =
+				snapshot.value === 'Showing Error Message'
+					? toast.error
+					: toast.success;
+			toastMessage(snapshot.context.message);
+		});
+
+		return subscription.unsubscribe;
+	}, [actorRef]);
+
 	return (
 		<form
-			className="flex flex-col gap-2 pt-2 text-base"
+			className="scrollbar-custom flex flex-col gap-2 overflow-y-scroll pt-2 text-base"
 			onSubmit={handleSubmit}
 		>
-			<Switch
-				value1="매수"
-				value2="매도"
-				text1="매수"
-				text2="매도"
-				selected={state.context.tradeType}
-				onChange={handleTradeTypeChange}
-			/>
-			<div className="flex items-center">
-				<div className="flex-1">
+			<div className="flex flex-col items-stretch gap-2">
+				<div className="items-stretch">
+					<Switch
+						value1="매수"
+						value2="매도"
+						text1="매수"
+						text2="매도"
+						selected={state.context.tradeType}
+						onChange={handleTradeTypeChange}
+					/>
+				</div>
+				<div className="items-stretch">
 					<Switch
 						value1="지정가"
 						value2="시장가"
@@ -173,11 +192,11 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 			</div>
 			<button
 				type="submit"
-				className="mt-4 cursor-pointer rounded-lg bg-red-500 py-1.5 text-white hover:opacity-80 active:opacity-90"
+				className="mt-2 cursor-pointer rounded-lg bg-red-500 py-1.5 text-white hover:opacity-80 active:opacity-90"
 			>
 				주문하기
 			</button>
-			{state.context.errorMessage}
+			{state.context.message}
 		</form>
 	);
 }

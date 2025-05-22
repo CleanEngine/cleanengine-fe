@@ -14,7 +14,7 @@ export default function CoinListWithSearchBar({
 	const [searchQuery, setSearchQuery] = useState('');
 
 	const filteredCoinList = coinList.filter((coin) =>
-		coin.coinTicker.toLowerCase().includes(searchQuery.toLowerCase()),
+		coin.ticker.toLowerCase().includes(searchQuery.toLowerCase()),
 	);
 
 	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +51,7 @@ export default function CoinListWithSearchBar({
 			</div>
 			<div className="scrollbar-custom min-h-0 flex-1 overflow-y-scroll">
 				{filteredCoinList.map((coin) => (
-					<CoinListItem key={coin.coinTicker} {...coin} />
+					<CoinListItem key={coin.ticker} {...coin} />
 				))}
 			</div>
 		</div>
