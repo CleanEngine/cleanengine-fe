@@ -18,7 +18,6 @@ export default function CoinListItem({
 }: CoinListItemProps) {
 	const currentPriceData = useCurrentPrice(ticker);
 	const isBull = currentPriceData && currentPriceData.changeRate > 0;
-	const sign = isBull ? '+' : '-';
 
 	return (
 		<Link to={to} className="block px-2">
@@ -40,8 +39,7 @@ export default function CoinListItem({
 				</div>
 				<div className="flex-1 text-right text-sm">
 					<span className={isBull ? 'text-red-600' : 'text-blue-700'}>
-						{sign}
-						{currentPriceData?.changeRate}%
+						{(currentPriceData?.changeRate || 0).toFixed(2)}%
 					</span>
 				</div>
 				<div className="flex-1 text-right text-sm">

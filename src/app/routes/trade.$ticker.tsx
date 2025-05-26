@@ -1,10 +1,9 @@
 import * as cookie from 'cookie';
 import { Outlet, redirect } from 'react-router';
-import type { Route } from './+types/trade.$ticker';
 
-import { api as coinApi } from '~/entities/coin';
-import CoinPriceWithName from '~/entities/coin/ui/CoinPriceWithName';
+import { CoinPriceWithName, api as coinApi } from '~/entities/coin';
 import { api } from '~/entities/session';
+import { AIChatBot } from '~/features/chat';
 import { CoinListWithSearchBar } from '~/features/coin-search-list';
 import { OrderForm, OrderFormFallback } from '~/features/order';
 import { ExecutionList } from '~/features/order-execution-list';
@@ -12,6 +11,7 @@ import { Orderbook, StockChart } from '~/features/tradeview';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
 import { NavBar } from '~/widgets/navbar';
+import type { Route } from './+types/trade.$ticker';
 
 export async function loader({ request, params }: Route.LoaderArgs) {
 	const rawCookie = request.headers.get('Cookie');
@@ -49,7 +49,7 @@ export default function TradeRouteComponent({
 	}));
 
 	return (
-		<div className="h-full bg-gray-100">
+		<div className="relative h-full bg-gray-100">
 			<NavBar
 				to="/"
 				serviceName="IF"
@@ -99,6 +99,7 @@ export default function TradeRouteComponent({
 				</div>
 			</div>
 			<Outlet />
+			<AIChatBot />
 		</div>
 	);
 }
