@@ -41,5 +41,8 @@ jobs:
           port: ${{secrets.FRONTEND_PORT}}
           script: |
             cd ~
+            docker stop frontend || true
+            docker rm frontend || true
+            docker rmi ${{secrets.DOCKER_USERNAME}}/if-fe:latest || true
             docker pull ${{secrets.DOCKER_USERNAME}}/if-fe:latest
             docker run -d --name frontend -p 3000:3000 ${{secrets.DOCKER_USERNAME}}/if-fe:latest
