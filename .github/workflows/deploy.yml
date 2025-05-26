@@ -30,3 +30,14 @@ jobs:
       - name: Push image to Docker hub
         run: |
           docker push ${{secrets.DOCKER_USERNAME}}/if-fe:latest
+      - name: Connect to cloud server
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{secrets.FRONTEND_HOST}}
+          username: ${{secrets.FRONTEND_USERNAME}}
+          key: ${{secrets.FRONTEND_SECRET_KEY}}
+          port: ${{secrets.FRONTEND_PORT}}
+          script: |
+            cd ~
+            docker pull ${{secrets.DOCKER_USERNAME}}/if-fe:latest
+            docker run -d --name frontend -p 3000:3000 ${{secrets.DOCKER_USERNAME}}/if-fe:latest
