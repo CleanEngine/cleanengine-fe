@@ -10,7 +10,7 @@
 		"typecheck": "react-router typegen && tsc",
 		"test": "vitest",
 		"coverage": "vitest run --coverage",
-		"lint": "biome check --write --unsafe .",
+		"lint": "biome check --write .",
 		"postinstall": "husky"
 	},
 	"lint-staged": {
