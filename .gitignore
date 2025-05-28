@@ -27,4 +27,5 @@ dist-ssr
 /.react-router/
 /build/
 
+coverage
 .env
