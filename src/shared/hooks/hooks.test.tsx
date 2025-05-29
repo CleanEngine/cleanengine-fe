@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import useClickOutside from './useClickOutside';
+import useDimensions from './useDimensions';
 import useScrollToBottom from './useScrollToBottom';
 
 describe('useClickOutside 훅 테스트', () => {
@@ -65,50 +66,21 @@ describe('useScrollToBottom 훅 테스트', () => {
 	});
 });
 
-// FIXME: 테스트 환경에서 getBoundingClientRect를 mock으로 처리할 수 없음
-// describe('useDimensions 훅 테스트', () => {
-// 	it('참조하는 element의 width와 height가 반환된다.', () => {
-// 		const element = document.createElement('div');
-// 		const ref = { current: element };
-// 		vi.spyOn(element, 'getBoundingClientRect').mockImplementation(() => ({
-// 			width: 100,
-// 			height: 100,
-// 			x: 0,
-// 			y: 0,
-// 			top: 0,
-// 			left: 0,
-// 			right: 100,
-// 			bottom: 100,
-// 			toJSON: () => {},
-// 		}));
+describe('useDimensions 훅 테스트', () => {
+	it('참조하는 element의 width와 height가 반환된다.', () => {
+		const element = document.createElement('div');
+		const ref = { current: element };
 
-// 		const { result } = renderHook(() => useDimensions(ref));
+		Object.defineProperty(element, 'offsetWidth', {
+			value: 100,
+		});
+		Object.defineProperty(element, 'offsetHeight', {
+			value: 100,
+		});
 
-// 		expect(result.current.width).toBe(100);
-// 		expect(result.current.height).toBe(100);
-// 	});
+		const { result } = renderHook(() => useDimensions(ref));
 
-// 	it('참조하는 element의 width와 height가 변경되면 변경된 값을 반환한다.', () => {
-// 		const element = document.createElement('div');
-// 		document.body.appendChild(element);
-// 		const ref = { current: element };
-
-// 		element.style.width = '100px';
-// 		element.style.height = '100px';
-// 		element.style.border = 'none';
-// 		element.style.padding = 'none';
-
-// 		const { result, rerender } = renderHook(() => useDimensions(ref));
-
-// 		expect(result.current.width).toBe(100);
-// 		expect(result.current.height).toBe(100);
-
-// 		element.style.height = '10px';
-// 		element.style.width = '10px';
-
-// 		rerender();
-
-// 		expect(result.current.height).toBe(10);
-// 		expect(result.current.width).toBe(10);
-// 	});
-// });
+		expect(result.current.width).toBe(100);
+		expect(result.current.height).toBe(100);
+	});
+});
