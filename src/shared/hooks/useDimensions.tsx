@@ -10,7 +10,7 @@ export default function useDimensions(
 			dimensions.current.width = ref.current.offsetWidth;
 			dimensions.current.height = ref.current.offsetHeight;
 		}
-	}, [ref]);
+	}, [ref.current]);
 
 	return dimensions.current;
 }
