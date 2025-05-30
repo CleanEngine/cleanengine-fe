@@ -1,9 +1,10 @@
+import svgr from '@svgr/rollup';
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-	plugins: [tsconfigPaths()],
+	plugins: [svgr(), tsconfigPaths()],
 	test: {
 		environment: 'jsdom',
 		globals: true,
