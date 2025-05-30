@@ -47,7 +47,7 @@
 					"options": {
 						"strictCase": false,
 						"requireAscii": true,
-						"filenameCases": ["camelCase", "export"]
+						"filenameCases": ["PascalCase", "camelCase", "export"]
 					}
 				}
 			},
@@ -60,8 +60,8 @@
 		{
 			"include": [
 				"test/**/*",
-				"*.test.{ts,tsx,js,jsx}",
-				"*.spec.{ts,tsx,js,jsx}",
+				"**/*.test.{ts,tsx,js,jsx}",
+				"**/*.spec.{ts,tsx,js,jsx}",
 				"src/app/routes/*"
 			],
 			"linter": {

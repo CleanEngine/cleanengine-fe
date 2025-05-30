@@ -29,7 +29,10 @@ export default function Switch<T extends Value, T1 extends T, T2 extends T>({
 	};
 
 	return (
-		<div className="relative flex h-8 select-none items-center rounded-md bg-gray-100 font-normal text-gray-600 text-sm">
+		<div
+			className="relative flex h-8 select-none items-center rounded-md bg-gray-100 font-normal text-gray-600 text-sm"
+			data-testid="switch"
+		>
 			<div
 				className={clsx(
 					selected === value1 ? 'left-[25%]' : 'left-[75%]',
@@ -42,6 +45,7 @@ export default function Switch<T extends Value, T1 extends T, T2 extends T>({
 				onClick={handleSwitch}
 				tabIndex={0}
 				value={value1}
+				data-testid="switch-button-1"
 			>
 				{text1}
 			</button>
@@ -51,6 +55,7 @@ export default function Switch<T extends Value, T1 extends T, T2 extends T>({
 				onClick={handleSwitch}
 				tabIndex={0}
 				value={value2}
+				data-testid="switch-button-2"
 			>
 				{text2}
 			</button>

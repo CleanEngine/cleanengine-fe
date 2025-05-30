@@ -1,6 +1,6 @@
 name: Deploy remix app
 
-run-name: Deploy remix app to docker hub by ${{github.actor}}
+run-name: Deploy remix app to docker hub and start services by ${{github.actor}}
 
 on:
   push:
@@ -19,6 +19,8 @@ jobs:
           echo "VITE_OAUTH_URL=${{ secrets.VITE_OAUTH_URL }}" > .env
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
           echo "VITE_STOMP_URL=${{ secrets.VITE_STOMP_URL }}" >> .env
+          echo "VITE_AI_URL=${{ secrets.VITE_AI_URL }}" >> .env
+
       - name: Build image
         run: |
           docker build -t ${{secrets.DOCKER_USERNAME}}/if-fe:latest .

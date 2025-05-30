@@ -1,0 +1,48 @@
+name: Code Analyze branch
+
+run-name: Run code analyze triggered with push by ${{github.actor}}
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  code_analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout repository on branch: ${{ github.REF }}'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.REF }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: yarn install
+
+      - name: Coverage Test
+        continue-on-error: true
+        run: yarn run coverage
+
+      - name: 'Run an analysis of the ${{ github.REF }} branch'
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

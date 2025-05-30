@@ -30,6 +30,7 @@ export default function ChatButton({ isOpen, handleClick }: ChatButtonProps) {
 			animate={isOpen ? 'open' : 'closed'}
 			variants={buttonVariant}
 			exit={{ opacity: 0 }}
+			data-testid="chat-button"
 		>
 			<IconHeadset />
 		</motion.button>
