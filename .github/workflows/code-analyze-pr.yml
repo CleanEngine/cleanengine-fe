@@ -1,24 +1,30 @@
-name: Code Analyze branch
+name: Code Analyze Pull Request
 
-run-name: Run code analyze triggered with push by ${{github.actor}}
-
+run-name: Run code analyze triggered with pull request by ${{github.actor}}
 
 on:
-  push:
+  pull_request:
+    types: [opened, reopened, synchronize]
     branches:
       - main
       - develop
+env:
+  NODE_VERSION: 18.12.0
 
 jobs:
   code_analysis:
+
     runs-on: ubuntu-latest
 
     steps:
       - name: 'Checkout repository on branch: ${{ github.REF }}'
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.REF }}
-          fetch-depth: 0
+          ref: ${{ github.HEAD_REF }}
+
+      - name: Retrieve entire repository history
+        run: |
+          git fetch --prune --unshallow
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -30,19 +36,19 @@ jobs:
         id: npm-cache
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
       - name: Install Dependencies
         if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: yarn install
+        run: npm install
 
       - name: Coverage Test
         continue-on-error: true
-        run: yarn run coverage
+        run: npm run coverage
 
-      - name: 'Run an analysis of the ${{ github.REF }} branch'
+      - name: Run an analysis of the ${{ github.REF }} branch ${{ github.BASE_REF }} base
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
