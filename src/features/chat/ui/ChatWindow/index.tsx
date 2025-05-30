@@ -99,6 +99,7 @@ export default function ChatWindow({
 			animate="open"
 			exit="exit"
 			variants={shadowVariant}
+			data-testid="chat-window"
 		>
 			<motion.div
 				className="absolute inset-0 bg-white"
@@ -122,6 +123,7 @@ export default function ChatWindow({
 							type="button"
 							className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg p-2 hover:bg-gray-100"
 							onClick={handleClose}
+							data-testid="chat-window-close-button"
 						>
 							<span className="text-xl">×</span>
 						</button>
