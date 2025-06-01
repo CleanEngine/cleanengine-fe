@@ -11,7 +11,7 @@ export default defineConfig({
 		setupFiles: ['./setupTests.ts'],
 		coverage: {
 			provider: 'v8',
-			reporter: ['html', 'json', 'text'],
+			reporter: ['html', 'json', 'text', ['lcov', { projectRoot: './src' }]],
 			include: ['src/**/*'],
 			exclude: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/types/**'],
 		},
