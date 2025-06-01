@@ -7,13 +7,11 @@ import {
 } from 'react';
 
 import useDimensions from '~/shared/hooks/useDimensions';
-import useScrollToBottom from '~/shared/hooks/useScrollToBottom';
 
 type ChatWindowProps = {
 	children: ReactNode;
 	state: 'idle' | 'processing' | 'complete';
 	inputValue: string;
-	messageList: unknown[];
 	handleInputValueChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleClose?: VoidFunction;
 	handleSubmit: (e: FormEvent) => void;
@@ -84,11 +82,10 @@ export default function ChatWindow({
 	handleInputValueChange: onInputValueChange,
 	handleSubmit,
 	handleClose,
-	messageList,
 }: ChatWindowProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const messagesEndRef = useScrollToBottom([...messageList]);
 	const { height } = useDimensions(containerRef);
+	const disabled = state === 'processing' || state === 'complete';
 
 	return (
 		<motion.div
@@ -129,10 +126,7 @@ export default function ChatWindow({
 						</button>
 					</div>
 					<div className="custom-scroll flex-1 overflow-y-auto p-4">
-						<div className="flex flex-col space-y-4">
-							{children}
-							<div ref={messagesEndRef} />
-						</div>
+						<div className="flex flex-col space-y-4">{children}</div>
 					</div>
 					<div className="border-gray-400 border-t p-4">
 						<form className="flex items-center gap-2" onSubmit={handleSubmit}>
@@ -140,15 +134,13 @@ export default function ChatWindow({
 								type="text"
 								className="flex-1 rounded-full border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
 								placeholder="메시지를 입력하세요..."
-								disabled={state === 'processing'}
-								value={
-									state === 'processing' ? 'AI가 답변 중입니다.' : inputValue
-								}
+								disabled={disabled}
+								value={disabled ? 'AI가 답변 중입니다.' : inputValue}
 								onChange={onInputValueChange}
 							/>
 							<button
 								type="submit"
-								disabled={state === 'processing'}
+								disabled={disabled}
 								className="flex aspect-square h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-500 p-2 text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-400"
 							>
 								<span>↑</span>
