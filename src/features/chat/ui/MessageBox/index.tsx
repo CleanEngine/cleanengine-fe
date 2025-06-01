@@ -12,6 +12,7 @@ export default function MessageBox({ direction, message }: MessageBoxProps) {
 				'flex',
 				direction === 'left' ? 'justify-start' : 'justify-end',
 			)}
+			data-testid="message-box"
 		>
 			<div
 				className={clsx(
