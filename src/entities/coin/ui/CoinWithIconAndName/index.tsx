@@ -11,7 +11,7 @@ export default function CoinWithIconAndName({
 	coinIcon,
 }: CoinWithIconAndNameProps) {
 	return (
-		<div className="flex w-fit flex-col">
+		<div className="flex w-fit flex-col" data-testid="coin-with-icon-and-name">
 			<div className="flex gap-1">
 				<span className="inline-block h-fit w-fit overflow-visible">
 					{coinIcon}
