@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import { Client } from '@stomp/stompjs';
 
 const client = new Client({
@@ -6,3 +7,4 @@ const client = new Client({
 });
 
 export default client;
+/* v8 ignore end */

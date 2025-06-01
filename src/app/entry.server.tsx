@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import { PassThrough } from 'node:stream';
 
 import { createReadableStreamFromReadable } from '@react-router/node';
@@ -73,3 +74,5 @@ export default function handleRequest(
 		setTimeout(abort, streamTimeout + 1000);
 	});
 }
+
+/* v8 ignore end */

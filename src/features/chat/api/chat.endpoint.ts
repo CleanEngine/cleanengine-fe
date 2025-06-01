@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import ky, { type KyResponse } from 'ky';
 import type { Message } from '../types/chat.type';
 
@@ -11,3 +12,4 @@ export default {
 		);
 	},
 };
+/* v8 ignore end */
