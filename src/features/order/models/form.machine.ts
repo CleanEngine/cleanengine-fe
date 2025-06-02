@@ -138,7 +138,7 @@ export const formMachine = setup({
 				assertEvent(event, 'CHANGE_QUANTITY');
 
 				const quantity = event.quantity;
-				const price = context.price || 0;
+				const price = context.price ?? 0;
 
 				if (context.tradeType === '매수') {
 					if (!context.deposit) return '예수금이 없습니다.';
