@@ -1,13 +1,12 @@
-import { type ChangeEvent, type FormEvent, useEffect } from 'react';
-
 import { useMachine } from '@xstate/react';
+import { type ChangeEvent, type FormEvent, useEffect } from 'react';
 import { toast } from 'react-toastify/unstyled';
+
 import { QuantityInput } from '~/entities/order';
 import Switch from '~/shared/ui/Switch';
 import { formatCurrencyKR, preventNonNumericInput } from '~/shared/utils';
 import { PRICE_STEP, QUANTITY_STEP } from '../../const';
 import { formMachine } from '../../models/form.machine';
-import type { OrderType, TradeType } from '../../types/order.endpoint';
 
 type OrderFormProps = {
 	ticker: string;
@@ -19,6 +18,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 			ticker,
 		},
 	});
+
 	const priceLabel =
 		state.context.tradeType === '매수' ? '구매 가격' : '판매 가격';
 	const quantityLabel =
@@ -36,34 +36,26 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 				? `${formatCurrencyKR((state.context.price || 0) * (state.context.quantity || 0))}원`
 				: '시장가격에 매도';
 
-	const handleTradeTypeChange = (tradeType: TradeType) => {
-		send({ type: 'SWITCH_TRADE_TYPE', tradeType });
+	const handleTradeTypeChange = () => {
+		send({ type: 'SWITCH_TRADE_TYPE' });
 	};
 
-	const handleOrderTypeChange = (orderType: OrderType) => {
-		send({ type: 'SWITCH_ORDER_TYPE', orderType });
+	const handleOrderTypeChange = () => {
+		send({ type: 'SWITCH_ORDER_TYPE' });
 	};
 
 	const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const value = event.currentTarget.value;
 
 		const price = Number(value);
-		if (state.context.tradeType === '매수') {
-			send({ type: 'CHANGE_BUY_PRICE', price });
-		} else {
-			send({ type: 'CHANGE_SELL_PRICE', price });
-		}
+		send({ type: 'CHANGE_PRICE', price });
 	};
 
 	const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const value = event.currentTarget.value;
 
 		const quantity = Number(value);
-		if (state.context.tradeType === '매수') {
-			send({ type: 'CHANGE_BUY_QUANTITY', quantity });
-		} else {
-			send({ type: 'CHANGE_SELL_QUANTITY', quantity });
-		}
+		send({ type: 'CHANGE_QUANTITY', quantity });
 	};
 
 	const handlePriceMinus = () => {
