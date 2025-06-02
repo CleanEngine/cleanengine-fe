@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStompClient } from '~/app/provider/StompProvider';
 
-type CurrentPriceData = {
+export type CurrentPriceData = {
 	changeRate: number;
 	currentPrice: number;
 	prevClose: number;

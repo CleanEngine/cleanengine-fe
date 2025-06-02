@@ -22,7 +22,10 @@ export default function ExecutionList({ ticker }: ExecutionListProps) {
 	);
 
 	return (
-		<div className="flex min-h-0 min-w-xs flex-1 flex-col text-sm">
+		<div
+			className="flex min-h-0 min-w-xs flex-1 flex-col text-sm"
+			data-testid="execution-list"
+		>
 			<div className="flex p-2 font-normal">
 				<div className="flex-1 text-left text-gray-900">
 					<span>체결가</span>

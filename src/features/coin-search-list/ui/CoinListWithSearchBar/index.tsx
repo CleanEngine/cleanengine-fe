@@ -4,7 +4,7 @@ import { IconMagnifying } from '~/assets/svgs';
 import type { CoinListItemProps } from '../CoinListItem';
 import CoinListItem from '../CoinListItem';
 
-type CoinListWithSearchBarProps = {
+export type CoinListWithSearchBarProps = {
 	coinList: CoinListItemProps[];
 };
 
@@ -22,7 +22,10 @@ export default function CoinListWithSearchBar({
 	};
 
 	return (
-		<div className="flex h-full min-h-0 flex-1 flex-col bg-white">
+		<div
+			className="flex h-full min-h-0 flex-1 flex-col bg-white"
+			data-testid="coin-list-with-search-bar"
+		>
 			<div className="px-2 py-3">
 				<div className="relative w-full">
 					<input

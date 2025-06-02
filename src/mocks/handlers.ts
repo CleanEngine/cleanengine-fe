@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import { http, HttpResponse } from 'msw';
 
 export const handlers = [
@@ -8,3 +9,4 @@ export const handlers = [
 		return new HttpResponse(null, { status: 200 });
 	}),
 ];
+/* v8 ignore end */

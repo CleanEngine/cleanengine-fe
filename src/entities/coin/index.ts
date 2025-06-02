@@ -1,3 +1,4 @@
+/* v8 ignore start */
 export { default as CoinWithIconAndName } from './ui/CoinWithIconAndName';
 export type { CoinWithIconAndNameProps } from './ui/CoinWithIconAndName';
 export { default as useCurrentPrice } from './hooks/useCurrentPrice';
@@ -10,3 +11,4 @@ export type {
 	CoinName,
 	CoinTicker,
 } from './types/coin.type';
+/* v8 ignore end */
