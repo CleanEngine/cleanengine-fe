@@ -24,6 +24,7 @@ export default function ExecutionItem({
 				isGray && 'bg-gray-100',
 				'flex rounded-lg p-2 py-1.5 font-normal text-gray-500 text-sm',
 			)}
+			data-testid="execution-item"
 		>
 			<div className="flex-1 text-left">
 				<span>{formatCurrencyKR(price)}원</span>
