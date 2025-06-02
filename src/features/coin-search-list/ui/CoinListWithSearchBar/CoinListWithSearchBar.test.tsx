@@ -1,10 +1,26 @@
 import { render, screen } from '@testing-library/react';
 import { createRoutesStub } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import userEvent from '@testing-library/user-event';
+import StompProvider from '~/app/provider/StompProvider';
 import type { CoinListWithSearchBarProps } from '.';
 import CoinListWithSearchBar from '.';
+
+vi.mock('@stomp/stompjs', () => {
+	return {
+		Client: vi.fn().mockImplementation(() => {
+			return {
+				activate: vi.fn(),
+				deactivate: vi.fn(),
+				onConnect: null,
+				onDisconnect: null,
+				onWebSocketError: null,
+				onStompError: null,
+			};
+		}),
+	};
+});
 
 const props: CoinListWithSearchBarProps = {
 	coinList: [
@@ -32,7 +48,11 @@ const props: CoinListWithSearchBarProps = {
 const Stub = createRoutesStub([
 	{
 		path: '/coin/:ticker',
-		Component: () => <CoinListWithSearchBar {...props} />,
+		Component: () => (
+			<StompProvider brokerURL="">
+				<CoinListWithSearchBar {...props} />
+			</StompProvider>
+		),
 	},
 ]);
 

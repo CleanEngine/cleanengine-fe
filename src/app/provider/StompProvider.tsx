@@ -11,10 +11,7 @@ type StompContextType = {
 	connected: boolean;
 };
 
-export const StompContext = createContext<StompContextType>({
-	client: null,
-	connected: false,
-});
+export const StompContext = createContext<StompContextType | null>(null);
 
 export default function StompProvider({
 	children,
@@ -69,6 +66,13 @@ export default function StompProvider({
 }
 
 export function useStompClient() {
-	const { client, connected } = useContext(StompContext);
-	return { client, connected };
+	const stompContext = useContext(StompContext);
+
+	if (!stompContext) {
+		throw new Error(
+			'useStompClient hook은 StompProvider 내부에서 사용해야 합니다.',
+		);
+	}
+
+	return { client: stompContext.client, connected: stompContext.connected };
 }
