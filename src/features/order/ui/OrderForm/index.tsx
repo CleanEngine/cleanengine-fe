@@ -100,6 +100,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 		<form
 			className="scrollbar-custom flex flex-col gap-2 overflow-y-scroll pt-2 text-base"
 			onSubmit={handleSubmit}
+			aria-label="주문 폼"
 		>
 			<div className="flex flex-col items-stretch gap-2">
 				<div className="items-stretch">
@@ -144,6 +145,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 						value={(state.context.price || '').toString()}
 						min={0}
 						onKeyDown={preventNonNumericInput}
+						data-testid="price-input"
 					/>
 				</div>
 			</div>
@@ -168,6 +170,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 						value={(state.context.quantity || '').toString()}
 						min={0}
 						onKeyDown={preventNonNumericInput}
+						data-testid="quantity-input"
 					/>
 				</div>
 			</div>
