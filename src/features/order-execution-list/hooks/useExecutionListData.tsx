@@ -12,7 +12,7 @@ export default function useExecutionListData(ticker: CoinTicker) {
 		if (!client || !connected) return;
 
 		client.publish({
-			destination: '/app/subscribe/realTimeTradeRate',
+			destination: `/app/subscribe/realTimeTradeRate/${ticker}`,
 			body: JSON.stringify({ ticker }),
 		});
 
