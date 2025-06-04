@@ -76,9 +76,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
 	return (
-		<StompProvider
-			brokerURL={`${import.meta.env.VITE_STOMP_URL}/api/coin/realtime`}
-		>
+		<StompProvider brokerURL={`${import.meta.env.VITE_STOMP_URL}/api/coin/min`}>
 			<Outlet />
 			<ToastContainer
 				position="top-center"
