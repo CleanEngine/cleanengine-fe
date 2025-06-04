@@ -6,17 +6,12 @@ export const chatMachine = setup({
 	types: {
 		context: {} as {
 			question: Message;
-			answer: Message;
 			messageList: MessageObj[];
-			state: 'idle' | 'processing' | 'complete';
+			state: 'idle' | 'processing';
 		},
 		events: {} as
 			| {
 					type: 'SUBMIT_EVENT';
-			  }
-			| {
-					type: 'RECEIVE_ANSWER';
-					answer: string;
 			  }
 			| {
 					type: 'TYPING_QUESTION';
@@ -37,9 +32,6 @@ export const chatMachine = setup({
 		}),
 		switchStateToProcessing: assign({
 			state: 'processing',
-		}),
-		switchStateToComplete: assign({
-			state: 'complete',
 		}),
 		assignQuestion: assign({
 			question: ({ event }) => {
@@ -63,8 +55,14 @@ export const chatMachine = setup({
 			question: '',
 		}),
 		assignErrorMessage: assign({
-			answer: ({ event }) => {
-				return '답변을 받아오는데 실패했습니다.';
+			messageList: ({ event, context }) => {
+				return [
+					...context.messageList,
+					{
+						message: '답변을 받아오는데 실패했습니다.',
+						isMine: false,
+					},
+				];
 			},
 		}),
 	},
@@ -72,7 +70,6 @@ export const chatMachine = setup({
 	id: 'chatMachine',
 	context: {
 		question: '',
-		answer: '',
 		messageList: [],
 		state: 'idle',
 	},
@@ -102,9 +99,8 @@ export const chatMachine = setup({
 				src: 'submitQuestion',
 				input: ({ context }) => ({ question: context.question }),
 				onDone: {
-					target: 'RECEIVED ANSWER',
+					target: 'EMPTY QUESTION FIELD',
 					actions: [
-						'switchStateToComplete',
 						'resetQuestion',
 						assign({
 							messageList: ({ event, context }) => {
@@ -114,18 +110,13 @@ export const chatMachine = setup({
 								];
 							},
 						}),
+						'switchStateToIdle',
 					],
 				},
 				onError: {
-					target: 'RECEIVED ANSWER',
-					actions: ['assignErrorMessage'],
+					target: 'EMPTY QUESTION FIELD',
+					actions: ['assignErrorMessage', 'resetQuestion', 'switchStateToIdle'],
 				},
-			},
-		},
-		'RECEIVED ANSWER': {
-			always: {
-				target: 'EMPTY QUESTION FIELD',
-				actions: ['switchStateToIdle'],
 			},
 		},
 	},

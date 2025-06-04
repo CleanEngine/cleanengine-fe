@@ -39,7 +39,6 @@ export default function AIChatBot() {
 					handleSubmit={handleSubmitQuestion}
 					handleInputValueChange={handleQuestionFieldChange}
 					state={state.context.state}
-					messageList={state.context.messageList}
 				>
 					{state.context.messageList.map((message, index) => {
 						const key = `msg-${index}-${message.isMine ? 'user' : 'ai'}`;
