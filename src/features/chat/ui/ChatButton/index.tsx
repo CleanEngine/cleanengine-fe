@@ -22,7 +22,7 @@ export default function ChatButton({ isOpen, handleClick }: ChatButtonProps) {
 		<motion.button
 			key="chat-button"
 			type="button"
-			className="absolute right-4 bottom-4 z-50 aspect-square w-12 cursor-pointer rounded-4xl bg-white p-2 shadow-sm"
+			className="absolute right-4 bottom-4 z-20 aspect-square w-12 cursor-pointer rounded-4xl bg-white p-2 shadow-sm"
 			onClick={handleClick}
 			initial={false}
 			whileHover={{ scale: 1.1 }}
