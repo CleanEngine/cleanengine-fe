@@ -12,6 +12,7 @@ import type { Route } from './+types/root';
 
 import './app.css';
 import { Slide } from 'react-toastify';
+import useTradeNotification from '~/features/trade/hooks/useTradeNotification';
 import StompProvider from './provider/StompProvider';
 
 export const links: Route.LinksFunction = () => [
@@ -74,9 +75,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 	);
 }
 
+function TradeNotificationHandler() {
+	useTradeNotification();
+	return null;
+}
+
 export default function App() {
 	return (
 		<StompProvider brokerURL={`${import.meta.env.VITE_STOMP_URL}/api/coin/min`}>
+			<TradeNotificationHandler />
 			<Outlet />
 			<ToastContainer
 				position="top-center"
