@@ -30,7 +30,7 @@ export default function ExecutionItem({
 				<span>{formatCurrencyKR(price)}원</span>
 			</div>
 			<div className="flex-1 text-right">
-				<span>{size}</span>
+				<span>{size.toFixed(6)}</span>
 			</div>
 			<div className={clsx(color, 'flex-1 text-right')}>
 				<span>{changeRate.toFixed(2)}%</span>
