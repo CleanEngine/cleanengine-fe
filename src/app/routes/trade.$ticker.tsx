@@ -99,7 +99,9 @@ export default function TradeRouteComponent({
 					<div className="lg:col-span-full lg:row-span-1 lg:row-start-3 xl:col-span-1 xl:col-start-1 xl:row-span-1 xl:row-start-2 2xl:col-span-2 2xl:col-start-2 2xl:row-start-2">
 						<Container>
 							<ContainerTitle>실시간 체결 목록</ContainerTitle>
-							{coinInfo && <ExecutionList ticker={coinInfo.ticker} />}
+							{coinInfo && (
+								<ExecutionList ticker={coinInfo.ticker} key={coinInfo.ticker} />
+							)}
 						</Container>
 					</div>
 					<div className="hidden 2xl:col-start-1 2xl:row-span-2 2xl:row-start-1 2xl:block">
