@@ -58,7 +58,7 @@ export default function TradeRouteComponent({
 	};
 
 	return (
-		<div className="relative min-h-screen bg-gray-100 2xl:h-full">
+		<div className="relative min-h-screen bg-gray-100">
 			<AnimatePresence>
 				<NavBar
 					to="/"
@@ -71,8 +71,8 @@ export default function TradeRouteComponent({
 				{coinInfo && (
 					<CoinPriceWithName name={coinInfo?.name} ticker={coinInfo?.ticker} />
 				)}
-				<div className="relative grid h-[calc(100dvh-116px)] gap-4 p-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 2xl:grid-rows-2">
-					<div className="lg:col-span-full lg:row-span-1 lg:row-start-1 xl:col-span-full xl:row-span-1 xl:row-start-1 2xl:col-span-2 2xl:col-start-2 2xl:row-start-1">
+				<div className="relative flex h-[calc(100dvh-116px)] flex-col gap-4 overflow-x-scroll p-4 md:grid md:grid-cols-2 md:grid-rows-5 xl:grid-cols-3 xl:grid-rows-2 2xl:grid-cols-4 2xl:grid-rows-2">
+					<div className="h-auto md:col-span-full md:row-span-2 md:row-start-1 xl:col-span-full xl:row-span-1 xl:row-start-1 2xl:col-span-2 2xl:col-start-2 2xl:row-start-1">
 						<Container>
 							<ContainerTitle>실시간 차트</ContainerTitle>
 							{coinInfo && (
@@ -80,7 +80,7 @@ export default function TradeRouteComponent({
 							)}
 						</Container>
 					</div>
-					<div className="lg:col-span-1 lg:col-start-2 lg:row-span-1 lg:row-start-2 xl:col-span-1 xl:col-start-3 xl:row-span-1 xl:row-start2 2xl:col-start-4 2xl:row-span-1 2xl:row-start-1">
+					<div className="md:col-span-1 md:col-start-2 md:row-span-2 md:row-start-3 xl:col-span-1 xl:col-start-3 xl:row-span-1 xl:row-start2 2xl:col-start-4 2xl:row-span-1 2xl:row-start-1">
 						<Container>
 							<ContainerTitle>주문 하기</ContainerTitle>
 							{isLoggedIn && coinInfo ? (
@@ -90,13 +90,13 @@ export default function TradeRouteComponent({
 							)}
 						</Container>
 					</div>
-					<div className="lg:col-span-1 lg:col-start-1 lg:row-span-1 lg:row-start-2 xl:col-span-1 xl:col-start-2 xl:row-span-1 xl:row-start-2 2xl:col-start-4 2xl:row-span-full 2xl:row-start-2">
+					<div className="md:col-span-1 md:col-start-1 md:row-span-2 md:row-start-3 xl:col-span-1 xl:col-start-2 xl:row-span-1 xl:row-start-2 2xl:col-start-4 2xl:row-span-full 2xl:row-start-2">
 						<Container>
 							<ContainerTitle>실시간 호가</ContainerTitle>
 							{coinInfo && <Orderbook ticker={coinInfo.ticker} />}
 						</Container>
 					</div>
-					<div className="lg:col-span-full lg:row-span-1 lg:row-start-3 xl:col-span-1 xl:col-start-1 xl:row-span-1 xl:row-start-2 2xl:col-span-2 2xl:col-start-2 2xl:row-start-2">
+					<div className="md:col-span-full md:row-span-1 md:row-start-5 xl:col-span-1 xl:col-start-1 xl:row-span-1 xl:row-start-2 2xl:col-span-2 2xl:col-start-2 2xl:row-start-2">
 						<Container>
 							<ContainerTitle>실시간 체결 목록</ContainerTitle>
 							{coinInfo && (
