@@ -35,7 +35,6 @@ export default function SideBar({ coinListWithIcon, onClose }: SideBarProps) {
 				animate="animate"
 				exit="exit"
 				transition={{ ease: 'easeIn' }}
-				key="sidebar"
 			>
 				<div className="flex items-center justify-between">
 					<ContainerTitle>가상화폐 리스트</ContainerTitle>

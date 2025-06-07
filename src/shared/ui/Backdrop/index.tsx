@@ -17,7 +17,6 @@ export default function Backdrop({ children }: BackdropProps) {
 			initial="initial"
 			animate="animate"
 			exit="exit"
-			key="backdrop"
 		>
 			{children}
 		</motion.div>
