@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import { useRef } from 'react';
 
 import {
@@ -14,19 +15,34 @@ type SideBarProps = {
 	onClose: () => void;
 };
 
+const sideBarVariant = {
+	initial: { x: '-100%' },
+	animate: { x: 0 },
+	exit: { x: '-100%' },
+};
+
 export default function SideBar({ coinListWithIcon, onClose }: SideBarProps) {
 	const ref = useRef<HTMLDivElement>(null);
 	useClickOutside(ref, onClose);
 
 	return (
 		<Backdrop>
-			<div ref={ref} className="h-full w-full max-w-2xl bg-white p-4">
+			<motion.div
+				ref={ref}
+				className="h-full w-full max-w-2xl bg-white p-4"
+				variants={sideBarVariant}
+				initial="initial"
+				animate="animate"
+				exit="exit"
+				transition={{ ease: 'easeIn' }}
+				key="sidebar"
+			>
 				<div className="flex items-center justify-between">
 					<ContainerTitle>가상화폐 리스트</ContainerTitle>
 					<CloseButton onClick={onClose} />
 				</div>
 				<CoinListWithSearchBar coinList={coinListWithIcon} />
-			</div>
+			</motion.div>
 		</Backdrop>
 	);
 }
