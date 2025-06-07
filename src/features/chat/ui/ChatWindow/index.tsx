@@ -89,9 +89,8 @@ export default function ChatWindow({
 
 	return (
 		<motion.div
-			key="chat-window"
 			ref={containerRef}
-			className="absolute right-4 bottom-4 h-120 w-80 overflow-hidden rounded-2xl"
+			className="fixed right-4 bottom-4 h-120 w-80 overflow-hidden rounded-2xl"
 			initial="closed"
 			animate="open"
 			exit="exit"
