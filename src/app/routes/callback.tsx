@@ -1,5 +1,11 @@
 import * as cookie from 'cookie';
-import { type LoaderFunctionArgs, redirect } from 'react-router';
+import { type LoaderFunctionArgs, redirect, useNavigate } from 'react-router';
+import type { Route } from './+types/callback';
+
+import { useEffect } from 'react';
+import type { UserInfoResponse } from '~/entities/user/types/user.type';
+import ApiClient from '~/shared/api/httpClient';
+import { useUserId } from '../provider/UserInfoProvider';
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const rawCookie = request.headers.get('Cookie');
@@ -10,17 +16,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		return redirect('/trade/BTC/login');
 	}
 
-	return redirect('/trade');
+	const response = await ApiClient.get<UserInfoResponse>('api/userinfo', {
+		headers: {
+			Cookie: rawCookie || '',
+		},
+	});
 
-	// 이전로직:
-	// try {
-	// 	await api.checkToken();
-	// } catch (error) {
-	// 	return redirect('/trade/login');
-	// }
-	// return redirect('/trade');
+	const { data } = await response.json();
+
+	return data.userId;
 }
 
-export default function CallbackRoutes() {
+export default function CallbackRoutes({ loaderData }: Route.ComponentProps) {
+	const navigate = useNavigate();
+	const { userId, setUserId } = useUserId();
+	setUserId(loaderData);
+
+	useEffect(() => {
+		if (!userId) return;
+		navigate('/trade/BTC');
+	}, [userId, navigate]);
+
 	return null;
 }

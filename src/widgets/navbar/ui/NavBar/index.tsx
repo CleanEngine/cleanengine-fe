@@ -1,4 +1,5 @@
 import { Link, type LinkProps, NavLink, useSubmit } from 'react-router';
+import { useUserId } from '~/app/provider/UserInfoProvider';
 
 import type { CoinTicker } from '~/entities/coin';
 import Button from '~/shared/ui/Button';
@@ -23,8 +24,10 @@ export default function NavBar({
 	onClickMenuButton,
 }: NavBarProps) {
 	const submit = useSubmit();
+	const { setUserId } = useUserId();
 
 	const handleLogout = () => {
+		setUserId(null);
 		submit(null, { action: `/trade/${ticker}`, method: 'post' });
 	};
 
