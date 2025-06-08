@@ -17,6 +17,7 @@ export default function Backdrop({ children }: BackdropProps) {
 			initial="initial"
 			animate="animate"
 			exit="exit"
+			data-testid="backdrop"
 		>
 			{children}
 		</motion.div>

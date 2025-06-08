@@ -10,7 +10,7 @@ import Backdrop from '~/shared/ui/Backdrop';
 import CloseButton from '~/shared/ui/CloseButton';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
 
-type SideBarProps = {
+export type SideBarProps = {
 	coinListWithIcon: CoinListItemProps[];
 	onClose: () => void;
 };
@@ -35,6 +35,7 @@ export default function SideBar({ coinListWithIcon, onClose }: SideBarProps) {
 				animate="animate"
 				exit="exit"
 				transition={{ ease: 'easeIn' }}
+				data-testid="side-bar"
 			>
 				<div className="flex items-center justify-between">
 					<ContainerTitle>가상화폐 리스트</ContainerTitle>

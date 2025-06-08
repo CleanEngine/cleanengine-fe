@@ -10,6 +10,7 @@ export default function CloseButton({ onClick }: CloseButtonProps) {
 			type="button"
 			onClick={onClick}
 			className="aspect-auto w-4 cursor-pointer"
+			data-testid="close-button"
 		>
 			<IconXmark />
 		</button>
