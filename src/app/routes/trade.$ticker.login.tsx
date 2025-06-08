@@ -1,5 +1,5 @@
 import { LoginModal } from '~/widgets/auth';
 
 export default function LoginRouteComponent() {
-	return <LoginModal />;
+	return <LoginModal key="login-modal" />;
 }

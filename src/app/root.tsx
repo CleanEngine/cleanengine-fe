@@ -14,6 +14,7 @@ import './app.css';
 import { Slide } from 'react-toastify';
 import useTradeNotification from '~/features/trade/hooks/useTradeNotification';
 import StompProvider from './provider/StompProvider';
+import UserIdProvider from './provider/UserInfoProvider';
 
 export const links: Route.LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -82,24 +83,27 @@ function TradeNotificationHandler() {
 
 export default function App() {
 	return (
-		<StompProvider brokerURL={`${import.meta.env.VITE_STOMP_URL}/api/coin/min`}>
-			<TradeNotificationHandler />
-			<Outlet />
-			<ToastContainer
-				position="top-center"
-				autoClose={5000}
-				hideProgressBar={false}
-				newestOnTop={false}
-				closeOnClick={false}
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-				theme="light"
-				transition={Slide}
-				stacked
-			/>
-		</StompProvider>
+		<UserIdProvider>
+			<StompProvider
+				brokerURL={`${import.meta.env.VITE_STOMP_URL}/api/coin/min`}
+			>
+				<Outlet />
+				<ToastContainer
+					position="top-center"
+					autoClose={5000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick={false}
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+					theme="light"
+					transition={Slide}
+					stacked
+				/>
+			</StompProvider>
+		</UserIdProvider>
 	);
 }
 

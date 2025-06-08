@@ -31,7 +31,7 @@ export default function AIChatBot() {
 	};
 
 	return (
-		<AnimatePresence mode="wait">
+		<AnimatePresence mode="wait" propagate>
 			{isOpen ? (
 				<ChatWindow
 					handleClose={handleCloseChatWindow}
@@ -39,6 +39,7 @@ export default function AIChatBot() {
 					handleSubmit={handleSubmitQuestion}
 					handleInputValueChange={handleQuestionFieldChange}
 					state={state.context.state}
+					key="chat-window"
 				>
 					{state.context.messageList.map((message, index) => {
 						const key = `msg-${index}-${message.isMine ? 'user' : 'ai'}`;

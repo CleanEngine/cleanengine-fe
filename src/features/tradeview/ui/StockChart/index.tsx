@@ -503,7 +503,7 @@ export default function StockChart({ ticker }: StockChartProps) {
 	}, []);
 
 	return (
-		<div className="flex h-full w-full flex-col">
+		<div className="flex h-full min-h-80 w-full flex-col">
 			<div ref={chartControlRef} />
 			<div id="chartdiv" className="flex-1" />
 		</div>
