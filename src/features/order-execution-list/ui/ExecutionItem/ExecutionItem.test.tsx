@@ -18,8 +18,14 @@ describe('ExecutionItem 컴포넌트 테스트', () => {
 		render(<ExecutionItem {...props} />);
 
 		const price = screen.getByText('1,000원');
-		const size = screen.getByText('1');
-		const timestamp = screen.getByText('1');
+		const size = screen.getByText(String(props.size.toFixed(6)));
+		const timestamp = screen.getByText(
+			Intl.DateTimeFormat('ko-KR', {
+				hour: 'numeric',
+				minute: 'numeric',
+				second: 'numeric',
+			}).format(new Date(props.timestamp)),
+		);
 		const changeRate = screen.getByText('3.00%');
 
 		expect(price).toBeInTheDocument();
