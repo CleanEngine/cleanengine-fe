@@ -1,4 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import {
+	render,
+	screen,
+	waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import userEvent from '@testing-library/user-event';
@@ -27,7 +31,7 @@ describe('AIChatBot 컴포넌트 테스트', () => {
 
 		await user.click(chatButton);
 
-		const chatWindow = screen.getByTestId('chat-window');
+		const chatWindow = await screen.findByTestId('chat-window');
 
 		expect(chatWindow).toBeInTheDocument();
 	});
@@ -42,12 +46,14 @@ describe('AIChatBot 컴포넌트 테스트', () => {
 
 		await user.click(chatButton);
 
-		const chatWindow = screen.getByTestId('chat-window');
-		const closeButton = screen.getByTestId('chat-window-close-button');
+		const chatWindow = await screen.findByTestId('chat-window');
+		const closeButton = await screen.findByTestId('chat-window-close-button');
 
 		expect(chatWindow).toBeInTheDocument();
 
 		await user.click(closeButton);
+
+		await waitForElementToBeRemoved(() => screen.queryByTestId('chat-window'));
 
 		expect(chatWindow).not.toBeInTheDocument();
 	});
