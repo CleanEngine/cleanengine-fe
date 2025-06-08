@@ -9,10 +9,12 @@ import { AIChatBot } from '~/features/chat';
 import { CoinListWithSearchBar } from '~/features/coin-search-list';
 import { OrderForm, OrderFormFallback } from '~/features/order';
 import { ExecutionList } from '~/features/order-execution-list';
+import useTradeNotification from '~/features/trade/hooks/useTradeNotification';
 import { Orderbook, StockChart } from '~/features/tradeview';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
 import { NavBar, SideBar } from '~/widgets/navbar';
+import { useUserId } from '../provider/UserInfoProvider';
 import type { Route } from './+types/trade.$ticker';
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -41,6 +43,8 @@ export async function clientAction() {
 export default function TradeRouteComponent({
 	loaderData,
 }: Route.ComponentProps) {
+	const { userId } = useUserId();
+	useTradeNotification(userId || 0);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { coinInfo, coinList, isLoggedIn } = loaderData;
 	const coinListWithIcon = coinList.map((coinInfo) => ({

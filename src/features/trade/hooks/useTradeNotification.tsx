@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify/unstyled';
 
 import { useStompClient } from '~/app/provider/StompProvider';
-import { api as userApi } from '~/entities/user';
-import type { UserInfoResponse } from '~/entities/user/types/user.type';
 
 type TradeNotification = {
 	ticker: string;
@@ -13,24 +11,8 @@ type TradeNotification = {
 	tradedTime: string;
 };
 
-export default function useTradeNotification() {
+export default function useTradeNotification(userId: number) {
 	const { client, connected } = useStompClient();
-	const [userId, setUserId] = useState<number | null>(null);
-
-	useEffect(() => {
-		const fetchUserInfo = async () => {
-			try {
-				const response = await userApi.getUserInfo();
-				const { data } = await (response.json() as Promise<UserInfoResponse>);
-				setUserId(data.userId);
-			} catch (error) {
-				console.error('Failed to fetch user info:', error);
-				toast.error('사용자 정보를 가져오는데 실패했습니다.');
-			}
-		};
-
-		fetchUserInfo();
-	}, []);
 
 	useEffect(() => {
 		if (!client || !connected || !userId) return;
