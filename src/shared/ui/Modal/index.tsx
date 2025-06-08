@@ -5,7 +5,7 @@ type ModalProps = {
 	ref: Ref<HTMLDialogElement>;
 };
 
-export default function Modal({ children, ref }: ModalProps) {
+export default function Modal({ children, ref }: Readonly<ModalProps>) {
 	return (
 		<dialog
 			open

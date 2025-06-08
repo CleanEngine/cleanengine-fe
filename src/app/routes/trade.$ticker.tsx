@@ -44,7 +44,7 @@ export default function TradeRouteComponent({
 	loaderData,
 }: Route.ComponentProps) {
 	const { userId } = useUserId();
-	useTradeNotification(userId || 0);
+	useTradeNotification(userId ?? 0);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { coinInfo, coinList, isLoggedIn } = loaderData;
 	const coinListWithIcon = coinList.map((coinInfo) => ({

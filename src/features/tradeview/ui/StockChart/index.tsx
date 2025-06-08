@@ -99,7 +99,7 @@ function makeEvent(
 	);
 }
 
-export default function StockChart({ ticker }: StockChartProps) {
+export default function StockChart({ ticker }: Readonly<StockChartProps>) {
 	const chartControlRef = useRef<HTMLDivElement>(null);
 	const valueSeriesRef = useRef<am5xy.CandlestickSeries>(null);
 	const sbSeriesRef = useRef<am5xy.LineSeries>(null);

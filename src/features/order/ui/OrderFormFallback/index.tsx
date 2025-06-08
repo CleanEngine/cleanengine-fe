@@ -5,7 +5,9 @@ type OrderFormFallbackProps = {
 	ticker: CoinTicker;
 };
 
-export default function OrderFormFallback({ ticker }: OrderFormFallbackProps) {
+export default function OrderFormFallback({
+	ticker,
+}: Readonly<OrderFormFallbackProps>) {
 	return (
 		<div className="flex flex-col gap-2 pt-2 text-base">
 			<div className="flex flex-col items-center justify-center space-y-6 py-8">

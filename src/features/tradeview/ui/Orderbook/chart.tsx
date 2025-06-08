@@ -22,7 +22,7 @@ export type OrderbookChartProps = {
 export default function OrderbookChart({
 	data,
 	type = 'bull',
-}: OrderbookChartProps) {
+}: Readonly<OrderbookChartProps>) {
 	const xAxisRef = useRef<am5xy.ValueAxis<am5xy.AxisRenderer>>(null);
 	const yAxisRef = useRef<am5xy.CategoryAxis<am5xy.AxisRenderer>>(null);
 	const seriesRef = useRef<am5xy.ColumnSeries>(null);

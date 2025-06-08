@@ -8,8 +8,8 @@ import ApiClient from '~/shared/api/httpClient';
 import { useUserId } from '../provider/UserInfoProvider';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	const rawCookie = request.headers.get('Cookie');
-	const cookies = cookie.parse(rawCookie || '');
+	const rawCookie = request.headers.get('Cookie') ?? '';
+	const cookies = cookie.parse(rawCookie);
 	const isAccessTokenExists = !!cookies.access_token;
 
 	if (!isAccessTokenExists) {
@@ -18,7 +18,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 	const response = await ApiClient.get<UserInfoResponse>('api/userinfo', {
 		headers: {
-			Cookie: rawCookie || '',
+			Cookie: rawCookie,
 		},
 	});
 

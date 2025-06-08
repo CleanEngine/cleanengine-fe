@@ -10,7 +10,7 @@ export type CoinListWithSearchBarProps = {
 
 export default function CoinListWithSearchBar({
 	coinList,
-}: CoinListWithSearchBarProps) {
+}: Readonly<CoinListWithSearchBarProps>) {
 	const [searchQuery, setSearchQuery] = useState('');
 
 	const filteredCoinList = coinList.filter((coin) =>

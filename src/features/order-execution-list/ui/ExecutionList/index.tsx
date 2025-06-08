@@ -6,7 +6,9 @@ type ExecutionListProps = {
 	ticker: CoinTicker;
 };
 
-export default function ExecutionList({ ticker }: ExecutionListProps) {
+export default function ExecutionList({
+	ticker,
+}: Readonly<ExecutionListProps>) {
 	const executionList = useExecutionListData(ticker);
 
 	const orderList = executionList.length ? (

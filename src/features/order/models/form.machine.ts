@@ -35,7 +35,7 @@ export const formMachine = setup({
 				const { data } = await response.json();
 
 				const holdings = Number(
-					data.wallets.find((wallet) => wallet.ticker === input.ticker)?.size ||
+					data.wallets.find((wallet) => wallet.ticker === input.ticker)?.size ??
 						0,
 				);
 
@@ -100,7 +100,7 @@ export const formMachine = setup({
 			message: ({ event, context }) => {
 				assertEvent(event, 'CHANGE_PRICE');
 
-				const quantity = context.quantity || 0;
+				const quantity = context.quantity ?? 0;
 				const price = event.price;
 
 				if (context.tradeType === '매수') {
@@ -213,7 +213,7 @@ export const formMachine = setup({
 	context: (params) => {
 		const ticker =
 			typeof params.input === 'object' && params.input
-				? (params.input as { ticker?: string }).ticker || ''
+				? ((params.input as { ticker?: string }).ticker ?? '')
 				: '';
 
 		return {

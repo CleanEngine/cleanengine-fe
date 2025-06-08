@@ -17,7 +17,10 @@ const buttonVariant = {
 	},
 };
 
-export default function ChatButton({ isOpen, handleClick }: ChatButtonProps) {
+export default function ChatButton({
+	isOpen,
+	handleClick,
+}: Readonly<ChatButtonProps>) {
 	return (
 		<motion.button
 			key="chat-button"

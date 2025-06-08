@@ -10,10 +10,6 @@ import { ServerRouter } from 'react-router';
 
 export const streamTimeout = 5_000;
 
-// if (process.env.NODE_ENV === 'development') {
-// 	server.listen({ onUnhandledRequest: 'bypass' });
-// }
-
 export default function handleRequest(
 	request: Request,
 	responseStatusCode: number,

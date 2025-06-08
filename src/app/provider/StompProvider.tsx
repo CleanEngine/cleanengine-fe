@@ -16,7 +16,7 @@ export const StompContext = createContext<StompContextType | null>(null);
 export default function StompProvider({
 	children,
 	brokerURL,
-}: StompProviderProps) {
+}: Readonly<StompProviderProps>) {
 	const [stompClient, setStompClient] = useState<Client | null>(null);
 	const [isConnected, setIsConnected] = useState(false);
 
