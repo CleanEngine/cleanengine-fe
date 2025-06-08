@@ -12,6 +12,7 @@ import type { Route } from './+types/root';
 
 import './app.css';
 import { Slide } from 'react-toastify';
+import useTradeNotification from '~/features/trade/hooks/useTradeNotification';
 import StompProvider from './provider/StompProvider';
 import UserIdProvider from './provider/UserInfoProvider';
 
@@ -73,6 +74,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			</body>
 		</html>
 	);
+}
+
+function TradeNotificationHandler() {
+	useTradeNotification();
+	return null;
 }
 
 export default function App() {
