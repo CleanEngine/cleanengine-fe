@@ -82,7 +82,7 @@ export default function ChatWindow({
 	handleInputValueChange: onInputValueChange,
 	handleSubmit,
 	handleClose,
-}: ChatWindowProps) {
+}: Readonly<ChatWindowProps>) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { height } = useDimensions(containerRef);
 	const disabled = state === 'processing' || state === 'complete';

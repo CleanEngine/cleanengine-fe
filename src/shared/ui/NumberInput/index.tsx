@@ -2,7 +2,7 @@ import type { InputHTMLAttributes } from 'react';
 
 export type NumberInputProps = InputHTMLAttributes<HTMLInputElement>;
 
-export default function NumberInput(props: NumberInputProps) {
+export default function NumberInput(props: Readonly<NumberInputProps>) {
 	return (
 		<input
 			type="number"

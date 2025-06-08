@@ -18,7 +18,9 @@ type UserIdProviderProps = {
 
 export const UserIdContext = createContext<UserInfoContextType | null>(null);
 
-export default function UserIdProvider({ children }: UserIdProviderProps) {
+export default function UserIdProvider({
+	children,
+}: Readonly<UserIdProviderProps>) {
 	const [userId, setUserId] = useState<UserInfoContextType['userId'] | null>(
 		null,
 	);

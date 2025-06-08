@@ -5,7 +5,7 @@ export type LogoProps = {
 	isBlack?: boolean;
 };
 
-export default function Logo({ isBlack }: LogoProps) {
+export default function Logo({ isBlack }: Readonly<LogoProps>) {
 	const logo = isBlack ? CloudLogoBlack : CloudLogo;
 
 	return (

@@ -1,7 +1,6 @@
 import { IconKakao } from '~/assets/svgs';
 
 export default function KakaoLoginButton() {
-	//TODO: 카카오 로그인 URL 교체할 것
 	return (
 		<a
 			href={import.meta.env.VITE_OAUTH_URL}

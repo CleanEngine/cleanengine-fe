@@ -5,7 +5,10 @@ type MessageBoxProps = {
 	message: string;
 };
 
-export default function MessageBox({ direction, message }: MessageBoxProps) {
+export default function MessageBox({
+	direction,
+	message,
+}: Readonly<MessageBoxProps>) {
 	return (
 		<div
 			className={clsx(

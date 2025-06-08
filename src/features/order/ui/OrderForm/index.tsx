@@ -12,7 +12,7 @@ type OrderFormProps = {
 	ticker: string;
 };
 
-export default function OrderForm({ ticker }: OrderFormProps) {
+export default function OrderForm({ ticker }: Readonly<OrderFormProps>) {
 	const [state, send, actorRef] = useMachine(formMachine, {
 		input: {
 			ticker,
@@ -25,15 +25,15 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 		state.context.tradeType === '매수' ? '구매가능 금액' : '매도가능 수량';
 	const quantityValueText =
 		state.context.tradeType === '매수'
-			? `${formatCurrencyKR(state.context.deposit || 0)}원`
-			: `${state.context.holdings?.toFixed(2) || 0}개`;
+			? `${formatCurrencyKR(state.context.deposit ?? 0)}원`
+			: `${state.context.holdings?.toFixed(2) ?? 0}개`;
 	const totalOrderPriceText =
 		state.context.tradeType === '매수'
 			? state.context.orderType === '지정가'
-				? `${formatCurrencyKR((state.context.price || 0) * (state.context.quantity || 0))}원`
+				? `${formatCurrencyKR((state.context.price ?? 0) * (state.context.quantity ?? 0))}원`
 				: '시장가격에 매수'
 			: state.context.orderType === '지정가'
-				? `${formatCurrencyKR((state.context.price || 0) * (state.context.quantity || 0))}원`
+				? `${formatCurrencyKR((state.context.price ?? 0) * (state.context.quantity ?? 0))}원`
 				: '시장가격에 매도';
 
 	const handleTradeTypeChange = () => {
@@ -142,7 +142,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 						onClickPlus={handlePricePlus}
 						onChange={handlePriceChange}
 						step={PRICE_STEP}
-						value={(state.context.price || '').toString()}
+						value={(state.context.price ?? '').toString()}
 						min={0}
 						onKeyDown={preventNonNumericInput}
 						data-testid="price-input"
@@ -167,7 +167,7 @@ export default function OrderForm({ ticker }: OrderFormProps) {
 						onClickPlus={handleQuantityPlus}
 						step={QUANTITY_STEP}
 						onChange={handleQuantityChange}
-						value={(state.context.quantity || '').toString()}
+						value={(state.context.quantity ?? '').toString()}
 						min={0}
 						onKeyDown={preventNonNumericInput}
 						data-testid="quantity-input"

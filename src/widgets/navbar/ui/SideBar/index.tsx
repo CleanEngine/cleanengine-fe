@@ -21,7 +21,10 @@ const sideBarVariant = {
 	exit: { x: '-100%' },
 };
 
-export default function SideBar({ coinListWithIcon, onClose }: SideBarProps) {
+export default function SideBar({
+	coinListWithIcon,
+	onClose,
+}: Readonly<SideBarProps>) {
 	const ref = useRef<HTMLDivElement>(null);
 	useClickOutside(ref, onClose);
 

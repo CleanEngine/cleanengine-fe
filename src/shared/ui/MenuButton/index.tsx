@@ -4,7 +4,7 @@ export type MenuButtonProps = {
 	onClick: () => void;
 };
 
-export default function MenuButton({ onClick }: MenuButtonProps) {
+export default function MenuButton({ onClick }: Readonly<MenuButtonProps>) {
 	return (
 		<button
 			type="button"

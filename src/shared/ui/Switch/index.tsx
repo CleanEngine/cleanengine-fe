@@ -19,7 +19,7 @@ export default function Switch<T extends Value, T1 extends T, T2 extends T>({
 	text2,
 	onChange,
 	selected,
-}: SwitchProps<T, T1, T2>) {
+}: Readonly<SwitchProps<T, T1, T2>>) {
 	const handleSwitch = (e: MouseEvent<HTMLButtonElement>) => {
 		if (e.currentTarget.value === String(value1)) {
 			onChange?.(value1);

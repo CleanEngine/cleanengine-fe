@@ -4,7 +4,7 @@ type CloseButtonProps = {
 	onClick: () => void;
 };
 
-export default function CloseButton({ onClick }: CloseButtonProps) {
+export default function CloseButton({ onClick }: Readonly<CloseButtonProps>) {
 	return (
 		<button
 			type="button"
