@@ -91,7 +91,7 @@ export default function TradeRouteComponent({
 						<Container>
 							<ContainerTitle>주문 하기</ContainerTitle>
 							{isLoggedIn && coinInfo ? (
-								<OrderForm ticker={coinInfo.ticker} />
+								<OrderForm ticker={coinInfo.ticker} key={coinInfo.ticker} />
 							) : (
 								<OrderFormFallback ticker={coinInfo?.ticker || 'BTC'} />
 							)}
