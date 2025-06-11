@@ -7,7 +7,6 @@ import {
 	isRouteErrorResponse,
 } from 'react-router';
 import { ToastContainer } from 'react-toastify/unstyled';
-import 'react-toastify/ReactToastify.css';
 import type { Route } from './+types/root';
 
 import './app.css';
@@ -36,6 +35,12 @@ export const links: Route.LinksFunction = () => [
 		href: '/favicon-32x32.png',
 		type: 'image/png',
 		sizes: '32x32',
+	},
+	{
+		rel: 'stylesheet',
+		href: '/ReactToastify.css',
+		media: 'print',
+		onload: 'this.media="all"',
 	},
 ];
 
