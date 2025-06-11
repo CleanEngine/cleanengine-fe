@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify/unstyled';
 import type { Route } from './+types/root';
 
 import './app.css';
+import { preload } from 'react-dom';
 import { Slide } from 'react-toastify';
 import StompProvider from './provider/StompProvider';
 import UserIdProvider from './provider/UserInfoProvider';
@@ -53,6 +54,19 @@ export function meta() {
 }
 
 export function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
+	preload('/fonts/Pretendard-Medium.woff2', {
+		as: 'font',
+		crossOrigin: 'anonymous',
+	});
+	preload('/fonts/Pretendard-Regular.woff2', {
+		as: 'font',
+		crossOrigin: 'anonymous',
+	});
+	preload('/fonts/Pretendard-SemiBold.woff2', {
+		as: 'font',
+		crossOrigin: 'anonymous',
+	});
+
 	return (
 		<html lang="en">
 			<head>
