@@ -23,7 +23,7 @@ export default function CoinListWithSearchBar({
 
 	return (
 		<div
-			className="flex h-full min-h-0 flex-1 flex-col bg-white"
+			className="flex min-h-0 flex-1 flex-col bg-white"
 			data-testid="coin-list-with-search-bar"
 		>
 			<div className="px-2 py-3">

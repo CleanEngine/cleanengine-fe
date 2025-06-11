@@ -16,6 +16,11 @@
 		appearance: none;
 		-webkit-appearance: none;
 	}
+
+	.scrollbar-hide {
+		scrollbar-width: none;
+		-webkit-scrollbar: none;
+	}
 }
 
 @font-face {
