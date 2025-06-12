@@ -1,6 +1,6 @@
 import * as cookie from 'cookie';
 import { AnimatePresence } from 'motion/react';
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { Outlet, redirect } from 'react-router';
 
 import { CoinPriceWithName, api as coinApi } from '~/entities/coin';
@@ -10,12 +10,14 @@ import { CoinListWithSearchBar } from '~/features/coin-search-list';
 import { OrderForm, OrderFormFallback } from '~/features/order';
 import { ExecutionList } from '~/features/order-execution-list';
 import useTradeNotification from '~/features/trade/hooks/useTradeNotification';
-import { Orderbook, StockChart } from '~/features/tradeview';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
 import { NavBar, SideBar } from '~/widgets/navbar';
 import { useUserId } from '../provider/UserInfoProvider';
 import type { Route } from './+types/trade.$ticker';
+
+const LazyStockChart = lazy(() => import('~/features/tradeview/ui/StockChart'));
+const LazyOrderBook = lazy(() => import('~/features/tradeview/ui/Orderbook'));
 
 export async function loader({ request, params }: Route.LoaderArgs) {
 	const rawCookie = request.headers.get('Cookie');
@@ -79,12 +81,14 @@ export default function TradeRouteComponent({
 					<div className="h-auto md:col-span-full md:row-span-2 md:row-start-1 xl:col-span-full xl:row-span-1 xl:row-start-1 2xl:col-span-2 2xl:col-start-2 2xl:row-start-1">
 						<Container>
 							<ContainerTitle>실시간 차트</ContainerTitle>
-							{coinInfo && (
-								<StockChart
-									key={`chart-${coinInfo.ticker}`}
-									ticker={coinInfo.ticker}
-								/>
-							)}
+							<Suspense fallback="차트데이터를 가져오고 있습니다.">
+								{coinInfo && (
+									<LazyStockChart
+										key={`chart-${coinInfo.ticker}`}
+										ticker={coinInfo.ticker}
+									/>
+								)}
+							</Suspense>
 						</Container>
 					</div>
 					<div className="md:col-span-1 md:col-start-2 md:row-span-2 md:row-start-3 xl:col-span-1 xl:col-start-3 xl:row-span-1 xl:row-start2 2xl:col-start-4 2xl:row-span-1 2xl:row-start-1">
@@ -100,7 +104,9 @@ export default function TradeRouteComponent({
 					<div className="md:col-span-1 md:col-start-1 md:row-span-2 md:row-start-3 xl:col-span-1 xl:col-start-2 xl:row-span-1 xl:row-start-2 2xl:col-start-4 2xl:row-span-full 2xl:row-start-2">
 						<Container>
 							<ContainerTitle>실시간 호가</ContainerTitle>
-							{coinInfo && <Orderbook ticker={coinInfo.ticker} />}
+							<Suspense fallback={null}>
+								{coinInfo && <LazyOrderBook ticker={coinInfo.ticker} />}
+							</Suspense>
 						</Container>
 					</div>
 					<div className="md:col-span-full md:row-span-1 md:row-start-5 xl:col-span-1 xl:col-start-1 xl:row-span-1 xl:row-start-2 2xl:col-span-2 2xl:col-start-2 2xl:row-start-2">

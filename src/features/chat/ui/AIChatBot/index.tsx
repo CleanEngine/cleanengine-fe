@@ -1,12 +1,19 @@
 import { useMachine } from '@xstate/react';
 import { AnimatePresence } from 'motion/react';
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import {
+	type ChangeEvent,
+	type FormEvent,
+	Suspense,
+	lazy,
+	useState,
+} from 'react';
 
 import useScrollToBottom from '~/shared/hooks/useScrollToBottom';
 import { chatMachine } from '../../model/chat.machine';
 import ChatButton from '../ChatButton';
-import ChatWindow from '../ChatWindow';
 import MessageBox from '../MessageBox';
+
+const LazyChatWindow = lazy(() => import('~/features/chat/ui/ChatWindow'));
 
 export default function AIChatBot() {
 	const [state, send] = useMachine(chatMachine);
@@ -32,30 +39,32 @@ export default function AIChatBot() {
 
 	return (
 		<AnimatePresence mode="wait" propagate>
-			{isOpen ? (
-				<ChatWindow
-					handleClose={handleCloseChatWindow}
-					inputValue={state.context.question}
-					handleSubmit={handleSubmitQuestion}
-					handleInputValueChange={handleQuestionFieldChange}
-					state={state.context.state}
-					key="chat-window"
-				>
-					{state.context.messageList.map((message, index) => {
-						const key = `msg-${index}-${message.isMine ? 'user' : 'ai'}`;
-						return (
-							<MessageBox
-								key={key}
-								direction={message.isMine ? 'right' : 'left'}
-								message={message.message}
-							/>
-						);
-					})}
-					<div ref={messagesEndRef} />
-				</ChatWindow>
-			) : (
-				<ChatButton handleClick={handleOpenChatWindow} isOpen={isOpen} />
-			)}
+			<Suspense fallback={null}>
+				{isOpen ? (
+					<LazyChatWindow
+						handleClose={handleCloseChatWindow}
+						inputValue={state.context.question}
+						handleSubmit={handleSubmitQuestion}
+						handleInputValueChange={handleQuestionFieldChange}
+						state={state.context.state}
+						key="chat-window"
+					>
+						{state.context.messageList.map((message, index) => {
+							const key = `msg-${index}-${message.isMine ? 'user' : 'ai'}`;
+							return (
+								<MessageBox
+									key={key}
+									direction={message.isMine ? 'right' : 'left'}
+									message={message.message}
+								/>
+							);
+						})}
+						<div ref={messagesEndRef} />
+					</LazyChatWindow>
+				) : (
+					<ChatButton handleClick={handleOpenChatWindow} isOpen={isOpen} />
+				)}
+			</Suspense>
 		</AnimatePresence>
 	);
 }
