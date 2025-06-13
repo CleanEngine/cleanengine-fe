@@ -16,6 +16,9 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['@amcharts/amcharts5'],
 	},
+	ssr: {
+		noExternal: ['@amcharts/amcharts5'],
+	},
 	build: {
 		rollupOptions: {
 			external: ['d3-geo,d3-selection,d3-transition'],
