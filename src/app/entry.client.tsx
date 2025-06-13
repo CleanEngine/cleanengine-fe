@@ -1,5 +1,5 @@
 /* v8 ignore start */
-import { StrictMode, startTransition } from 'react';
+import { startTransition } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { HydratedRouter } from 'react-router/dom';
 
@@ -11,9 +11,9 @@ prepareApp().then(() => {
 	startTransition(() => {
 		hydrateRoot(
 			document,
-			<StrictMode>
-				<HydratedRouter />
-			</StrictMode>,
+			// <StrictMode>
+			// </StrictMode>,
+			<HydratedRouter />,
 		);
 	});
 });
