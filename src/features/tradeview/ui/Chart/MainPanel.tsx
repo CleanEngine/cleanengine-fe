@@ -26,12 +26,6 @@ export default function MainPanel({
 		}),
 	);
 
-	const valueLegend = mainPanel.plotContainer.children.push(
-		am5stock.StockLegend.new(chartRoot, {
-			stockChart: stockChart,
-		}),
-	);
-
 	const childrenWithProps = React.Children.map(children, (child) => {
 		if (React.isValidElement<MainPanel>(child)) {
 			return React.cloneElement(child, {
