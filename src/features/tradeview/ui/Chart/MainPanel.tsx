@@ -1,6 +1,6 @@
 import * as am5stock from '@amcharts/amcharts5/stock';
-
 import React, { useEffect, type PropsWithChildren } from 'react';
+
 import type { StockChart } from './StockChart';
 
 type MainPanelProps = PropsWithChildren<Partial<StockChart>>;
@@ -15,6 +15,7 @@ export default function MainPanel({
 	children,
 }: MainPanelProps) {
 	if (!chartRoot || !stockChart) {
+		console.error('MainPanel should be used within StockChart');
 		return null;
 	}
 

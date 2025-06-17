@@ -1,6 +1,7 @@
 import * as am5 from '@amcharts/amcharts5';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import React, { useEffect, useRef, useState, type ReactNode } from 'react';
+
 import { ChartTextKR } from '../../const/chart.const';
 
 export type ChartContainerProps = {
@@ -25,16 +26,6 @@ export default function ChartContainer({
 	const chartToolbarContainerRef =
 		useRef<ChartContainer['chartToolbarContainerRef']['current']>(null);
 
-	const childrenWithProps = React.Children.map(children, (child) => {
-		if (React.isValidElement<ChartContainer>(child) && chartRoot) {
-			return React.cloneElement(child, {
-				chartRoot: chartRoot,
-				chartToolbarContainerRef: chartToolbarContainerRef,
-			});
-		}
-		return child;
-	});
-
 	useEffect(() => {
 		const root = am5.Root.new(containerId);
 
@@ -53,6 +44,16 @@ export default function ChartContainer({
 			root.dispose();
 		};
 	}, [containerId]);
+
+	const childrenWithProps = React.Children.map(children, (child) => {
+		if (React.isValidElement<ChartContainer>(child) && chartRoot) {
+			return React.cloneElement(child, {
+				chartRoot: chartRoot,
+				chartToolbarContainerRef: chartToolbarContainerRef,
+			});
+		}
+		return child;
+	});
 
 	return (
 		<>

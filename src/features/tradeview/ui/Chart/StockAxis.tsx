@@ -1,7 +1,8 @@
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
-import type { PropsWithChildren } from 'react';
-import React, { useEffect } from 'react';
+import React, { type PropsWithChildren } from 'react';
+
+import { isNullish } from '~/shared/utils';
 import type { MainPanel } from './MainPanel';
 
 type StockAxisProps = PropsWithChildren<Partial<MainPanel>>;
@@ -17,8 +18,9 @@ export default function StockAxis({
 	mainPanel,
 	children,
 }: StockAxisProps) {
-	if (!chartRoot || !stockChart || !mainPanel) {
-		return null;
+	if (isNullish(chartRoot) || isNullish(stockChart) || isNullish(mainPanel)) {
+		console.error('StockAxis should be used within MainPanel');
+		return;
 	}
 
 	const dateAxis = mainPanel.xAxes.push(
@@ -70,13 +72,6 @@ export default function StockAxis({
 		}
 		return child;
 	});
-
-	useEffect(() => {
-		return () => {
-			dateAxis.dispose();
-			valueAxis.dispose();
-		};
-	}, [dateAxis, valueAxis]);
 
 	return childrenWithProps;
 }

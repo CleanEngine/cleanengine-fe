@@ -1,7 +1,9 @@
 import * as am5xy from '@amcharts/amcharts5/xy';
-import type { PropsWithChildren } from 'react';
-import { useEffect, useState } from 'react';
+import { type PropsWithChildren, useEffect, useState } from 'react';
+
+import { isNullish } from '~/shared/utils';
 import type { CandlestickData } from '../../types/tradeview.type';
+import { isDisposed } from '../../utils';
 import type { XScrollBar } from './XScrollBar';
 
 type SbSeriesProps = PropsWithChildren<
@@ -25,12 +27,28 @@ export default function SbSeries({
 	const [sbSeries, setSbSeries] = useState<SbSeries['sbSeries']>(null);
 
 	useEffect(() => {
-		if (!pastTimeData || !pastTimeData.length || !sbSeries) return;
+		if (
+			isNullish(pastTimeData) ||
+			isNullish(pastTimeData.length) ||
+			isNullish(sbSeries)
+		)
+			return;
+
 		sbSeries.data.setAll(pastTimeData);
 	}, [pastTimeData, sbSeries]);
 
 	useEffect(() => {
-		if (!scrollbar || !chartRoot || !stockChart || !mainPanel) return;
+		if (
+			isNullish(scrollbar) ||
+			isNullish(chartRoot) ||
+			isNullish(stockChart) ||
+			isNullish(mainPanel)
+		) {
+			console.error('SbSeries should be used within XScrollBar');
+			return;
+		}
+
+		if (isDisposed(scrollbar, chartRoot, stockChart, mainPanel)) return;
 
 		const newSbDateAxis = scrollbar.chart.xAxes.push(
 			am5xy.GaplessDateAxis.new(chartRoot, {

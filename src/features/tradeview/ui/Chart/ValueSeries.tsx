@@ -1,7 +1,10 @@
 import * as am5stock from '@amcharts/amcharts5/stock';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import { type PropsWithChildren, useEffect, useState } from 'react';
+
+import { isNullish } from '~/shared/utils';
 import type { CandlestickData } from '../../types/tradeview.type';
+import { isDisposed } from '../../utils';
 import type { StockAxis } from './StockAxis';
 
 type SeriesSettings = {
@@ -37,8 +40,20 @@ export default function ValueSeries({
 	}, [valueSeries, pastTimeData]);
 
 	useEffect(() => {
-		if (!mainPanel || !chartRoot || !stockChart || !valueAxis || !dateAxis)
+		if (
+			isNullish(chartRoot) ||
+			isNullish(stockChart) ||
+			isNullish(mainPanel) ||
+			isNullish(valueAxis) ||
+			isNullish(dateAxis)
+		) {
+			console.error('ValueSeries should be used within StockAxis');
 			return;
+		}
+
+		if (isDisposed(chartRoot, stockChart, mainPanel, valueAxis, dateAxis))
+			return;
+
 		const newValueSeries = mainPanel.series.push(
 			am5xy.CandlestickSeries.new(chartRoot, {
 				name: seriesSettings?.name || 'MSFT',

@@ -1,6 +1,7 @@
 import * as am5stock from '@amcharts/amcharts5/stock';
 import React, { type PropsWithChildren } from 'react';
 
+import { isNullish } from '~/shared/utils';
 import type { ChartContainer } from './ChartContainer';
 
 type ChartPropsWithChildren = PropsWithChildren<
@@ -21,8 +22,9 @@ export default function StockChart({
 	settings = {},
 	children,
 }: ChartPropsWithChildren) {
-	if (!chartRoot) {
-		return null;
+	if (isNullish(chartRoot)) {
+		console.error('StockChart should be used within ChartContainer');
+		return;
 	}
 
 	const stockChart = chartRoot?.container.children.push(

@@ -1,5 +1,7 @@
 import * as am5stock from '@amcharts/amcharts5/stock';
 import { type PropsWithChildren, useEffect } from 'react';
+
+import { isNullish } from '~/shared/utils';
 import type { StockChart } from './StockChart';
 
 type StockToolBarProps = PropsWithChildren<Partial<StockChart>>;
@@ -11,7 +13,14 @@ export default function StockToolBar({
 	children,
 }: StockToolBarProps) {
 	useEffect(() => {
-		if (!chartRoot || !stockChart || !chartToolbarContainerRef?.current) return;
+		if (
+			isNullish(chartRoot) ||
+			isNullish(stockChart) ||
+			isNullish(chartToolbarContainerRef?.current)
+		) {
+			console.error('StockToolBar should be used within StockChart');
+			return;
+		}
 
 		const toolbar = am5stock.StockToolbar.new(chartRoot, {
 			stockChart: stockChart,

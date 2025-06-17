@@ -1,6 +1,8 @@
 import * as am5xy from '@amcharts/amcharts5/xy';
-import type { PropsWithChildren } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, type PropsWithChildren } from 'react';
+
+import { isNullish } from '~/shared/utils';
+import { isDisposed } from '../../utils';
 import type { MainPanel } from './MainPanel';
 
 type XScrollBarProps = PropsWithChildren<Partial<MainPanel>>;
@@ -19,20 +21,14 @@ export default function XScrollBar({
 		null,
 	);
 
-	const childrenWithProps = React.Children.map(children, (child) => {
-		if (React.isValidElement<XScrollBar>(child)) {
-			return React.cloneElement(child, {
-				scrollbar,
-				chartRoot,
-				stockChart,
-				mainPanel,
-			});
-		}
-		return child;
-	});
-
 	useEffect(() => {
-		if (!mainPanel || !chartRoot || !stockChart) return;
+		if (isNullish(chartRoot) || isNullish(stockChart) || isNullish(mainPanel)) {
+			console.error('XScrollBar should be used within MainPanel');
+			return;
+		}
+
+		if (isDisposed(chartRoot, stockChart, mainPanel)) return;
+
 		const newScrollbar = mainPanel.set(
 			'scrollbarX',
 			am5xy.XYChartScrollbar.new(chartRoot, {
@@ -49,6 +45,18 @@ export default function XScrollBar({
 			stockChart.toolsContainer.children.removeValue(newScrollbar);
 		};
 	}, [chartRoot, mainPanel, stockChart]);
+
+	const childrenWithProps = React.Children.map(children, (child) => {
+		if (React.isValidElement<XScrollBar>(child)) {
+			return React.cloneElement(child, {
+				scrollbar,
+				chartRoot,
+				stockChart,
+				mainPanel,
+			});
+		}
+		return child;
+	});
 
 	return childrenWithProps;
 }
