@@ -27,7 +27,10 @@ export default function ChartContainer({
 
 	const childrenWithProps = React.Children.map(children, (child) => {
 		if (React.isValidElement<ChartContainer>(child) && chartRoot) {
-			return React.cloneElement(child, { chartRoot: chartRoot });
+			return React.cloneElement(child, {
+				chartRoot: chartRoot,
+				chartToolbarContainerRef: chartToolbarContainerRef,
+			});
 		}
 		return child;
 	});

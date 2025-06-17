@@ -4,6 +4,7 @@ import MainPanel from './MainPanel';
 import SbSeries from './SbSeries';
 import StockAxis from './StockAxis';
 import StockChart from './StockChart';
+import StockToolBar from './StockToolBar';
 import ValueSeries from './ValueSeries';
 import XScrollBar from './XScrollBar';
 
@@ -59,6 +60,7 @@ export default function Chart() {
 	return (
 		<ChartContainer containerId="chartdiv" toolbarId="chart-toolbar">
 			<StockChart settings={{ paddingLeft: 0 }}>
+				<StockToolBar />
 				<MainPanel>
 					<XScrollBar>
 						<SbSeries pastTimeData={DUMMY_DATA} />

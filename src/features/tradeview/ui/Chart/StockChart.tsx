@@ -17,6 +17,7 @@ export type StockChart = {
 
 export default function StockChart({
 	chartRoot,
+	chartToolbarContainerRef,
 	settings = {},
 	children,
 }: ChartPropsWithChildren) {
@@ -30,7 +31,11 @@ export default function StockChart({
 
 	const childrenWithProps = React.Children.map(children, (child) => {
 		if (React.isValidElement<StockChart>(child)) {
-			return React.cloneElement(child, { chartRoot, stockChart });
+			return React.cloneElement(child, {
+				chartRoot,
+				stockChart,
+				chartToolbarContainerRef,
+			});
 		}
 		return child;
 	});
