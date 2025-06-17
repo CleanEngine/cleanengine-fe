@@ -1,6 +1,7 @@
 import * as am5 from '@amcharts/amcharts5';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import React, { useEffect, useRef, useState, type ReactNode } from 'react';
+import { ChartTextKR } from '../../const/chart.const';
 
 export type ChartContainerProps = {
 	containerId: string;
@@ -41,6 +42,7 @@ export default function ChartContainer({
 
 		root.setThemes([am5themes_Animated.new(root), Theme]);
 		root.numberFormatter.set('numberFormat', '#,###.00');
+		root.language.setTranslationsAny(ChartTextKR);
 
 		setChartRoot(root);
 
