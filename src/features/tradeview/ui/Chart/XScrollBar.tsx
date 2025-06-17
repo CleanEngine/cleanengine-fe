@@ -33,7 +33,7 @@ export default function XScrollBar({
 			'scrollbarX',
 			am5xy.XYChartScrollbar.new(chartRoot, {
 				orientation: 'horizontal',
-				height: 50,
+				height: 20,
 			}),
 		);
 

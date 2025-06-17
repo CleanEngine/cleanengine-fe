@@ -27,6 +27,7 @@ export default function StockChart({
 		return;
 	}
 
+	chartRoot.container.children.clear();
 	const stockChart = chartRoot?.container.children.push(
 		am5stock.StockChart.new(chartRoot, settings),
 	);

@@ -1,12 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { CandlestickData } from '../../types/tradeview.type';
-import ChartContainer from './ChartContainer';
-import MainPanel from './MainPanel';
-import StockAxis from './StockAxis';
-import StockChart from './StockChart';
-import StockToolBar from './StockToolBar';
-import ValueSeriesWithData from './ValueSeriesWithData';
-// 최근 2시간 동안의 분봉 더미 캔들스틱 데이터 생성
+import ValueSeries, { type ValueSeriesProps } from './ValueSeries';
+
 const DUMMY_DATA: CandlestickData[] = (() => {
 	const data: CandlestickData[] = [];
 	const now = new Date();
@@ -54,7 +49,7 @@ const DUMMY_DATA: CandlestickData[] = (() => {
 	return data;
 })();
 
-export default function Chart() {
+export default function ValueSeriesWithData(props: ValueSeriesProps) {
 	const [data, setData] = useState<CandlestickData[]>(DUMMY_DATA);
 
 	const fetchPastTimeData = useCallback(async () => {
@@ -110,18 +105,10 @@ export default function Chart() {
 	}, []);
 
 	return (
-		<ChartContainer containerId="chartdiv" toolbarId="chart-toolbar">
-			<StockChart settings={{ paddingLeft: 0 }}>
-				<StockToolBar />
-				<MainPanel>
-					{/* <XScrollBar>
-						<SbSeries pastTimeData={data} />
-					</XScrollBar> */}
-					<StockAxis>
-						<ValueSeriesWithData />
-					</StockAxis>
-				</MainPanel>
-			</StockChart>
-		</ChartContainer>
+		<ValueSeries
+			{...props}
+			pastTimeData={data}
+			fetchPastTimeData={fetchPastTimeData}
+		/>
 	);
 }

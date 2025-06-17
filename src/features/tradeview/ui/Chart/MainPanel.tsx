@@ -23,7 +23,7 @@ export default function MainPanel({
 		am5stock.StockPanel.new(chartRoot, {
 			wheelY: 'zoomX',
 			panX: true,
-			panY: true,
+			panY: false,
 		}),
 	);
 
