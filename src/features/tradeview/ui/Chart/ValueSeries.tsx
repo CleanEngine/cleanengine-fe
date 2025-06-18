@@ -1,7 +1,6 @@
 import * as am5stock from '@amcharts/amcharts5/stock';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import type { PropsWithChildren } from 'react';
-
 import { isNullish } from '~/shared/utils';
 import type { CandlestickData } from '../../types/tradeview.type';
 import { isDisposed } from '../../utils';
@@ -18,7 +17,7 @@ export type ValueSeriesProps = PropsWithChildren<
 	Partial<StockAxis> & {
 		pastTimeData?: CandlestickData[];
 		seriesSettings?: SeriesSettings;
-		fetchPastTimeData?: () => Promise<void>;
+		fetchPastTimeData?: (prevData: CandlestickData) => CandlestickData[];
 	}
 >;
 
@@ -99,9 +98,16 @@ export default function ValueSeries({
 	dateAxis.on('start', async (value) => {
 		if (!value) return;
 
-		if (value < 0) {
-			fetchPastTimeData?.();
-			// dateAxis.zoom(0, 1, 0);
+		if (value < -0.1) {
+			const generatedPastData = fetchPastTimeData?.(
+				newValueSeries.data.values[0] as CandlestickData,
+			);
+
+			if (!generatedPastData) return;
+
+			const newData = [...generatedPastData, ...newValueSeries.data.values];
+
+			newValueSeries.data.setAll(newData);
 		}
 	});
 

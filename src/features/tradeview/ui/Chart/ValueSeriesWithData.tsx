@@ -1,4 +1,3 @@
-import { useCallback, useState } from 'react';
 import type { CandlestickData } from '../../types/tradeview.type';
 import ValueSeries, { type ValueSeriesProps } from './ValueSeries';
 
@@ -49,65 +48,64 @@ const DUMMY_DATA: CandlestickData[] = (() => {
 	return data;
 })();
 
+const fetchPastTimeData = (prevData: CandlestickData) => {
+	const pastData: CandlestickData[] = [];
+
+	// 시작점은 주어진 데이터
+	let currentClose = prevData.Close;
+	const baseVolume = prevData.Volume;
+	const baseTimestamp = prevData.Timestamp;
+
+	// 10개의 과거 데이터를 생성 (시간 역순으로)
+	for (let i = 10; i >= 1; i--) {
+		// 1분씩 과거로 이동 (새로운 Date 객체 생성)
+		const pastTimestamp = baseTimestamp - i * 60 * 1000; // i분 전
+
+		// 이전 봉의 종가를 기준으로 시가 생성 (작은 갭 허용)
+		const gapPercent = (Math.random() * 0.4 - 0.2) / 100; // -0.2% ~ +0.2%
+		const open = currentClose * (1 + gapPercent);
+
+		// 종가 생성 (-2% ~ +2% 변동)
+		const changePercent = (Math.random() * 4 - 2) / 100;
+		const close = open * (1 + changePercent);
+
+		// 고가와 저가 생성
+		const maxPrice = Math.max(open, close);
+		const minPrice = Math.min(open, close);
+
+		// 고가: 시가/종가 중 높은 값보다 0~2% 높게
+		const high = maxPrice * (1 + Math.random() * 0.02);
+
+		// 저가: 시가/종가 중 낮은 값보다 0~2% 낮게
+		const low = minPrice * (1 - Math.random() * 0.02);
+
+		// 거래량 (기준의 50~150%)
+		const volume = baseVolume * (0.5 + Math.random());
+
+		const candlestick: CandlestickData = {
+			Timestamp: pastTimestamp,
+			Open: Number(open.toFixed(2)),
+			Close: Number(close.toFixed(2)),
+			High: Number(high.toFixed(2)),
+			Low: Number(low.toFixed(2)),
+			Volume: Math.round(volume),
+		};
+
+		pastData.push(candlestick);
+
+		// 다음 반복을 위해 현재 종가를 다음 봉의 기준으로 설정
+		currentClose = close;
+	}
+
+	// 시간순으로 정렬 (과거 -> 현재)
+	return pastData.sort((a, b) => a.Timestamp - b.Timestamp);
+};
+
 export default function ValueSeriesWithData(props: ValueSeriesProps) {
-	const [data, setData] = useState<CandlestickData[]>(DUMMY_DATA);
-
-	const fetchPastTimeData = useCallback(async () => {
-		setData((prevData) => {
-			if (prevData.length === 0) return prevData;
-
-			// 기존 데이터의 가장 오래된 타임스탬프와 가격을 기준으로 함
-			const oldestData = prevData[0];
-			const oldestTimestamp = oldestData.Timestamp;
-			const basePrice = oldestData.Open;
-			const baseVolume = 1000;
-
-			const pastData: CandlestickData[] = [];
-
-			// 100개의 1분봉 데이터를 가장 오래된 데이터보다 이전 시간으로 생성
-			for (let i = 10; i >= 1; i--) {
-				const date = new Date(oldestTimestamp);
-				date.setMinutes(date.getMinutes() - i);
-
-				// 이전 봉의 종가를 기준으로 랜덤 변동 (-1% ~ +1%)
-				const changePercent = (Math.random() * 2 - 1) / 100;
-				const prevClose = pastData.length
-					? pastData[pastData.length - 1].Close
-					: basePrice;
-
-				const open = prevClose;
-				const close = open * (1 + changePercent);
-
-				// 고가는 시가와 종가 중 큰 값보다 0-1% 높게
-				const highBaseValue = Math.max(open, close);
-				const high = highBaseValue * (1 + Math.random() * 0.01);
-
-				// 저가는 시가와 종가 중 작은 값보다 0-1% 낮게
-				const lowBaseValue = Math.min(open, close);
-				const low = lowBaseValue * (1 - Math.random() * 0.01);
-
-				// 거래량 (기준 거래량의 30-200%)
-				const volume = baseVolume * (0.3 + Math.random() * 1.7);
-
-				pastData.push({
-					Timestamp: date.getTime(),
-					Open: Number(open.toFixed(2)),
-					Close: Number(close.toFixed(2)),
-					High: Number(high.toFixed(2)),
-					Low: Number(low.toFixed(2)),
-					Volume: Math.round(volume),
-				});
-			}
-
-			// 새로운 과거 데이터를 기존 데이터 앞에 추가
-			return [...pastData, ...prevData];
-		});
-	}, []);
-
 	return (
 		<ValueSeries
 			{...props}
-			pastTimeData={data}
+			pastTimeData={DUMMY_DATA}
 			fetchPastTimeData={fetchPastTimeData}
 		/>
 	);
