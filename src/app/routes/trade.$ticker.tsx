@@ -10,7 +10,6 @@ import { CoinListWithSearchBar } from '~/features/coin-search-list';
 import { OrderForm, OrderFormFallback } from '~/features/order';
 import { ExecutionList } from '~/features/order-execution-list';
 import useTradeNotification from '~/features/trade/hooks/useTradeNotification';
-import Chart from '~/features/tradeview/ui/Chart';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
 import { NavBar, SideBar } from '~/widgets/navbar';
@@ -83,7 +82,7 @@ export default function TradeRouteComponent({
 						<Container>
 							<ContainerTitle>실시간 차트</ContainerTitle>
 							<Suspense fallback="차트데이터를 가져오고 있습니다.">
-								<Chart />
+								<LazyStockChart />
 							</Suspense>
 						</Container>
 					</div>

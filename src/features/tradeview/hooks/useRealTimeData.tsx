@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useStompClient } from '~/app/provider/StompProvider';
 import type { CoinTicker } from '~/entities/coin';
-import type { CandlestickData, RowData } from '../types/tradeview.type';
+import type { CandlestickData, RawData } from '../types/tradeview.type';
 
 export default function useRealTimeData(ticker: CoinTicker) {
 	const { client, connected } = useStompClient();
@@ -19,7 +19,7 @@ export default function useRealTimeData(ticker: CoinTicker) {
 		const subscription = client.subscribe(
 			`/topic/realTimeOhlc/${ticker}`,
 			(message) => {
-				const parsedData = JSON.parse(message.body) as RowData;
+				const parsedData = JSON.parse(message.body) as RawData;
 				setData({
 					Timestamp: Date.parse(parsedData.timestamp),
 					Close: Number.parseFloat(parsedData.close),

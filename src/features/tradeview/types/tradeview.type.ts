@@ -1,4 +1,6 @@
-export type RowData = {
+import type { Time } from 'lightweight-charts';
+
+export type RawData = {
 	ticker: string;
 	timestamp: string;
 	open: string;
@@ -9,10 +11,9 @@ export type RowData = {
 };
 
 export type CandlestickData = {
-	Timestamp: number;
-	Close: number;
-	High: number;
-	Low: number;
-	Open: number;
-	Volume: number;
+	time: Time;
+	close: number;
+	high: number;
+	low: number;
+	open: number;
 };
