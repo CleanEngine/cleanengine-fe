@@ -4,12 +4,14 @@ import type {
 	IChartApi,
 	ISeriesApi,
 	LogicalRangeChangeEventHandler,
+	Time,
 	TimeChartOptions,
 } from 'lightweight-charts';
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import api from '../../api/tradeview.endpoints';
 import usePastTimeData from '../../hooks/usePastTimeData';
+import useRealTimeData from '../../hooks/useRealTimeData';
 import { extractCandlestickData, timestampToISOString } from '../../utils';
 import ChartContainer from './ChartContainer';
 import ChartRoot from './ChartRoot';
@@ -29,6 +31,7 @@ export default function Chart({
 	const chartRef = useRef<IChartApi>(null);
 	const seriesRef = useRef<ISeriesApi<'Candlestick'>>(null);
 	const [isChartReady, setIsChartReady] = useState(false);
+	const realTimeData = useRealTimeData(ticker);
 	const pastTimeData = usePastTimeData(ticker, interval, count);
 
 	const chartOption: DeepPartial<TimeChartOptions> = useMemo(() => {
@@ -37,6 +40,9 @@ export default function Chart({
 			localization: {
 				locale: 'kr',
 				dateFormat: 'yyyy-MM-dd',
+			},
+			rightPriceScale: {
+				borderVisible: false,
 			},
 		};
 	}, []);
@@ -52,6 +58,9 @@ export default function Chart({
 
 		const convertedData = extractCandlestickData(pastTimeData);
 		seriesRef.current.setData(convertedData);
+		chartRef.current.timeScale().applyOptions({
+			borderVisible: false,
+		});
 		chartRef.current.timeScale().fitContent();
 	}, [isChartReady, pastTimeData]);
 
@@ -95,6 +104,27 @@ export default function Chart({
 				.unsubscribeVisibleLogicalRangeChange(handleVisibleRangeChange);
 		};
 	}, [isChartReady, count, interval, ticker]);
+
+	useLayoutEffect(() => {
+		if (!realTimeData || !realTimeData.time) return;
+		const latestTime = seriesRef.current?.data().at(-1);
+
+		if (!latestTime) {
+			seriesRef.current?.setData([realTimeData]);
+			return;
+		}
+
+		const timeDiff = +realTimeData.time - +latestTime.time;
+
+		if (timeDiff < 60 * interval) {
+			seriesRef.current?.update({ ...realTimeData, time: latestTime.time });
+		} else {
+			seriesRef.current?.update({
+				...realTimeData,
+				time: (+latestTime.time + 60 * interval) as Time,
+			});
+		}
+	}, [realTimeData, interval]);
 
 	return (
 		<ChartRoot>

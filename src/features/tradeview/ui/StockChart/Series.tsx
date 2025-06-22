@@ -6,7 +6,7 @@ import {
 	type ISeriesApi,
 	LineSeries,
 	type SeriesDataItemTypeMap,
-	type SeriesOptionsMap,
+	type SeriesPartialOptionsMap,
 	type SeriesType,
 } from 'lightweight-charts';
 import {
@@ -28,7 +28,7 @@ type SeriesApi<T extends SeriesType> = {
 
 type SeriesProps<T extends SeriesType> = PropsWithChildren<{
 	seriesType: T;
-	seriesOption?: SeriesOptionsMap[T];
+	seriesOption?: SeriesPartialOptionsMap[T];
 	ref?: React.RefObject<ISeriesApi<T> | null>;
 	data?: SeriesDataItemTypeMap[T][];
 }>;
