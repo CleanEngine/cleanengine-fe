@@ -20,7 +20,7 @@ export default function ChartRoot({ children }: ChartRootProps) {
 
 	return (
 		<Context.Provider value={{ root: root }}>
-			<div className="h-full w-full" ref={handleRef}>
+			<div className="relative h-full w-full" ref={handleRef}>
 				{root && children}
 			</div>
 		</Context.Provider>

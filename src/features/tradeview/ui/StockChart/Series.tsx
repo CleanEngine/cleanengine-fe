@@ -15,6 +15,7 @@ import {
 	useContext,
 	useImperativeHandle,
 	useLayoutEffect,
+	useMemo,
 	useRef,
 } from 'react';
 
@@ -42,39 +43,39 @@ export default function Series<T extends SeriesType>({
 	data,
 	ref,
 }: SeriesProps<T>) {
-	const parent = useChartContainer();
+	const chartContainer = useChartContainer();
 	const seriesApiRef = useRef<SeriesApi<T>>({
 		_instance: null,
 
 		getInstance() {
-			if (!parent) {
+			if (!chartContainer) {
 				throw new Error('Series should be used within ChartContainer');
 			}
 
 			if (!this._instance) {
 				switch (seriesType) {
 					case 'Area':
-						this._instance = parent
+						this._instance = chartContainer
 							.getInstance()
 							.addSeries(AreaSeries, seriesOption) as ISeriesApi<T>;
 						break;
 					case 'Bar':
-						this._instance = parent
+						this._instance = chartContainer
 							.getInstance()
 							.addSeries(BarSeries, seriesOption) as ISeriesApi<T>;
 						break;
 					case 'Line':
-						this._instance = parent
+						this._instance = chartContainer
 							.getInstance()
 							.addSeries(LineSeries, seriesOption) as ISeriesApi<T>;
 						break;
 					case 'Histogram':
-						this._instance = parent
+						this._instance = chartContainer
 							.getInstance()
 							.addSeries(HistogramSeries, seriesOption) as ISeriesApi<T>;
 						break;
 					case 'Candlestick':
-						this._instance = parent
+						this._instance = chartContainer
 							.getInstance()
 							.addSeries(CandlestickSeries, seriesOption) as ISeriesApi<T>;
 						break;
@@ -91,9 +92,9 @@ export default function Series<T extends SeriesType>({
 		},
 
 		free() {
-			if (!this._instance || parent.isRemoved) return;
+			if (!this._instance || chartContainer.isRemoved) return;
 
-			parent.free(this._instance);
+			chartContainer.free(this._instance);
 		},
 	});
 
@@ -112,6 +113,13 @@ export default function Series<T extends SeriesType>({
 	}, [seriesOption]);
 
 	useImperativeHandle(ref, () => seriesApiRef.current.getInstance(), []);
+
+	const context = useMemo(
+		() => ({
+			series: seriesApiRef.current,
+		}),
+		[],
+	);
 
 	return (
 		<SeriesContext.Provider value={seriesApiRef.current}>

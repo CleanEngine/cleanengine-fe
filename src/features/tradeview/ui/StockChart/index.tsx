@@ -9,13 +9,15 @@ import type {
 } from 'lightweight-charts';
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 
+import ChartContainer from './ChartContainer';
+import ChartRoot from './ChartRoot';
+import Series from './Series';
+import ToolTip from './ToolTip';
+
 import api from '../../api/tradeview.endpoints';
 import usePastTimeData from '../../hooks/usePastTimeData';
 import useRealTimeData from '../../hooks/useRealTimeData';
 import { extractCandlestickData, timestampToISOString } from '../../utils';
-import ChartContainer from './ChartContainer';
-import ChartRoot from './ChartRoot';
-import Series from './Series';
 
 type ChartProps = {
 	ticker?: string;
@@ -43,6 +45,15 @@ export default function Chart({
 			},
 			rightPriceScale: {
 				borderVisible: false,
+			},
+			crosshair: {
+				horzLine: {
+					visible: true,
+					labelVisible: true,
+				},
+				vertLine: {
+					labelVisible: true,
+				},
 			},
 		};
 	}, []);
@@ -136,7 +147,9 @@ export default function Chart({
 				onChartReady={() => setIsChartReady(true)}
 				chartOption={chartOption}
 			>
-				<Series ref={seriesRef} seriesType="Candlestick" />
+				<Series ref={seriesRef} seriesType="Candlestick">
+					<ToolTip />
+				</Series>
 			</ChartContainer>
 		</ChartRoot>
 	);
