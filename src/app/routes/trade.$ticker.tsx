@@ -1,6 +1,6 @@
 import * as cookie from 'cookie';
 import { AnimatePresence } from 'motion/react';
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy, useMemo, useState } from 'react';
 import { Outlet, redirect } from 'react-router';
 
 import { CoinPriceWithName, api as coinApi } from '~/entities/coin';
@@ -49,11 +49,16 @@ export default function TradeRouteComponent({
 	useTradeNotification(userId ?? 0);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { coinInfo, coinList, isLoggedIn } = loaderData;
-	const coinListWithIcon = coinList.map((coinInfo) => ({
-		...coinInfo,
-		coinIcon: <span>🪙</span>,
-		to: `/trade/${coinInfo.ticker}`,
-	}));
+	const coinListWithIcon = useMemo(
+		() =>
+			coinList.map((coinInfo) => ({
+				...coinInfo,
+				coinIcon: <span>🪙</span>,
+				to: `/trade/${coinInfo.ticker}`,
+				onClick: () => setIsMenuOpen(false),
+			})),
+		[coinList],
+	);
 
 	const handleOpenMenu = () => {
 		setIsMenuOpen(true);
