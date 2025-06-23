@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/react-router';
+import { preload } from 'react-dom';
 import {
 	Links,
 	Meta,
@@ -6,12 +8,11 @@ import {
 	ScrollRestoration,
 	isRouteErrorResponse,
 } from 'react-router';
+import { Slide } from 'react-toastify';
 import { ToastContainer } from 'react-toastify/unstyled';
-import type { Route } from './+types/root';
 
 import './app.css';
-import { preload } from 'react-dom';
-import { Slide } from 'react-toastify';
+import type { Route } from './+types/root';
 import StompProvider from './provider/StompProvider';
 import UserIdProvider from './provider/UserInfoProvider';
 
@@ -121,9 +122,12 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 			error.status === 404
 				? 'The requested page could not be found.'
 				: error.statusText || details;
-	} else if (import.meta.env.DEV && error && error instanceof Error) {
-		details = error.message;
-		stack = error.stack;
+	} else if (error && error instanceof Error) {
+		Sentry.captureException(error);
+		if (import.meta.env.DEV) {
+			details = error.message;
+			stack = error.stack;
+		}
 	}
 
 	return (
