@@ -82,7 +82,7 @@ export default function TradeRouteComponent({
 						<Container>
 							<ContainerTitle>실시간 차트</ContainerTitle>
 							<Suspense fallback="차트데이터를 가져오고 있습니다.">
-								<LazyStockChart />
+								<LazyStockChart ticker={coinInfo?.ticker || 'BTC'} />
 							</Suspense>
 						</Container>
 					</div>
