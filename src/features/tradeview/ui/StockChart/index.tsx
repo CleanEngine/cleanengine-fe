@@ -7,7 +7,13 @@ import type {
 	Time,
 	TimeChartOptions,
 } from 'lightweight-charts';
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+	type MouseEvent,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 
 import ChartContainer from './ChartContainer';
 import ChartRoot from './ChartRoot';
@@ -15,9 +21,11 @@ import Series from './Series';
 import ToolTip from './ToolTip';
 
 import api from '../../api/tradeview.endpoints';
+import { Periods } from '../../const/chart.const';
 import usePastTimeData from '../../hooks/usePastTimeData';
 import useRealTimeData from '../../hooks/useRealTimeData';
 import { extractCandlestickData, timestampToISOString } from '../../utils';
+import PeriodSelector from '../PeriodSelector';
 
 type ChartProps = {
 	ticker?: string;
@@ -30,6 +38,7 @@ export default function Chart({
 	interval = 1,
 	count = 10,
 }: ChartProps) {
+	const [selectedPeriod, setSelectedPeriod] = useState(1);
 	const chartRef = useRef<IChartApi>(null);
 	const seriesRef = useRef<ISeriesApi<'Candlestick'>>(null);
 	const [isChartReady, setIsChartReady] = useState(false);
@@ -137,8 +146,17 @@ export default function Chart({
 		}
 	}, [realTimeData, interval]);
 
+	const handleSelectPeriod = (e: MouseEvent<HTMLButtonElement>) => {
+		setSelectedPeriod(Number(e.currentTarget.value));
+	};
+
 	return (
 		<ChartRoot>
+			<PeriodSelector
+				periods={Periods}
+				onSelectPeriod={handleSelectPeriod}
+				selectedPeriod={selectedPeriod}
+			/>
 			<ChartContainer
 				ref={chartRef}
 				layout={{
