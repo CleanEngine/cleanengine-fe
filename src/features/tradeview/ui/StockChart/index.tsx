@@ -102,9 +102,15 @@ export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
 
 				if (!pastData.length) return;
 
-				const pastCandlestickData = extractCandlestickData(pastData);
+				const previousData = seriesRef.current?.data() || [];
 
-				const previousData = seriesRef.current?.data().values() || [];
+				const pastCandlestickData = extractCandlestickData(pastData).filter(
+					(data) => {
+						const prevTime = previousData.at(0)?.time;
+						if (!prevTime) return true;
+						return data.time < prevTime;
+					},
+				);
 				seriesRef.current?.setData([...pastCandlestickData, ...previousData]);
 			}
 		};
