@@ -21,29 +21,24 @@ import Series from './Series';
 import ToolTip from './ToolTip';
 
 import api from '../../api/tradeview.endpoints';
-import { Periods } from '../../const/chart.const';
+import { Intervals } from '../../const/chart.const';
 import usePastTimeData from '../../hooks/usePastTimeData';
 import useRealTimeData from '../../hooks/useRealTimeData';
 import { extractCandlestickData, timestampToISOString } from '../../utils';
-import PeriodSelector from '../PeriodSelector';
+import IntervalSelector from '../IntervalSelector';
 
 type ChartProps = {
 	ticker?: string;
-	interval?: number;
 	count?: number;
 };
 
-export default function Chart({
-	ticker = 'BTC',
-	interval = 1,
-	count = 10,
-}: ChartProps) {
-	const [selectedPeriod, setSelectedPeriod] = useState(1);
+export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
+	const [selectedInterval, setSelectedInterval] = useState(1);
 	const chartRef = useRef<IChartApi>(null);
 	const seriesRef = useRef<ISeriesApi<'Candlestick'>>(null);
 	const [isChartReady, setIsChartReady] = useState(false);
 	const realTimeData = useRealTimeData(ticker);
-	const pastTimeData = usePastTimeData(ticker, interval, count);
+	const pastTimeData = usePastTimeData(ticker, selectedInterval, count);
 
 	const chartOption: DeepPartial<TimeChartOptions> = useMemo(() => {
 		return {
@@ -99,7 +94,7 @@ export default function Chart({
 
 				const response = await api.getPastData(
 					ticker,
-					interval,
+					selectedInterval,
 					count,
 					firstDate,
 				);
@@ -123,7 +118,7 @@ export default function Chart({
 				?.timeScale()
 				.unsubscribeVisibleLogicalRangeChange(handleVisibleRangeChange);
 		};
-	}, [isChartReady, count, interval, ticker]);
+	}, [isChartReady, count, selectedInterval, ticker]);
 
 	useLayoutEffect(() => {
 		if (!realTimeData || !realTimeData.time) return;
@@ -136,26 +131,26 @@ export default function Chart({
 
 		const timeDiff = +realTimeData.time - +latestTime.time;
 
-		if (timeDiff < 60 * interval) {
+		if (timeDiff < 60 * selectedInterval) {
 			seriesRef.current?.update({ ...realTimeData, time: latestTime.time });
 		} else {
 			seriesRef.current?.update({
 				...realTimeData,
-				time: (+latestTime.time + 60 * interval) as Time,
+				time: (+latestTime.time + 60 * selectedInterval) as Time,
 			});
 		}
-	}, [realTimeData, interval]);
+	}, [realTimeData, selectedInterval]);
 
-	const handleSelectPeriod = (e: MouseEvent<HTMLButtonElement>) => {
-		setSelectedPeriod(Number(e.currentTarget.value));
+	const handleSelectInterval = (e: MouseEvent<HTMLButtonElement>) => {
+		setSelectedInterval(Number(e.currentTarget.value));
 	};
 
 	return (
 		<ChartRoot>
-			<PeriodSelector
-				periods={Periods}
-				onSelectPeriod={handleSelectPeriod}
-				selectedPeriod={selectedPeriod}
+			<IntervalSelector
+				intervals={Intervals}
+				onSelectInterval={handleSelectInterval}
+				selectedInterval={selectedInterval}
 			/>
 			<ChartContainer
 				ref={chartRef}
