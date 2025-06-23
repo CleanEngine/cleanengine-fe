@@ -17,6 +17,7 @@ import {
 	useRef,
 } from 'react';
 
+import { INTERVAL_SELECTOR_HEIGHT } from '../../const/chart.const';
 import { useChartRoot } from './ChartRoot';
 
 type ChartContainerProps = PropsWithChildren<{
@@ -57,7 +58,7 @@ export default function ChartContainer({
 					...chartOption,
 					layout,
 					width: root.clientWidth,
-					height: root.clientHeight,
+					height: root.clientHeight - INTERVAL_SELECTOR_HEIGHT,
 				});
 				this._instance.timeScale().fitContent();
 			}
@@ -76,10 +77,11 @@ export default function ChartContainer({
 		const chart = chartApi.getInstance();
 
 		const handleResize = () => {
+			if (!root) return;
 			chart.applyOptions({
 				...chartOption,
-				width: root?.clientWidth,
-				height: root?.clientHeight,
+				width: root.clientWidth,
+				height: root.clientHeight - INTERVAL_SELECTOR_HEIGHT,
 			});
 		};
 

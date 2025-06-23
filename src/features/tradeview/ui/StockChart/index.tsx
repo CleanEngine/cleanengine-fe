@@ -21,7 +21,7 @@ import Series from './Series';
 import ToolTip from './ToolTip';
 
 import api from '../../api/tradeview.endpoints';
-import { Intervals } from '../../const/chart.const';
+import { INTERVALS } from '../../const/chart.const';
 import usePastTimeData from '../../hooks/usePastTimeData';
 import useRealTimeData from '../../hooks/useRealTimeData';
 import { extractCandlestickData, timestampToISOString } from '../../utils';
@@ -148,7 +148,7 @@ export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
 	return (
 		<ChartRoot>
 			<IntervalSelector
-				intervals={Intervals}
+				intervals={INTERVALS}
 				onSelectInterval={handleSelectInterval}
 				selectedInterval={selectedInterval}
 			/>
