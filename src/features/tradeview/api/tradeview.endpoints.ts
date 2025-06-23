@@ -1,10 +1,17 @@
 /* v8 ignore start */
 import ApiClient from '~/shared/api/httpClient';
-import type { RowData } from '../types/tradeview.type';
+import type { RawData } from '../types/tradeview.type';
 
 export default {
-	getPastData: async (ticker = 'TRUMP') => {
-		return await ApiClient.get<RowData[]>(`api/minute-ohlc?ticker=${ticker}`);
+	getPastData: async (
+		ticker = 'TRUMP',
+		interval = 1,
+		count = 100,
+		from?: string,
+	) => {
+		return await ApiClient.get<RawData[]>(
+			`api/minute-ohlc?ticker=${ticker}&count=${count}&interval=${interval}${from ? `&from=${from}` : ''}`,
+		);
 	},
 };
 /* v8 ignore end */

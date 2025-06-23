@@ -20,6 +20,9 @@ jobs:
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
           echo "VITE_STOMP_URL=${{ secrets.VITE_STOMP_URL }}" >> .env
           echo "VITE_AI_URL=${{ secrets.VITE_AI_URL }}" >> .env
+          echo "VITE_SENTRY_ORG=${{ secrets.VITE_SENTRY_ORG }}" >> .env
+          echo "VITE_SENTRY_PROJECT=${{ secrets.VITE_SENTRY_PROJECT }}" >> .env
+          echo "VITE_SENTRY_AUTH_TOKEN=${{ secrets.VITE_SENTRY_AUTH_TOKEN }}" >> .env
 
       - name: Build image
         run: |

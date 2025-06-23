@@ -1,8 +1,10 @@
+import type { Time } from 'lightweight-charts';
 import { useEffect, useState } from 'react';
 
 import { useStompClient } from '~/app/provider/StompProvider';
 import type { CoinTicker } from '~/entities/coin';
-import type { CandlestickData, RowData } from '../types/tradeview.type';
+import type { CandlestickData, RawData } from '../types/tradeview.type';
+import { timeToKrTz } from '../utils';
 
 export default function useRealTimeData(ticker: CoinTicker) {
 	const { client, connected } = useStompClient();
@@ -19,14 +21,14 @@ export default function useRealTimeData(ticker: CoinTicker) {
 		const subscription = client.subscribe(
 			`/topic/realTimeOhlc/${ticker}`,
 			(message) => {
-				const parsedData = JSON.parse(message.body) as RowData;
+				const parsedData = JSON.parse(message.body) as RawData;
+				const parsedTime = timeToKrTz(parsedData.timestamp, 'Asia/Seoul');
 				setData({
-					Timestamp: Date.parse(parsedData.timestamp),
-					Close: Number.parseFloat(parsedData.close),
-					High: Number.parseFloat(parsedData.high),
-					Low: Number.parseFloat(parsedData.low),
-					Open: Number.parseFloat(parsedData.open),
-					Volume: Number.parseFloat(parsedData.volume),
+					time: parsedTime as Time,
+					close: Number.parseFloat(parsedData.close),
+					high: Number.parseFloat(parsedData.high),
+					low: Number.parseFloat(parsedData.low),
+					open: Number.parseFloat(parsedData.open),
 				});
 			},
 		);

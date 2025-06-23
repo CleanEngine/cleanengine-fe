@@ -32,3 +32,7 @@ export function preventNonNumericInput(event: React.KeyboardEvent): void {
 		event.preventDefault();
 	}
 }
+
+export function isNullish(value: unknown): value is null | undefined {
+	return value === null || value === undefined;
+}
