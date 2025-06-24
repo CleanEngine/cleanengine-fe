@@ -29,3 +29,19 @@ export function timestampToISOString(timestamp: number) {
 	const date = new Date(timestamp * 1000);
 	return date.toISOString().slice(0, -1);
 }
+
+export function priceFormatter() {
+	const currentLocale = window.navigator.languages[0];
+
+	return Intl.NumberFormat(currentLocale, {
+		style: 'currency',
+		currency: 'KRW',
+	}).format;
+}
+
+export function formatDateKr(date: Date) {
+	return Intl.DateTimeFormat('ko-KR', {
+		dateStyle: 'full',
+		timeStyle: 'short',
+	}).format(date);
+}

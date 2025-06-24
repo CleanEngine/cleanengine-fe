@@ -15,7 +15,6 @@ import {
 	useContext,
 	useImperativeHandle,
 	useLayoutEffect,
-	useMemo,
 	useRef,
 } from 'react';
 
@@ -113,13 +112,6 @@ export default function Series<T extends SeriesType>({
 	}, [seriesOption]);
 
 	useImperativeHandle(ref, () => seriesApiRef.current.getInstance(), []);
-
-	const context = useMemo(
-		() => ({
-			series: seriesApiRef.current,
-		}),
-		[],
-	);
 
 	return (
 		<SeriesContext.Provider value={seriesApiRef.current}>

@@ -21,10 +21,14 @@ import Series from './Series';
 import ToolTip from './ToolTip';
 
 import api from '../../api/tradeview.endpoints';
-import { INTERVALS } from '../../const/chart.const';
+import { INTERVALS, MINUTE } from '../../const/chart.const';
 import usePastTimeData from '../../hooks/usePastTimeData';
 import useRealTimeData from '../../hooks/useRealTimeData';
-import { extractCandlestickData, timestampToISOString } from '../../utils';
+import {
+	extractCandlestickData,
+	priceFormatter,
+	timestampToISOString,
+} from '../../utils';
 import IntervalSelector from '../IntervalSelector';
 
 type ChartProps = {
@@ -39,6 +43,7 @@ export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
 	const [isChartReady, setIsChartReady] = useState(false);
 	const realTimeData = useRealTimeData(ticker);
 	const pastTimeData = usePastTimeData(ticker, selectedInterval, count);
+	const prevRequestDate = useRef<Time | null>(null);
 
 	const chartOption: DeepPartial<TimeChartOptions> = useMemo(() => {
 		return {
@@ -46,6 +51,7 @@ export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
 			localization: {
 				locale: 'kr',
 				dateFormat: 'yyyy-MM-dd',
+				priceFormatter: priceFormatter(),
 			},
 			rightPriceScale: {
 				borderVisible: false,
@@ -89,6 +95,12 @@ export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
 			if (logicalRange.from < -0.5) {
 				const firstData = seriesRef.current?.dataByIndex(0) as CandlestickData;
 				if (!firstData || !firstData.time) return;
+				if (
+					prevRequestDate.current &&
+					prevRequestDate.current <= firstData.time
+				)
+					return;
+				prevRequestDate.current = firstData.time;
 
 				const firstDate = timestampToISOString(firstData.time as number);
 
@@ -137,12 +149,12 @@ export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
 
 		const timeDiff = +realTimeData.time - +latestTime.time;
 
-		if (timeDiff < 60 * selectedInterval) {
+		if (timeDiff < MINUTE * selectedInterval) {
 			seriesRef.current?.update({ ...realTimeData, time: latestTime.time });
 		} else {
 			seriesRef.current?.update({
 				...realTimeData,
-				time: (+latestTime.time + 60 * selectedInterval) as Time,
+				time: (+latestTime.time + MINUTE * selectedInterval) as Time,
 			});
 		}
 	}, [realTimeData, selectedInterval]);
