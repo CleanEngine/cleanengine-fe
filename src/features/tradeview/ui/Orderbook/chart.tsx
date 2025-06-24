@@ -1,6 +1,7 @@
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import { useEffect, useLayoutEffect, useRef } from 'react';
+import { formatCurrencyKR } from '~/shared/utils';
 import type { OrderBookUnit } from '../../types/orderbook.type';
 
 const THEME = {
@@ -33,7 +34,7 @@ export default function OrderbookChart({
 		if (!chartRef.current || !yAxisRef.current || !seriesRef.current) return;
 
 		const formattedData = data.map((item) => ({
-			price: item.price.toString(),
+			price: formatCurrencyKR(+item.price),
 			size: item.size,
 			priceY: item.price,
 			sizeX: item.size,
@@ -41,10 +42,6 @@ export default function OrderbookChart({
 
 		yAxisRef.current.data.setAll(formattedData);
 		seriesRef.current.data.setAll(formattedData);
-
-		chartRef.current.series.each((series) => {
-			series.appear(1000);
-		});
 	}, [data]);
 
 	useLayoutEffect(() => {
@@ -69,7 +66,6 @@ export default function OrderbookChart({
 			am5.Rectangle.new(rootRef.current, {
 				stroke: am5.color('#fff'),
 				strokeOpacity: 0,
-				fill: THEME[type].barColor,
 				fillOpacity: 0.05,
 			}),
 		);
@@ -116,7 +112,7 @@ export default function OrderbookChart({
 				sequencedInterpolation: true,
 				tooltip: am5.Tooltip.new(rootRef.current, {
 					pointerOrientation: 'horizontal',
-					labelText: '[bold]{priceY}원 {sizeX}개',
+					labelText: "[bold]{priceY.formatNumber('#,###.##')}원 {sizeX}개",
 				}),
 				paddingBottom: 0,
 				paddingTop: 0,

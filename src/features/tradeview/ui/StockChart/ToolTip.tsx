@@ -1,6 +1,7 @@
 import type { CandlestickData } from 'lightweight-charts';
 import { useLayoutEffect, useRef } from 'react';
 import { formatCurrencyKR } from '~/shared/utils';
+import { formatDateKr } from '../../utils';
 import { useChartContainer } from './ChartContainer';
 import { useChartRoot } from './ChartRoot';
 import { useSeries } from './Series';
@@ -36,6 +37,8 @@ export default function ToolTip() {
 				const { close, high, low, open, time } = param.seriesData.get(
 					chartSeries,
 				) as CandlestickData;
+				const date = new Date((time as number) * 1000);
+				const koreanDate = new Date(date.setHours(date.getHours() - 9));
 
 				toolTipElementRef.current.style.display = 'block';
 				toolTipElementRef.current.innerHTML = `<div style="border: 1px solid #d1d5db; background-color: white; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); color: #1f2937; z-index: 40;">
@@ -50,7 +53,7 @@ export default function ToolTip() {
 				<div style="font-weight: 500;">${formatCurrencyKR(close)}원</div>
 			</div>
 			<div style="border-top: 1px solid #e5e7eb; padding-top: 0.25rem; margin-top: 0.25rem;">
-				<div style="color: #6b7280; font-size: 0.75rem; line-height: 1rem;">${new Date((time as number) * 1000).toLocaleString()}</div>
+				<div style="color: #6b7280; font-size: 0.75rem; line-height: 1rem;">${formatDateKr(koreanDate)}</div>
 			</div>
 		</div>`;
 

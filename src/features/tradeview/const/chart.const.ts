@@ -7,3 +7,5 @@ export const INTERVALS = [
 ];
 
 export const INTERVAL_SELECTOR_HEIGHT = 26;
+
+export const MINUTE = 60;
