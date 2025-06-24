@@ -39,6 +39,7 @@ export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
 	const [isChartReady, setIsChartReady] = useState(false);
 	const realTimeData = useRealTimeData(ticker);
 	const pastTimeData = usePastTimeData(ticker, selectedInterval, count);
+	const prevRequestDate = useRef<Time | null>(null);
 
 	const chartOption: DeepPartial<TimeChartOptions> = useMemo(() => {
 		return {
@@ -89,6 +90,12 @@ export default function Chart({ ticker = 'BTC', count = 30 }: ChartProps) {
 			if (logicalRange.from < -0.5) {
 				const firstData = seriesRef.current?.dataByIndex(0) as CandlestickData;
 				if (!firstData || !firstData.time) return;
+				if (
+					prevRequestDate.current &&
+					prevRequestDate.current <= firstData.time
+				)
+					return;
+				prevRequestDate.current = firstData.time;
 
 				const firstDate = timestampToISOString(firstData.time as number);
 
