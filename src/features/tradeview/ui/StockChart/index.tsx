@@ -15,10 +15,11 @@ import {
 	useState,
 } from 'react';
 
-import ChartContainer from './ChartContainer';
-import ChartRoot from './ChartRoot';
-import Series from './Series';
-import ToolTip from './ToolTip';
+import ChartContainer from '../../../../shared/ui/Chart/ChartContainer';
+import ChartRoot from '../../../../shared/ui/Chart/ChartRoot';
+import Series from '../../../../shared/ui/Chart/Series';
+import ToolTip from '../../../../shared/ui/Chart/ToolTip';
+import IntervalSelector from '../IntervalSelector';
 
 import api from '../../api/tradeview.endpoints';
 import { INTERVALS, MINUTE } from '../../const/chart.const';
@@ -29,7 +30,6 @@ import {
 	priceFormatter,
 	timestampToISOString,
 } from '../../utils';
-import IntervalSelector from '../IntervalSelector';
 
 type ChartProps = {
 	ticker?: string;

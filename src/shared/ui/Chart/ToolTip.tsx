@@ -1,7 +1,7 @@
 import type { CandlestickData } from 'lightweight-charts';
 import { useLayoutEffect, useRef } from 'react';
 import { formatCurrencyKR } from '~/shared/utils';
-import { formatDateKr } from '../../utils';
+import { formatDateKr } from '../../../features/tradeview/utils';
 import { useChartContainer } from './ChartContainer';
 import { useChartRoot } from './ChartRoot';
 import { useSeries } from './Series';
