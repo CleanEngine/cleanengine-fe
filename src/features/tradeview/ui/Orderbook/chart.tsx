@@ -21,18 +21,22 @@ export default function OrderbookChart({
 	type = 'bull',
 	layout = 'vertical',
 }: Readonly<OrderbookChartProps>) {
-	const color = type === 'bull' ? 'red' : 'blue';
+	const color = type === 'bull' ? '#FDD2D7' : '#CDE0FE';
 
 	return (
 		<div
 			className={clsx(
 				'flex h-full min-h-full w-full px-1',
-				type === 'bull' ? 'bg-red-100' : 'bg-blue-100',
+				type === 'bull' ? 'bg-red-50' : 'bg-blue-50',
 			)}
 		>
 			<div className="flex h-full min-h-full flex-col justify-around">
 				{data.map((item) => (
-					<div key={item.price + item.size} style={{ overflowAnchor: 'none' }}>
+					<div
+						key={item.price + item.size}
+						className="text-[#4287F9]"
+						style={{ overflowAnchor: 'none' }}
+					>
 						{formatCurrencyKR(item.price)}
 					</div>
 				))}
