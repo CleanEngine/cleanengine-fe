@@ -1,9 +1,7 @@
-type Price = string;
-type Size = number;
-
-export type OrderBookUnit = {
-	price: Price;
-	size: Size;
+export type OrderBookChartData = {
+	name: string;
+	price: number;
+	size: number;
 };
 
 export type OrderBookUnitRaw = {
@@ -13,8 +11,8 @@ export type OrderBookUnitRaw = {
 
 export type OrderBookData = {
 	ticker: string;
-	buyOrderBookUnits: OrderBookUnit[];
-	sellOrderBookUnits: OrderBookUnit[];
+	buyOrderBookChartData: OrderBookChartData[];
+	sellOrderBookChartData: OrderBookChartData[];
 };
 
 export type RawOrderBookData = {

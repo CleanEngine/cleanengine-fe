@@ -20,12 +20,14 @@ export default function useOrderBookData(ticker: CoinTicker) {
 				const parsedData = JSON.parse(message.body) as RawOrderBookData;
 				setData({
 					ticker: parsedData.ticker,
-					buyOrderBookUnits: parsedData.buyOrderBookUnits.map((unit) => ({
-						price: String(unit.price),
+					buyOrderBookChartData: parsedData.buyOrderBookUnits.map((unit) => ({
+						name: String(unit.price),
+						price: Number(unit.price),
 						size: Number(unit.size),
 					})),
-					sellOrderBookUnits: parsedData.sellOrderBookUnits.map((unit) => ({
-						price: String(unit.price),
+					sellOrderBookChartData: parsedData.sellOrderBookUnits.map((unit) => ({
+						name: String(unit.price),
+						price: Number(unit.price),
 						size: Number(unit.size),
 					})),
 				});
