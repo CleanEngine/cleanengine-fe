@@ -7,6 +7,7 @@ import {
 	XAxis,
 	YAxis,
 } from 'recharts';
+import { formatCurrencyKR } from '~/shared/utils';
 import type { OrderBookChartData } from '../../types/orderbook.type';
 
 export type OrderbookChartProps = {
@@ -25,13 +26,15 @@ export default function OrderbookChart({
 	return (
 		<div
 			className={clsx(
-				'flex h-full min-h-full w-full',
+				'flex h-full min-h-full w-full px-1',
 				type === 'bull' ? 'bg-red-100' : 'bg-blue-100',
 			)}
 		>
 			<div className="flex h-full min-h-full flex-col justify-around">
 				{data.map((item) => (
-					<div key={item.name}>{item.price}</div>
+					<div key={item.price + item.size} style={{ overflowAnchor: 'none' }}>
+						{formatCurrencyKR(item.price)}
+					</div>
 				))}
 			</div>
 			<div className="h-full min-h-full w-full">
