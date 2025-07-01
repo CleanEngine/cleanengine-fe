@@ -1,6 +1,14 @@
 /* v8 ignore start */
-import type { RouteConfig } from '@react-router/dev/routes';
-import { flatRoutes } from '@react-router/fs-routes';
+import { type RouteConfig, prefix, route } from '@react-router/dev/routes';
 
-export default flatRoutes() satisfies RouteConfig;
+export default [
+	route('', './routes/_index.tsx', [route('trade', './routes/catchTrade.tsx')]),
+	route('callback', './routes/callback.tsx'),
+	...prefix('trade', [
+		route(':ticker', './routes/trade.tsx', [
+			route('login', './routes/login.tsx'),
+			route('profile', './routes/profile.tsx'),
+		]),
+	]),
+] satisfies RouteConfig;
 /* v8 ignore end */

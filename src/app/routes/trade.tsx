@@ -14,7 +14,7 @@ import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
 import { NavBar, SideBar } from '~/widgets/navbar';
 import { useUserId } from '../provider/UserInfoProvider';
-import type { Route } from './+types/trade.$ticker';
+import type { Route } from './+types/trade';
 
 const LazyStockChart = lazy(() => import('~/features/tradeview/ui/StockChart'));
 const LazyOrderBook = lazy(() => import('~/features/tradeview/ui/Orderbook'));
