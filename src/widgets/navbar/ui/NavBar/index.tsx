@@ -37,7 +37,17 @@ export default function NavBar({
 		</NavLink>
 	);
 
-	const LogoutButton = () => <Button onClick={handleLogout}>로그아웃</Button>;
+	const LogoutButton = () => (
+		<Button buttonStyle="secondary" onClick={handleLogout}>
+			로그아웃
+		</Button>
+	);
+
+	const ProfileButton = () => (
+		<NavLink to={`/trade/${ticker}/profile`}>
+			<Button>프로필</Button>
+		</NavLink>
+	);
 
 	return (
 		<>
@@ -48,7 +58,10 @@ export default function NavBar({
 				<Link to={to}>
 					<LogoWithTitle serviceName={serviceName} isBlack={isBlack} />
 				</Link>
-				{isLoggedIn ? <LogoutButton /> : <LoginButton />}
+				<div className="flex items-center gap-1">
+					{isLoggedIn ? <ProfileButton /> : null}
+					{isLoggedIn ? <LogoutButton /> : <LoginButton />}
+				</div>
 			</nav>
 			<div className="h-[60px]" />
 		</>
