@@ -1,12 +1,13 @@
 import type { Response } from '~/shared/types/api';
 
-type Wallet = {
-	accountId: number;
-	buyPrice: string;
-	id: number;
-	roi: string;
-	size: string;
+export type Wallet = {
+	name: string;
 	ticker: string;
+	accountId: number;
+	buyPrice: number;
+	currentPrice: number;
+	roi: number;
+	size: number;
 };
 
 type UserInfoResponseData = {
