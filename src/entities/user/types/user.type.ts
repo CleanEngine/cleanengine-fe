@@ -10,12 +10,13 @@ export type Wallet = {
 	size: number;
 };
 
-type UserInfoResponseData = {
+export type UserInfoResponseData = {
 	userId: number;
 	email: string;
 	nickname: string;
 	provider: string;
 	cash: number;
+	totalAssetAmount: number;
 	wallets: Wallet[];
 };
 
