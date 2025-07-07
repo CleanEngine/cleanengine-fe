@@ -2,10 +2,6 @@
 import { PassThrough } from 'node:stream';
 
 import { createReadableStreamFromReadable } from '@react-router/node';
-import {
-	getMetaTagTransformer,
-	wrapSentryHandleRequest,
-} from '@sentry/react-router';
 import { isbot } from 'isbot';
 import type { RenderToPipeableStreamOptions } from 'react-dom/server';
 import { renderToPipeableStream } from 'react-dom/server';
@@ -51,7 +47,9 @@ function handleRequest(
 						}),
 					);
 
-					pipe(getMetaTagTransformer(body));
+					/* Sentry 설정 제외 */
+					// pipe(getMetaTagTransformer(body));
+					pipe(body);
 				},
 				onShellError(error: unknown) {
 					reject(error);
@@ -75,5 +73,7 @@ function handleRequest(
 	});
 }
 
-export default wrapSentryHandleRequest(handleRequest);
+/* Sentry 설정 제외 */
+// export default wrapSentryHandleRequest(handleRequest);
+export default handleRequest;
 /* v8 ignore end */
