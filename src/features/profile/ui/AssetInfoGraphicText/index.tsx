@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { formatCurrencyKR } from '~/shared/utils';
+import IncrementingNumber from '~/shared/ui/IncrementingNumber';
 
 type AssetInfoGraphicTextProps = {
 	label: string;
@@ -12,8 +12,7 @@ export default function AssetInfoGraphicText({
 	type,
 	value,
 }: AssetInfoGraphicTextProps) {
-	const valueText =
-		type === 'money' ? `${formatCurrencyKR(value)}원` : `${value.toFixed(4)}%`;
+	const valueUnit = type === 'money' ? '원' : '%';
 	const color =
 		value > 0 ? 'text-red-500' : value < 0 ? 'text-blue-500' : 'text-gray-800';
 	const valueTextClassName = type === 'percent' ? color : '';
@@ -27,7 +26,10 @@ export default function AssetInfoGraphicText({
 					valueTextClassName,
 				)}
 			>
-				{valueText}
+				<IncrementingNumber formatToCurrencyKr duration={3}>
+					{value}
+				</IncrementingNumber>
+				{valueUnit}
 			</p>
 		</div>
 	);

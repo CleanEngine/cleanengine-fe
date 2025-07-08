@@ -19,7 +19,7 @@ export default function AssetInfoGraphic({ userInfo }: AssetInfoGraphicProps) {
 				<CoinPieChart coinData={coinData} />
 			</div>
 			<div className="flex flex-1/5 justify-center gap-10">
-				<div className="flex flex-col gap-6">
+				<div className="flex flex-1 flex-col gap-6">
 					<AssetInfoGraphicText
 						label="총평가금액"
 						type="money"
@@ -31,11 +31,13 @@ export default function AssetInfoGraphic({ userInfo }: AssetInfoGraphicProps) {
 						value={roiAverage}
 					/>
 				</div>
-				<AssetInfoGraphicText
-					label="예수금"
-					type="money"
-					value={userInfo.cash}
-				/>
+				<div className="flex-1">
+					<AssetInfoGraphicText
+						label="예수금"
+						type="money"
+						value={userInfo.cash}
+					/>
+				</div>
 			</div>
 		</div>
 	);
