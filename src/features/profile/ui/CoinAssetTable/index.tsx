@@ -11,7 +11,7 @@ const TABLE_ROW_HEIGHT = 36;
 
 export default function CoinAssetTable({ wallets }: CoinAssetTableProps) {
 	return (
-		<div className="scrollbar-custom max-h-54 overflow-y-scroll rounded-md border-1 border-gray-400">
+		<div className="scrollbar-custom max-h-54 shrink-0 overflow-y-scroll rounded-md border-1 border-gray-400">
 			<table className="w-200 border-collapse">
 				<thead
 					className="sticky top-0 bg-white"
@@ -24,10 +24,7 @@ export default function CoinAssetTable({ wallets }: CoinAssetTableProps) {
 						<th>수익률</th>
 					</tr>
 				</thead>
-				<tbody
-					className="mt-[${TABLE_HEAD_HEIGHT}px]"
-					style={{ marginTop: `${TABLE_HEAD_HEIGHT}px` }}
-				>
+				<tbody style={{ marginTop: `${TABLE_HEAD_HEIGHT}px` }}>
 					{wallets.map((wallet) => (
 						<tr
 							key={wallet.ticker}
