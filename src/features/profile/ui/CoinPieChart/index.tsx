@@ -1,8 +1,7 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { COLORS } from '../../const/chart.const';
 import type { CoinPieChartData } from '../../types/chart.type';
-import CoinPieChartLabel from '../CoinPieChartLabel';
-import CoinPieChartTooltip from '../CoinPieChartTooltip';
+import CoinPieChartActiveShape from '../CoinPieChartActiveShape';
 
 type CoinPieChartProps = { coinData: CoinPieChartData[] };
 
@@ -15,8 +14,10 @@ export default function CoinPieChart({ coinData }: CoinPieChartProps) {
 					cy="50%"
 					nameKey="ticker"
 					dataKey="totalPrice"
-					label={CoinPieChartLabel}
 					labelLine={false}
+					innerRadius={60}
+					outerRadius={80}
+					activeShape={CoinPieChartActiveShape}
 				>
 					{coinData.map((item, index) => (
 						<Cell
@@ -25,7 +26,6 @@ export default function CoinPieChart({ coinData }: CoinPieChartProps) {
 						/>
 					))}
 				</Pie>
-				<Tooltip content={CoinPieChartTooltip} />
 			</PieChart>
 		</ResponsiveContainer>
 	);
