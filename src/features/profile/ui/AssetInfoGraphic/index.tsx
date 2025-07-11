@@ -14,7 +14,7 @@ export default function AssetInfoGraphic({ userInfo }: AssetInfoGraphicProps) {
 		wallets.reduce((acc, item) => acc + item.roi, 0) / wallets.length;
 
 	return (
-		<div className="flex h-100 w-180 items-center justify-center gap-6 ">
+		<div className="flex h-100 w-180 shrink-0 items-center justify-center gap-6 ">
 			<div className="h-full flex-1/5">
 				<CoinPieChart coinData={coinData} />
 			</div>
