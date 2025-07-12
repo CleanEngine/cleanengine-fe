@@ -3,4 +3,8 @@ export type CoinPieChartData = {
 	totalPrice: number;
 	averagePrice: number;
 	quantity: number;
+	roi: number;
+	accountId: number;
+	name: string;
+	currentPrice: number;
 };

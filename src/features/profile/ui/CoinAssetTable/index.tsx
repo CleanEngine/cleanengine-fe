@@ -1,17 +1,23 @@
-import type { Wallet } from '~/entities/user';
+import type { RefObject } from 'react';
 import { formatCurrencyKR } from '~/shared/utils';
-import { COLORS } from '../../const/chart.const';
+import {
+	COLORS,
+	TABLE_HEAD_HEIGHT,
+	TABLE_ROW_HEIGHT,
+} from '../../const/chart.const';
+import type { CoinPieChartData } from '../../types/chart.type';
 
 type CoinAssetTableProps = {
-	wallets: Wallet[];
+	coinData: CoinPieChartData[];
+	ref?: RefObject<HTMLDivElement | null>;
 };
 
-const TABLE_HEAD_HEIGHT = 32;
-const TABLE_ROW_HEIGHT = 36;
-
-export default function CoinAssetTable({ wallets }: CoinAssetTableProps) {
+export default function CoinAssetTable({ coinData, ref }: CoinAssetTableProps) {
 	return (
-		<div className="scrollbar-custom max-h-54 shrink-0 overflow-y-scroll rounded-md border-1 border-gray-400">
+		<div
+			ref={ref}
+			className="scrollbar-custom max-h-54 shrink-0 overflow-y-scroll rounded-md border-1 border-gray-400"
+		>
 			<table className="w-200 border-collapse">
 				<thead
 					className="sticky top-0 bg-white"
@@ -29,19 +35,16 @@ export default function CoinAssetTable({ wallets }: CoinAssetTableProps) {
 					</tr>
 				</thead>
 				<tbody style={{ marginTop: `${TABLE_HEAD_HEIGHT}px` }}>
-					{wallets.map((wallet, index) => {
+					{coinData.map((coin, index) => {
 						const color = COLORS[index % COLORS.length];
 						const roiTextColor =
-							wallet.roi > 0
-								? '#fb2c36'
-								: wallet.roi < 0
-									? '#3b82f6'
-									: '#9ca3af';
+							coin.roi > 0 ? '#fb2c36' : coin.roi < 0 ? '#3b82f6' : '#9ca3af';
 						return (
 							<tr
-								key={wallet.ticker}
-								className="flex text-center text-gray-700"
+								key={coin.ticker}
+								className="flex text-center text-gray-700 "
 								style={{ height: `${TABLE_ROW_HEIGHT}px` }}
+								data-ticker={coin.ticker}
 							>
 								<td className="flex flex-[0.5] items-center justify-center">
 									<span
@@ -50,19 +53,19 @@ export default function CoinAssetTable({ wallets }: CoinAssetTableProps) {
 									/>
 								</td>
 								<td className="flex flex-[0.5] items-center text-left font-semibold">
-									{wallet.ticker}
+									{coin.ticker}
 								</td>
 								<td className="flex flex-1 items-center justify-center">
-									{formatCurrencyKR(wallet.buyPrice)}원
+									{formatCurrencyKR(coin.averagePrice)}원
 								</td>
 								<td className="flex flex-1 items-center justify-center">
-									{formatCurrencyKR(wallet.buyPrice * wallet.size)}원
+									{formatCurrencyKR(coin.totalPrice)}원
 								</td>
 								<td
 									className="flex flex-1 items-center justify-center text-gray-700"
 									style={{ color: roiTextColor }}
 								>
-									{wallet.roi}%
+									{coin.roi}%
 								</td>
 							</tr>
 						);

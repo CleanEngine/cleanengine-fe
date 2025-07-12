@@ -3,13 +3,21 @@ import { COLORS } from '../../const/chart.const';
 import type { CoinPieChartData } from '../../types/chart.type';
 import CoinPieChartActiveShape from '../CoinPieChartActiveShape';
 
-type CoinPieChartProps = { coinData: CoinPieChartData[] };
+export type CoinPieChartProps = {
+	coinData: CoinPieChartData[];
+	onClick?: (data: CoinPieChartData) => void;
+};
 
-export default function CoinPieChart({ coinData }: CoinPieChartProps) {
+export default function CoinPieChart({ coinData, onClick }: CoinPieChartProps) {
+	const handleClick = ({ payload }: { payload: CoinPieChartData }) => {
+		onClick?.(payload);
+	};
+
 	return (
 		<ResponsiveContainer>
 			<PieChart data={coinData}>
 				<Pie
+					onClick={handleClick}
 					cx="50%"
 					cy="50%"
 					nameKey="ticker"

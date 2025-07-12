@@ -1,3 +1,6 @@
+export const TABLE_HEAD_HEIGHT = 32;
+export const TABLE_ROW_HEIGHT = 36;
+
 export const COLORS = [
 	{ backgroundColor: '#FF3B30', textColor: '#FFFFFF' }, // 밝은 빨강 - 가장 눈에 띄는 색상
 	{ backgroundColor: '#007AFF', textColor: '#FFFFFF' }, // 밝은 파랑
