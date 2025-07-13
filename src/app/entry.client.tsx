@@ -30,7 +30,13 @@ import { HydratedRouter } from 'react-router/dom';
 // });
 
 async function prepareApp() {
-	return Promise.resolve();
+	if (process.env.NODE_ENV !== 'development') {
+		return;
+	}
+
+	const { worker } = await import('../mocks/browser');
+
+	return worker.start();
 }
 
 prepareApp().then(() => {

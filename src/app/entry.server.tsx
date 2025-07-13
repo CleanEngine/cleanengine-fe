@@ -1,5 +1,6 @@
-/* v8 ignore start */
 import { PassThrough } from 'node:stream';
+/* v8 ignore start */
+import { server } from '~/mocks/server';
 
 import { createReadableStreamFromReadable } from '@react-router/node';
 import { isbot } from 'isbot';
@@ -9,6 +10,15 @@ import type { AppLoadContext, EntryContext } from 'react-router';
 import { ServerRouter } from 'react-router';
 
 export const streamTimeout = 5_000;
+
+if (process.env.NODE_ENV === 'development') {
+	server.listen();
+
+	server.events.on('request:start', ({ request }) => {
+		// biome-ignore lint/suspicious/noConsole: <explanation>
+		console.log('MSW intercepted:', request.method, request.url);
+	});
+}
 
 function handleRequest(
 	request: Request,
