@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import type { MouseEvent } from 'react';
+import { Fragment, type MouseEvent } from 'react';
 
 type TabItem = {
 	value: string;
@@ -22,7 +22,7 @@ export default function Tab({ items, selected, onClick }: Readonly<TabProps>) {
 		<div className="h-8 w-full">
 			<ul className="flex h-full w-full">
 				{items.map((item, index) => (
-					<>
+					<Fragment key={item.value}>
 						<li key={item.value} className="flex flex-1 flex-col text-center">
 							<button
 								type="button"
@@ -46,7 +46,7 @@ export default function Tab({ items, selected, onClick }: Readonly<TabProps>) {
 								<div className="h-full w-0.5 bg-gray-100" />
 							</li>
 						)}
-					</>
+					</Fragment>
 				))}
 			</ul>
 		</div>
