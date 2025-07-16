@@ -1,4 +1,10 @@
-import { Link, type LinkProps, NavLink, useSubmit } from 'react-router';
+import {
+	Link,
+	type LinkProps,
+	NavLink,
+	useLocation,
+	useSubmit,
+} from 'react-router';
 import { useUserId } from '~/app/provider/UserInfoProvider';
 
 import type { CoinTicker } from '~/entities/coin';
@@ -23,6 +29,7 @@ export default function NavBar({
 	ticker,
 	onClickMenuButton,
 }: NavBarProps) {
+	const location = useLocation();
 	const submit = useSubmit();
 	const { setUserId } = useUserId();
 
@@ -44,7 +51,7 @@ export default function NavBar({
 	);
 
 	const ProfileButton = () => (
-		<NavLink to={`/trade/${ticker}/profile`}>
+		<NavLink to={`/trade/${ticker}/profile?referer=${location.pathname}`}>
 			<Button>프로필</Button>
 		</NavLink>
 	);
