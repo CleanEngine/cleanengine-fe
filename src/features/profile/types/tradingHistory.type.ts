@@ -36,10 +36,11 @@ export type TradingHistory =
 			status: 'unsettled' | 'settled' | 'in_progress';
 	  };
 
-export type History = {
-	data: TradingHistory[];
-	next: number;
-	last: number;
+export type HistoryResonseData = {
+	orderList: TradingHistory[];
+	totalPages: number;
+	currentPage: number;
+	pageSize: number;
 };
 
-export type HistoryResponse = Response<History>;
+export type HistoryResponse = Response<HistoryResonseData>;
