@@ -1,21 +1,26 @@
 import { api as userApi } from '~/entities/user';
-import { type HistoryResponse, api as profileApi } from '~/features/profile';
+import { api as profileApi } from '~/features/profile';
 import { ProfileModal } from '~/widgets/user';
 import type { Route } from './+types/profile';
 
-export async function loader() {
-	const response = await userApi.getUserInfo();
-	const { data } = await response.json();
+const FETCH_SIZE = 10;
 
-	const history = new Promise<HistoryResponse>((res) => {
-		profileApi.getHistory().then((response) => {
-			response.json().then((data) => {
-				res(data);
-			});
-		});
-	});
+export async function loader({ request }: Route.LoaderArgs) {
+	const { searchParams } = new URL(request.url);
+	const page = Number(searchParams.get('p') || 1);
+	const settled = searchParams.get('t') === 'settled';
 
-	return { userInfo: data, historyDataPromise: history };
+	const [userInfoResponse, historyResponse] = await Promise.all([
+		userApi.getUserInfo(),
+		profileApi.getHistory(page, FETCH_SIZE, settled),
+	]);
+
+	const [userInfo, history] = await Promise.all([
+		userInfoResponse.json(),
+		historyResponse.json(),
+	]);
+
+	return { userInfo: userInfo.data, historyData: history.data };
 }
 
 export default function ProfileRouteComponent({

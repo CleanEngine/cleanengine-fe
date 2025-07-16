@@ -1,12 +1,11 @@
-import { Suspense } from 'react';
-import { Await, useRouteLoaderData, useSearchParams } from 'react-router';
+import { useRouteLoaderData, useSearchParams } from 'react-router';
 import Pagination from '~/shared/ui/Pagination';
 import Tab from '~/shared/ui/Tab';
-import type { HistoryResponse } from '../../types/tradingHistory.type';
+import type { TradingHistory } from '../../types/tradingHistory.type';
 import TradingHistoryListItem from '../TradingHistoryListItem';
 
 export default function TradingHistoryList() {
-	const { historyDataPromise } = useRouteLoaderData('profile');
+	const { historyData } = useRouteLoaderData('profile');
 
 	const [searchParams, setSearchParams] = useSearchParams({
 		p: '1',
@@ -55,19 +54,13 @@ export default function TradingHistoryList() {
 				<span className="flex-1 text-center">취소</span>
 			</div>
 			<ul className="scrollbar-custom flex max-h-60 flex-col gap-2 overflow-auto px-2 py-2">
-				<Suspense fallback={<div>Loading...</div>}>
-					<Await resolve={historyDataPromise}>
-						{(response: HistoryResponse) =>
-							response.data.data.map((item) => {
-								return <TradingHistoryListItem key={item.orderId} {...item} />;
-							})
-						}
-					</Await>
-				</Suspense>
+				{historyData.orderList.map((item: TradingHistory) => (
+					<TradingHistoryListItem key={item.orderId} {...item} />
+				))}
 			</ul>
 			<Pagination
 				currentPage={currentPage}
-				totalPages={40}
+				totalPages={historyData.totalPages}
 				showCount={10}
 				onClick={handleClickPageNumber}
 				onPrevClick={handlePrevClick}
