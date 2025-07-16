@@ -7,7 +7,7 @@ export default [
 	...prefix('trade', [
 		route(':ticker', './routes/trade.tsx', [
 			route('login', './routes/login.tsx'),
-			route('profile', './routes/profile.tsx'),
+			route('profile', './routes/profile.tsx', { id: 'profile' }),
 		]),
 	]),
 ] satisfies RouteConfig;

@@ -1,3 +1,5 @@
+import type { Response } from '~/shared/types/api';
+
 export type TradingHistory =
 	| {
 			orderId: string;
@@ -33,3 +35,11 @@ export type TradingHistory =
 			price: number;
 			status: 'unsettled' | 'settled' | 'in_progress';
 	  };
+
+export type History = {
+	data: TradingHistory[];
+	next: number;
+	last: number;
+};
+
+export type HistoryResponse = Response<History>;
