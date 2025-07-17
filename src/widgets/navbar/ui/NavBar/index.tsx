@@ -39,7 +39,7 @@ export default function NavBar({
 	};
 
 	const LoginButton = () => (
-		<NavLink to={`/trade/${ticker}/login`}>
+		<NavLink to={`/trade/${ticker}/login?referer=${location.pathname}`}>
 			<Button>로그인</Button>
 		</NavLink>
 	);

@@ -8,10 +8,14 @@ import Modal from '~/shared/ui/Modal';
 
 import CloudLogo from '~/assets/images/cloud.webp';
 
-export default function LoginModal() {
+type LoginModalProps = {
+	referer: string;
+};
+
+export default function LoginModal({ referer }: LoginModalProps) {
 	const navigate = useNavigate();
 	const modalRef = useRef<HTMLDialogElement>(null);
-	useClickOutside(modalRef, () => navigate(-1));
+	useClickOutside(modalRef, () => navigate(referer));
 
 	return (
 		<Backdrop>
