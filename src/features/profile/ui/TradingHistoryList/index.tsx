@@ -1,12 +1,17 @@
-import { useRouteLoaderData, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
+
 import Pagination from '~/shared/ui/Pagination';
 import Tab from '~/shared/ui/Tab';
-import type { TradingHistory } from '../../types/tradingHistory.type';
+import type { HistoryResonseData } from '../../types/tradingHistory.type';
 import TradingHistoryListItem from '../TradingHistoryListItem';
 
-export default function TradingHistoryList() {
-	const { historyData } = useRouteLoaderData('profile');
+type TradingHistoryListProps = {
+	historyData: HistoryResonseData;
+};
 
+export default function TradingHistoryList({
+	historyData,
+}: TradingHistoryListProps) {
 	const [searchParams, setSearchParams] = useSearchParams({
 		p: '1',
 		t: 'unsettled',
@@ -54,7 +59,7 @@ export default function TradingHistoryList() {
 				<span className="flex-1 text-center">취소</span>
 			</div>
 			<ul className="scrollbar-custom flex max-h-60 flex-col gap-2 overflow-auto px-2 py-2">
-				{historyData.orderList.map((item: TradingHistory) => (
+				{historyData.orderList.map((item) => (
 					<TradingHistoryListItem key={item.orderId} {...item} />
 				))}
 			</ul>

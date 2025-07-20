@@ -1,9 +1,8 @@
 import { useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { Outlet, useNavigate, useSearchParams } from 'react-router';
 
 import type { UserInfoResponseData } from '~/entities/user';
 import AssetInfoGraphic from '~/features/profile/ui/AssetInfoGraphic';
-import TradingHistory from '~/features/profile/ui/TradingHistoryList';
 import useClickOutside from '~/shared/hooks/useClickOutside';
 import Backdrop from '~/shared/ui/Backdrop';
 import Modal from '~/shared/ui/Modal';
@@ -25,7 +24,7 @@ export default function ProfileModal({ userInfo }: ProfileModalProps) {
 			<Modal ref={modalRef}>
 				<div className="scrollbar-custom flex max-h-screen flex-col items-center gap-3 overflow-y-auto p-20 pt-10">
 					<AssetInfoGraphic userInfo={userInfo} />
-					<TradingHistory />
+					<Outlet />
 				</div>
 			</Modal>
 		</Backdrop>

@@ -51,7 +51,9 @@ export default function NavBar({
 	);
 
 	const ProfileButton = () => (
-		<NavLink to={`/trade/${ticker}/profile?referer=${location.pathname}`}>
+		<NavLink
+			to={`/trade/${ticker}/profile/history?referer=${location.pathname}`}
+		>
 			<Button>프로필</Button>
 		</NavLink>
 	);
