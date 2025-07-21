@@ -1,7 +1,7 @@
 import * as cookie from 'cookie';
 import { AnimatePresence } from 'motion/react';
 import { Suspense, lazy, useMemo, useState } from 'react';
-import { Outlet, redirect } from 'react-router';
+import { Outlet, isRouteErrorResponse, redirect } from 'react-router';
 
 import { CoinPriceWithName, api as coinApi } from '~/entities/coin';
 import { api } from '~/entities/session';
@@ -13,6 +13,7 @@ import useTradeNotification from '~/features/trade/hooks/useTradeNotification';
 import ClientOnly from '~/shared/ui/ClientOnly';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
+import ErrorComponent from '~/shared/ui/Error';
 import { NavBar, SideBar } from '~/widgets/navbar';
 import { useUserId } from '../provider/UserInfoProvider';
 import type { Route } from './+types/trade';
@@ -41,6 +42,26 @@ export async function clientAction() {
 		console.error(error);
 	}
 	return redirect('/trade/BTC');
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+	if (isRouteErrorResponse(error)) {
+		const errorTitle = `${error.status} ${error.statusText}`;
+		const errorDescription = error.data;
+		return <ErrorComponent title={errorTitle} description={errorDescription} />;
+	}
+	if (error instanceof Error) {
+		const errorTitle = error.name;
+		const errorDescription = error.message;
+		return <ErrorComponent title={errorTitle} description={errorDescription} />;
+	}
+
+	return (
+		<ErrorComponent
+			title="Error"
+			description="예상하지 못한 에러가 발생했습니다."
+		/>
+	);
 }
 
 export default function TradeRouteComponent({
