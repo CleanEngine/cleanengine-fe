@@ -1,6 +1,7 @@
-import { isRouteErrorResponse } from 'react-router';
-import { TradingHistory } from '~/features/profile';
-import { api as profileApi } from '~/features/profile';
+import { HTTPError } from 'ky';
+import { data, isRouteErrorResponse } from 'react-router';
+
+import { TradingHistory, api as profileApi } from '~/features/profile';
 import ErrorComponent from '~/shared/ui/Error';
 import type { Route } from './+types/history';
 
@@ -8,14 +9,27 @@ const FETCH_SIZE = 10;
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const { searchParams } = new URL(request.url);
-	const page = Number(searchParams.get('p') || 1);
+	const page = searchParams.get('p') ? Number(searchParams.get('p')) : 1;
 	const settled = searchParams.get('t') === 'settled';
 
-	const response = profileApi.getHistory(page, FETCH_SIZE, settled);
+	if (page < 1) {
+		throw data('잘못된 요청입니다.', { status: 400 });
+	}
 
-	const { data } = await response.json();
-
-	return data;
+	try {
+		const response = await profileApi.getHistory(page, FETCH_SIZE, settled);
+		const { data } = await response.json();
+		return data;
+	} catch (error) {
+		if (error instanceof HTTPError) {
+			const errorText = await error.response.text();
+			throw data(errorText, { status: error.response.status });
+		}
+		if (error instanceof Error) {
+			throw data(error.message, { status: 500 });
+		}
+		throw data('예상하지 못한 에러가 발생했습니다.', { status: 500 });
+	}
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
