@@ -8,9 +8,11 @@ export default {
 		if (page) params.set('page', page.toString());
 		if (size) params.set('size', size.toString());
 
-		if (settled) params.set('settled', settled.toString());
-		else params.set('settled', 'unsettled');
+		if (settled) params.set('settled', 'true');
+		else params.set('settled', 'false');
 
-		return ApiClient.get<HistoryResponse>(`api/history?${params.toString()}`);
+		return ApiClient.get<HistoryResponse>(
+			`api/userinfo/trades?${params.toString()}`,
+		);
 	},
 };

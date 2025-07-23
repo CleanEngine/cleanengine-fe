@@ -1,39 +1,88 @@
 import type { Response } from '~/shared/types/api';
 
+// 지정가/시장가
+export enum OrderType {
+	LIMIT = 'LIMIT',
+	MARKET = 'MARKET',
+}
+
+// 매수/매도
+export enum Side {
+	ASK = 'ASK',
+	BID = 'BID',
+}
+
+// 주문 상태
+export enum OrderStatus {
+	UNSETTLED = 'UNSETTLED',
+	SETTLED = 'SETTLED',
+	IN_PROGRESS = 'IN_PROGRESS',
+}
+
 export type TradingHistory =
 	| {
+			// 지정가 매도
+			side: Side.ASK;
+			orderStatus:
+				| OrderStatus.UNSETTLED
+				| OrderStatus.SETTLED
+				| OrderStatus.IN_PROGRESS;
+			orderType: OrderType.LIMIT;
 			orderId: string;
-			side: 'ask';
-			orderType: 'limit';
 			ticker: string;
-			size: number;
+			name: string;
 			price: number;
-			status: 'unsettled' | 'settled' | 'in_progress';
+			orderSize: number;
+			remainingSize: number;
+			displaySize: number;
+			tradeTime: string;
 	  }
 	| {
+			// 시장가 매도
+			side: Side.ASK;
+			orderStatus:
+				| OrderStatus.UNSETTLED
+				| OrderStatus.SETTLED
+				| OrderStatus.IN_PROGRESS;
+			orderType: OrderType.MARKET;
 			orderId: string;
-			side: 'ask';
-			orderType: 'market';
 			ticker: string;
-			size: number;
-			status: 'unsettled' | 'settled' | 'in_progress';
+			name: string;
+			orderSize: number;
+			remainingSize: number;
+			displaySize: number;
+			tradeTime: string;
 	  }
 	| {
+			// 지정가 매수
+			side: Side.BID;
+			orderStatus:
+				| OrderStatus.UNSETTLED
+				| OrderStatus.SETTLED
+				| OrderStatus.IN_PROGRESS;
+			orderType: OrderType.LIMIT;
 			orderId: string;
-			side: 'bid';
-			orderType: 'limit';
 			ticker: string;
-			size: number;
+			name: string;
 			price: number;
-			status: 'unsettled' | 'settled' | 'in_progress';
+			orderSize: number;
+			remainingSize: number;
+			displaySize: number;
+			tradeTime: string;
 	  }
 	| {
+			// 시장가 매수
+			side: Side.BID;
+			orderStatus:
+				| OrderStatus.UNSETTLED
+				| OrderStatus.SETTLED
+				| OrderStatus.IN_PROGRESS;
+			orderType: OrderType.MARKET;
 			orderId: string;
-			side: 'bid';
-			orderType: 'market';
 			ticker: string;
+			name: string;
 			price: number;
-			status: 'unsettled' | 'settled' | 'in_progress';
+			tradeTime: string;
 	  };
 
 export type HistoryResonseData = {
@@ -41,6 +90,7 @@ export type HistoryResonseData = {
 	totalPages: number;
 	currentPage: number;
 	pageSize: number;
+	totalElements: number;
 };
 
 export type HistoryResponse = Response<HistoryResonseData>;

@@ -1,6 +1,9 @@
 /* v8 ignore start */
 import { http, HttpResponse } from 'msw';
-import type { HistoryResonseData } from '~/features/profile/types/tradingHistory.type';
+import {
+	type HistoryResonseData,
+	OrderStatus,
+} from '~/features/profile/types/tradingHistory.type';
 import type { Response } from '~/shared/types/api';
 import { DUMMY_HISTORY_LIST, DUMMY_USERINFO_DATA } from './dummy';
 
@@ -30,26 +33,48 @@ export const handlers = [
 			status: 200,
 		});
 	}),
-	http.get(api('history'), async ({ request }) => {
+	http.get(api('userinfo/trades'), async ({ request }) => {
 		const { searchParams } = new URL(request.url);
-
 		const page = Number(searchParams.get('page') || 1);
 		const size = Number(searchParams.get('size') || 10);
-		const settled =
-			searchParams.get('settled') === 'true' ? 'settled' : 'unsettled';
+		const settled = searchParams.get('settled') === 'true';
 
-		const filteredOrderlist = DUMMY_HISTORY_LIST.filter(
-			(item) => item.status === settled,
+		const filteredOrderlist = DUMMY_HISTORY_LIST.filter((item) =>
+			settled
+				? item.orderStatus === OrderStatus.SETTLED
+				: item.orderStatus !== OrderStatus.SETTLED,
 		);
+
 		const firstItemIndex = (page - 1) * size;
-		const lastItemIndex = page * size;
+		const lastItemIndex = page * size - 1;
+
+		if (firstItemIndex < 0) {
+			return HttpResponse.json('잘못된 요청입니다.', {
+				status: 400,
+			});
+		}
+
+		if (lastItemIndex > filteredOrderlist.length + size) {
+			return HttpResponse.json('해당하는 리소스가 존재하지 않습니다.', {
+				status: 404,
+			});
+		}
 
 		const historyData: HistoryResonseData = {
 			orderList: filteredOrderlist.slice(firstItemIndex, lastItemIndex + 1),
 			totalPages: Math.ceil(filteredOrderlist.length / size),
 			currentPage: page,
 			pageSize: size,
+			totalElements: filteredOrderlist.length,
 		};
+
+		if (filteredOrderlist.length === 0) {
+			historyData.orderList = [];
+
+			return HttpResponse.json(successResponse(historyData), {
+				status: 204,
+			});
+		}
 
 		return HttpResponse.json(successResponse(historyData), {
 			status: 200,
