@@ -1,44 +1,43 @@
-import { isRouteErrorResponse } from 'react-router';
+import { HTTPError } from 'ky';
+import { data, isRouteErrorResponse } from 'react-router';
+
 import { api as userApi } from '~/entities/user';
-import { api as profileApi } from '~/features/profile';
-import ErrorComponent from '~/shared/ui/Error';
+import ErrorModal from '~/shared/ui/ErrorModal';
 import { ProfileModal } from '~/widgets/user';
 import type { Route } from './+types/profile';
 
-const FETCH_SIZE = 10;
+export async function loader() {
+	try {
+		const response = await userApi.getUserInfo();
+		const { data } = await response.json();
 
-export async function loader({ request }: Route.LoaderArgs) {
-	const { searchParams } = new URL(request.url);
-	const page = Number(searchParams.get('p') || 1);
-	const settled = searchParams.get('t') === 'settled';
-
-	const [userInfoResponse, historyResponse] = await Promise.all([
-		userApi.getUserInfo(),
-		profileApi.getHistory(page, FETCH_SIZE, settled),
-	]);
-
-	const [userInfo, history] = await Promise.all([
-		userInfoResponse.json(),
-		historyResponse.json(),
-	]);
-
-	return { userInfo: userInfo.data, historyData: history.data };
+		return data;
+	} catch (error) {
+		if (error instanceof HTTPError) {
+			const errorText = await error.response.text();
+			throw data(errorText, { status: error.response.status });
+		}
+		if (error instanceof Error) {
+			throw data(error.message, { status: 500 });
+		}
+		throw data('예상하지 못한 에러가 발생했습니다.', { status: 500 });
+	}
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 	if (isRouteErrorResponse(error)) {
 		const errorTitle = `${error.status} ${error.statusText}`;
 		const errorDescription = error.data;
-		return <ErrorComponent title={errorTitle} description={errorDescription} />;
+		return <ErrorModal title={errorTitle} description={errorDescription} />;
 	}
 	if (error instanceof Error) {
 		const errorTitle = error.name;
 		const errorDescription = error.message;
-		return <ErrorComponent title={errorTitle} description={errorDescription} />;
+		return <ErrorModal title={errorTitle} description={errorDescription} />;
 	}
 
 	return (
-		<ErrorComponent
+		<ErrorModal
 			title="Error"
 			description="예상하지 못한 에러가 발생했습니다."
 		/>
@@ -48,5 +47,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 export default function ProfileRouteComponent({
 	loaderData,
 }: Route.ComponentProps) {
-	return <ProfileModal userInfo={loaderData.userInfo} />;
+	return <ProfileModal userInfo={loaderData} />;
 }

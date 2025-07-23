@@ -2,7 +2,7 @@ import Lottie from 'lottie-react';
 import ErrorAnimation from '~/assets/lotties/error.json';
 import ClientOnly from '../ClientOnly';
 
-type ErrorComponentProps = {
+export type ErrorComponentProps = {
 	title: string;
 	description: string;
 };
