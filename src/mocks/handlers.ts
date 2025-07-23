@@ -48,18 +48,6 @@ export const handlers = [
 		const firstItemIndex = (page - 1) * size;
 		const lastItemIndex = page * size - 1;
 
-		if (firstItemIndex < 0) {
-			return HttpResponse.json('잘못된 요청입니다.', {
-				status: 400,
-			});
-		}
-
-		if (lastItemIndex > filteredOrderlist.length + size) {
-			return HttpResponse.json('해당하는 리소스가 존재하지 않습니다.', {
-				status: 404,
-			});
-		}
-
 		const historyData: HistoryResonseData = {
 			orderList: filteredOrderlist.slice(firstItemIndex, lastItemIndex + 1),
 			totalPages: Math.ceil(filteredOrderlist.length / size),
@@ -67,6 +55,18 @@ export const handlers = [
 			pageSize: size,
 			totalElements: filteredOrderlist.length,
 		};
+
+		if (page < 1 || size < 1 || firstItemIndex < 0) {
+			return HttpResponse.json('잘못된 요청입니다.', {
+				status: 400,
+			});
+		}
+
+		if (page > historyData.totalPages) {
+			return HttpResponse.json('해당하는 리소스가 존재하지 않습니다.', {
+				status: 404,
+			});
+		}
 
 		if (filteredOrderlist.length === 0) {
 			historyData.orderList = [];
