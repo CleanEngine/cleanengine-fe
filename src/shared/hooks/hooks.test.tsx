@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import useClickOutside from './useClickOutside';
 import useDimensions from './useDimensions';
-import useScrollToBottom from './useScrollToBottom';
+import useScrollIntoView from './useScrollIntoView';
 
 describe('useClickOutside 훅 테스트', () => {
 	it('ref가 부착된 컴포넌트가 아닌 바깥 컴포넌트를 클릭하면 callback함수가 실행된다.', () => {
@@ -50,8 +50,10 @@ describe('useScrollToBottom 훅 테스트', () => {
 		const mockScrollIntoView = vi.fn();
 
 		const { result, rerender } = renderHook(
-			({ deps }) => useScrollToBottom(deps),
-			{ initialProps: { deps: [1] } },
+			({ deps }) => useScrollIntoView(deps),
+			{
+				initialProps: { deps: [1] },
+			},
 		);
 
 		act(() => {
