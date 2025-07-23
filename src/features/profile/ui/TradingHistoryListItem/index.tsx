@@ -1,3 +1,4 @@
+import { formatDateKr } from '~/features/tradeview/utils';
 import { formatCurrencyKR } from '~/shared/utils';
 import {
 	OrderType,
@@ -8,9 +9,10 @@ import TradingHistoryCancelButton from '../TradingHistoryCancleButton';
 
 type TradingHistoryListItemProps = TradingHistory;
 
-export default function TradingHistoryListItem(
-	props: Readonly<TradingHistoryListItemProps>,
-) {
+export default function TradingHistoryListItem({
+	tradeTime,
+	...props
+}: Readonly<TradingHistoryListItemProps>) {
 	const { side, ticker, orderStatus, orderType } = props;
 	const typeText = side === Side.ASK ? '매도' : '매수';
 	const priceText =
@@ -28,6 +30,7 @@ export default function TradingHistoryListItem(
 			<span className="flex-1">{ticker}</span>
 			<span className="flex-1">{priceText}</span>
 			<span className="flex-1">{sizeText}</span>
+			<span className="flex-[2.5]">{formatDateKr(new Date(tradeTime))}</span>
 			<div className="flex-1 text-center">
 				<TradingHistoryCancelButton status={orderStatus} />
 			</div>

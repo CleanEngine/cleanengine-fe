@@ -56,7 +56,8 @@ export default function TradingHistoryList({
 				<span className="flex-1">종목</span>
 				<span className="flex-1">가격</span>
 				<span className="flex-1">수량</span>
-				<span className="flex-1 text-center">취소</span>
+				<span className="flex-[2.5]">거래시간</span>
+				<span className="flex-1 text-center">주문 취소</span>
 			</div>
 			<ul className="scrollbar-custom flex max-h-60 flex-col gap-2 overflow-auto px-2 py-2">
 				{historyData.orderList.map((item) => (
