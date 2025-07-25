@@ -16,7 +16,7 @@ export default function CoinAssetTable({ coinData, ref }: CoinAssetTableProps) {
 	return (
 		<div
 			ref={ref}
-			className="scrollbar-custom max-h-54 shrink-0 overflow-y-scroll rounded-md border-1 border-gray-400"
+			className="scrollbar-custom max-h-54 shrink-0 overflow-y-scroll rounded-md border-1 border-gray-200"
 		>
 			<table className="w-200 border-collapse">
 				<thead

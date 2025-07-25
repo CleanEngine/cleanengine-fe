@@ -66,7 +66,7 @@ export default function TradingHistoryList({
 				<span className="flex-1 text-center">주문 취소</span>
 			</div>
 			<ul
-				className="scrollbar-custom flex max-h-60 flex-col gap-2 overflow-auto px-2 py-2"
+				className="scrollbar-custom flex h-60 flex-col gap-2 overflow-auto px-2 py-2"
 				ref={scrollContainerRef}
 			>
 				{historyData.orderList.map((item) => (

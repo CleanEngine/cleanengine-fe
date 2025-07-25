@@ -22,9 +22,11 @@ export default function ProfileModal({ userInfo }: ProfileModalProps) {
 	return (
 		<Backdrop>
 			<Modal ref={modalRef}>
-				<div className="scrollbar-custom flex max-h-screen flex-col items-center gap-3 overflow-y-auto p-20 pt-10">
+				<div className="scrollbar-custom flex max-h-screen flex-col items-center gap-3 overflow-y-auto px-20">
 					<AssetInfoGraphic userInfo={userInfo} />
-					<Outlet />
+					<div className="w-full py-8">
+						<Outlet />
+					</div>
 				</div>
 			</Modal>
 		</Backdrop>
