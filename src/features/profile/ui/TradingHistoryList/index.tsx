@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router';
 
+import useScrollTo from '~/shared/hooks/useScrollTo';
 import Pagination from '~/shared/ui/Pagination';
 import Tab from '~/shared/ui/Tab';
 import type { HistoryResonseData } from '../../types/tradingHistory.type';
@@ -12,6 +13,11 @@ type TradingHistoryListProps = {
 export default function TradingHistoryList({
 	historyData,
 }: TradingHistoryListProps) {
+	const scrollContainerRef = useScrollTo<HTMLUListElement>([], {
+		top: 0,
+		behavior: 'instant',
+	});
+
 	const [searchParams, setSearchParams] = useSearchParams({
 		p: '1',
 		t: 'unsettled',
@@ -59,7 +65,10 @@ export default function TradingHistoryList({
 				<span className="flex-[2.5]">거래시간</span>
 				<span className="flex-1 text-center">주문 취소</span>
 			</div>
-			<ul className="scrollbar-custom flex max-h-60 flex-col gap-2 overflow-auto px-2 py-2">
+			<ul
+				className="scrollbar-custom flex max-h-60 flex-col gap-2 overflow-auto px-2 py-2"
+				ref={scrollContainerRef}
+			>
 				{historyData.orderList.map((item) => (
 					<TradingHistoryListItem key={item.orderId} {...item} />
 				))}
