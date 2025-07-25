@@ -7,6 +7,8 @@ import {
 import type { Response } from '~/shared/types/api';
 import { DUMMY_HISTORY_LIST, DUMMY_USERINFO_DATA } from './dummy';
 
+let historyList = [...DUMMY_HISTORY_LIST];
+
 function api(endpoint: string) {
 	return `http://localhost:8080/api/${endpoint}`;
 }
@@ -39,7 +41,7 @@ export const handlers = [
 		const size = Number(searchParams.get('size') || 10);
 		const settled = searchParams.get('settled') === 'true';
 
-		const filteredOrderlist = DUMMY_HISTORY_LIST.filter((item) =>
+		const filteredOrderlist = historyList.filter((item) =>
 			settled
 				? item.orderStatus === OrderStatus.SETTLED
 				: item.orderStatus !== OrderStatus.SETTLED,
@@ -78,6 +80,22 @@ export const handlers = [
 
 		return HttpResponse.json(successResponse(historyData), {
 			status: 200,
+		});
+	}),
+	http.delete(api('userinfo/trades'), async ({ request }) => {
+		const { searchParams } = new URL(request.url);
+		const orderId = searchParams.get('orderId');
+
+		if (!orderId) {
+			return HttpResponse.json('잘못된 요청입니다.', {
+				status: 400,
+			});
+		}
+
+		historyList = historyList.filter((item) => item.orderId !== orderId);
+
+		return HttpResponse.json(successResponse(null), {
+			status: 205,
 		});
 	}),
 ];

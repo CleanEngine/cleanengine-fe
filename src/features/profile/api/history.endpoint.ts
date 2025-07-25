@@ -15,4 +15,7 @@ export default {
 			`api/userinfo/trades?${params.toString()}`,
 		);
 	},
+	deleteHistory: (orderId: string) => {
+		return ApiClient.delete(`api/userinfo/trades?orderId=${orderId}`);
+	},
 };
