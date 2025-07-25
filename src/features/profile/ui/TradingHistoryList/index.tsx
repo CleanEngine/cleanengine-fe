@@ -63,7 +63,9 @@ export default function TradingHistoryList({
 				<span className="flex-1">가격</span>
 				<span className="flex-1">수량</span>
 				<span className="flex-[2.5]">거래시간</span>
-				<span className="flex-1 text-center">주문 취소</span>
+				<span className="flex-1 text-center">
+					{tab === 'unsettled' ? '주문 취소' : '상태'}
+				</span>
 			</div>
 			<ul
 				className="scrollbar-custom flex h-60 flex-col gap-2 overflow-auto px-2 py-2"
