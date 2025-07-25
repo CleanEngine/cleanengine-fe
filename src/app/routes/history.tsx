@@ -32,6 +32,30 @@ export async function loader({ request }: Route.LoaderArgs) {
 	}
 }
 
+export async function clientAction({ request }: Route.ClientActionArgs) {
+	const formData = await request.formData();
+	const orderId = formData.get('orderId') as string;
+
+	if (!orderId) {
+		throw data('주문번호가 존재하지 않습니다.', { status: 400 });
+	}
+
+	try {
+		await profileApi.deleteHistory(orderId);
+
+		return data({}, { status: 205 });
+	} catch (error) {
+		if (error instanceof HTTPError) {
+			const errorText = await error.response.text();
+			throw data(errorText, { status: error.response.status });
+		}
+		if (error instanceof Error) {
+			throw data(error.message, { status: 500 });
+		}
+		throw data('예상하지 못한 에러가 발생했습니다.', { status: 500 });
+	}
+}
+
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 	if (isRouteErrorResponse(error)) {
 		const errorTitle = `${error.status} ${error.statusText}`;

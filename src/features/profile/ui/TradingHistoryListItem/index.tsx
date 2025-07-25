@@ -11,6 +11,7 @@ type TradingHistoryListItemProps = TradingHistory;
 
 export default function TradingHistoryListItem({
 	tradeTime,
+	orderId,
 	...props
 }: Readonly<TradingHistoryListItemProps>) {
 	const { side, ticker, orderStatus, orderType } = props;
@@ -32,7 +33,7 @@ export default function TradingHistoryListItem({
 			<span className="flex-1">{sizeText}</span>
 			<span className="flex-[2.5]">{formatDateKr(new Date(tradeTime))}</span>
 			<div className="flex-1 text-center">
-				<TradingHistoryCancelButton status={orderStatus} />
+				<TradingHistoryCancelButton status={orderStatus} orderId={orderId} />
 			</div>
 		</li>
 	);
