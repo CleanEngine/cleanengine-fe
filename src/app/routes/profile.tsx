@@ -1,12 +1,20 @@
 import { HTTPError } from 'ky';
-import { data, isRouteErrorResponse } from 'react-router';
+import { data, isRouteErrorResponse, redirect } from 'react-router';
 
 import { api as userApi } from '~/entities/user';
 import ErrorModal from '~/shared/ui/ErrorModal';
+import { checkLogin } from '~/shared/utils/util.server';
 import { ProfileModal } from '~/widgets/user';
 import type { Route } from './+types/profile';
 
-export async function loader() {
+export async function loader({ request }: Route.LoaderArgs) {
+	const rawCookie = request.headers.get('Cookie');
+	const isLoggedIn = checkLogin(rawCookie);
+
+	if (!isLoggedIn) {
+		return redirect('/login');
+	}
+
 	try {
 		const response = await userApi.getUserInfo();
 		const { data } = await response.json();

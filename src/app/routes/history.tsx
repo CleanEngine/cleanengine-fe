@@ -1,13 +1,21 @@
 import { HTTPError } from 'ky';
-import { data, isRouteErrorResponse } from 'react-router';
+import { data, isRouteErrorResponse, redirect } from 'react-router';
 
 import { TradingHistory, api as profileApi } from '~/features/profile';
 import ErrorComponent from '~/shared/ui/Error';
+import { checkLogin } from '~/shared/utils/util.server';
 import type { Route } from './+types/history';
 
 const FETCH_SIZE = 10;
 
 export async function loader({ request }: Route.LoaderArgs) {
+	const rawCookie = request.headers.get('Cookie');
+	const isLoggedIn = checkLogin(rawCookie);
+
+	if (!isLoggedIn) {
+		return redirect('/login');
+	}
+
 	const { searchParams } = new URL(request.url);
 	const page = searchParams.get('p') ? Number(searchParams.get('p')) : 1;
 	const settled = searchParams.get('t') === 'settled';

@@ -1,4 +1,3 @@
-import * as cookie from 'cookie';
 import { useEffect } from 'react';
 import {
 	type LoaderFunctionArgs,
@@ -11,26 +10,26 @@ import type { Route } from './+types/callback';
 import type { UserInfoResponse } from '~/entities/user/types/user.type';
 import ApiClient from '~/shared/api/httpClient';
 import ErrorComponent from '~/shared/ui/Error';
+import { checkLogin } from '~/shared/utils/util.server';
 import { useUserId } from '../provider/UserInfoProvider';
 import { getSession } from '../sessions.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	const rawCookie = request.headers.get('Cookie') ?? '';
+	const rawCookie = request.headers.get('Cookie');
 
 	const session = await getSession(rawCookie);
 	const referer = session.get('referer') || '/';
 
-	const cookies = cookie.parse(rawCookie);
-	const isAccessTokenExists = !!cookies.access_token;
+	const isLoggedIn = checkLogin(rawCookie);
 
-	if (!isAccessTokenExists) {
+	if (!isLoggedIn) {
 		return redirect(referer);
 	}
 
 	try {
 		const response = await ApiClient.get<UserInfoResponse>('api/userinfo', {
 			headers: {
-				Cookie: rawCookie,
+				Cookie: rawCookie as string,
 			},
 		});
 
