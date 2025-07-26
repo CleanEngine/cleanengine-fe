@@ -64,20 +64,6 @@ export const handlers = [
 			});
 		}
 
-		if (page > historyData.totalPages) {
-			return HttpResponse.json('해당하는 리소스가 존재하지 않습니다.', {
-				status: 404,
-			});
-		}
-
-		if (filteredOrderlist.length === 0) {
-			historyData.orderList = [];
-
-			return HttpResponse.json(successResponse(historyData), {
-				status: 204,
-			});
-		}
-
 		return HttpResponse.json(successResponse(historyData), {
 			status: 200,
 		});
