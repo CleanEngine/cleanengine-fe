@@ -22,6 +22,9 @@ export default function OrderbookChart({
 	layout = 'vertical',
 }: Readonly<OrderbookChartProps>) {
 	const color = type === 'bull' ? '#FDD2D7' : '#CDE0FE';
+	// 매도는 price 기준 내림차순 정렬
+	const displayData =
+		type === 'bear' ? [...data].sort((a, b) => b.price - a.price) : data;
 
 	return (
 		<div
@@ -31,7 +34,7 @@ export default function OrderbookChart({
 			)}
 		>
 			<div className="flex h-full min-h-full flex-col justify-around">
-				{data.map((item) => (
+				{displayData.map((item) => (
 					<div
 						key={item.price + item.size}
 						className="text-[#4287F9]"
@@ -43,7 +46,12 @@ export default function OrderbookChart({
 			</div>
 			<div className="h-full min-h-full w-full">
 				<ResponsiveContainer width="100%">
-					<BarChart layout={layout} data={data} barGap={0} barCategoryGap={0}>
+					<BarChart
+						layout={layout}
+						data={displayData}
+						barGap={0}
+						barCategoryGap={0}
+					>
 						<XAxis type="number" dataKey="size" hide={true} />
 						<YAxis type="category" dataKey="price" hide={true} />
 						<Bar dataKey="size" fill={color} barSize="100%">
