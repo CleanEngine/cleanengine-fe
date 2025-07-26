@@ -1,13 +1,22 @@
-import { data, isRouteErrorResponse } from 'react-router';
+import { data, isRouteErrorResponse, redirect } from 'react-router';
+
 import ErrorComponent from '~/shared/ui/Error';
 import { getCustomReferer } from '~/shared/utils';
+import { checkLogin } from '~/shared/utils/util.server';
 import { LoginModal } from '~/widgets/auth';
 import { commitSession, getSession } from '../sessions.server';
 import type { Route } from './+types/login';
 
 export async function loader({ request }: Route.LoaderArgs) {
-	const session = await getSession(request.headers.get('Cookie'));
+	const cookie = request.headers.get('Cookie');
+	const isLoggedIn = checkLogin(cookie);
 	const referer = getCustomReferer(request.url) || '/';
+
+	if (isLoggedIn) {
+		return redirect(referer);
+	}
+
+	const session = await getSession(cookie);
 
 	session.set('referer', referer);
 
