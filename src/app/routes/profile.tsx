@@ -7,12 +7,13 @@ import { checkLogin } from '~/shared/utils/util.server';
 import { ProfileModal } from '~/widgets/user';
 import type { Route } from './+types/profile';
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, context, params }: Route.LoaderArgs) {
 	const rawCookie = request.headers.get('Cookie');
 	const isLoggedIn = checkLogin(rawCookie);
+	const ticker = params.ticker;
 
 	if (!isLoggedIn) {
-		return redirect('/login');
+		return redirect(`/trade/${ticker}/login`);
 	}
 
 	try {
