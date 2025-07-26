@@ -39,7 +39,7 @@ export default function Pagination({
 				onClick={onPrevClick}
 				type="button"
 				className="w-3 cursor-pointer fill-gray-400 hover:fill-gray-500 disabled:cursor-not-allowed disabled:fill-gray-200"
-				disabled={currentPage === 1}
+				disabled={currentPage <= 1}
 			>
 				<IconArrowLeft />
 			</button>
@@ -61,7 +61,7 @@ export default function Pagination({
 				onClick={onNextClick}
 				type="button"
 				className="w-3 cursor-pointer fill-gray-400 hover:fill-gray-500 disabled:cursor-not-allowed disabled:fill-gray-200"
-				disabled={currentPage === totalPages}
+				disabled={currentPage >= totalPages}
 			>
 				<IconArrowRight />
 			</button>
