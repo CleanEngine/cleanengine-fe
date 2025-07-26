@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router';
 
 import useScrollTo from '~/shared/hooks/useScrollTo';
+import NoContent from '~/shared/ui/NoContent';
 import Pagination from '~/shared/ui/Pagination';
 import Tab from '~/shared/ui/Tab';
 import type { HistoryResonseData } from '../../types/tradingHistory.type';
@@ -24,6 +25,8 @@ export default function TradingHistoryList({
 	});
 	const currentPage = Number(searchParams.get('p'));
 	const tab = searchParams.get('t') || 'unsettled';
+	const noContentTitle =
+		tab === 'unsettled' ? '미체결 내역이 없습니다.' : '체결 내역이 없습니다.';
 
 	const handleTabClick = (value: string) => {
 		setSearchParams({ p: '1', t: value });
@@ -71,9 +74,16 @@ export default function TradingHistoryList({
 				className="scrollbar-custom flex h-60 flex-col gap-2 overflow-auto px-2 py-2"
 				ref={scrollContainerRef}
 			>
-				{historyData.orderList.map((item) => (
-					<TradingHistoryListItem key={item.orderId} {...item} />
-				))}
+				{historyData.orderList.length ? (
+					historyData.orderList.map((item) => (
+						<TradingHistoryListItem key={item.orderId} {...item} />
+					))
+				) : (
+					<NoContent
+						title={noContentTitle}
+						description="내용을 확인하고 싶으면 거래를 해주세요"
+					/>
+				)}
 			</ul>
 			<Pagination
 				currentPage={currentPage}
