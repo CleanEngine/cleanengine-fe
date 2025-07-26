@@ -14,9 +14,12 @@ type AssetInfoGraphicProps = {
 export default function AssetInfoGraphic({ userInfo }: AssetInfoGraphicProps) {
 	const assetTableRef = useRef<HTMLDivElement>(null);
 	const { wallets, totalAssetAmount } = userInfo;
-	const coinData = generateCoinPieChartData(wallets);
+	const assetData = generateCoinPieChartData(userInfo);
+	const coinData = assetData.filter((item) => item.ticker !== 'KRW');
 	const roiAverage =
-		wallets.reduce((acc, item) => acc + item.roi, 0) / wallets.length;
+		wallets.length > 0
+			? wallets.reduce((acc, item) => acc + item.roi, 0) / wallets.length
+			: 0;
 
 	const handleClickChart = (data: CoinPieChartData) => {
 		if (!assetTableRef.current) return;
@@ -37,7 +40,7 @@ export default function AssetInfoGraphic({ userInfo }: AssetInfoGraphicProps) {
 		<>
 			<div className="flex h-100 w-180 shrink-0 items-center justify-center gap-6 ">
 				<div className="h-full flex-1/5">
-					<CoinPieChart coinData={coinData} onClick={handleClickChart} />
+					<CoinPieChart coinData={assetData} onClick={handleClickChart} />
 				</div>
 				<div className="flex flex-1/5 justify-center gap-10">
 					<div className="flex flex-1 flex-col gap-6">
