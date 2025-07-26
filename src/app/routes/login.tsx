@@ -1,14 +1,14 @@
 import { data, isRouteErrorResponse } from 'react-router';
 import ErrorComponent from '~/shared/ui/Error';
+import { getCustomReferer } from '~/shared/utils';
 import { LoginModal } from '~/widgets/auth';
 import { commitSession, getSession } from '../sessions.server';
 import type { Route } from './+types/login';
 
 export async function loader({ request }: Route.LoaderArgs) {
-	const { searchParams } = new URL(request.url);
 	const session = await getSession(request.headers.get('Cookie'));
+	const referer = getCustomReferer(request.url) || '/';
 
-	const referer = searchParams.get('referer') || '/';
 	session.set('referer', referer);
 
 	return data(

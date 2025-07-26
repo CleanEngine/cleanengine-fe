@@ -1,9 +1,10 @@
 import { useRef } from 'react';
-import { Outlet, useNavigate, useSearchParams } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 
 import type { UserInfoResponseData } from '~/entities/user';
 import AssetInfoGraphic from '~/features/profile/ui/AssetInfoGraphic';
 import useClickOutside from '~/shared/hooks/useClickOutside';
+import useCustomReferer from '~/shared/hooks/useCustomReferer';
 import Backdrop from '~/shared/ui/Backdrop';
 import Modal from '~/shared/ui/Modal';
 
@@ -12,12 +13,11 @@ type ProfileModalProps = {
 };
 
 export default function ProfileModal({ userInfo }: ProfileModalProps) {
-	const [searchParams] = useSearchParams();
+	const referer = useCustomReferer();
 	const navigate = useNavigate();
 	const modalRef = useRef<HTMLDialogElement>(null);
-	useClickOutside(modalRef, () =>
-		navigate(searchParams.get('referer') || '/trade/BTC'),
-	);
+
+	useClickOutside(modalRef, () => navigate(referer || '/trade/BTC'));
 
 	return (
 		<Backdrop>

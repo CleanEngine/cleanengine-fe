@@ -1,7 +1,8 @@
 import { useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import useClickOutside from '~/shared/hooks/useClickOutside';
+import useCustomReferer from '~/shared/hooks/useCustomReferer';
 import Backdrop from '~/shared/ui/Backdrop';
 import ErrorComponent, { type ErrorComponentProps } from '~/shared/ui/Error';
 import Modal from '~/shared/ui/Modal';
@@ -9,12 +10,11 @@ import Modal from '~/shared/ui/Modal';
 type ErrorModalProps = ErrorComponentProps;
 
 export default function ErrorModal({ title, description }: ErrorModalProps) {
-	const [searchParams] = useSearchParams();
+	const referer = useCustomReferer();
 	const navigate = useNavigate();
 	const modalRef = useRef<HTMLDialogElement>(null);
-	useClickOutside(modalRef, () =>
-		navigate(searchParams.get('referer') || '/trade/BTC'),
-	);
+
+	useClickOutside(modalRef, () => navigate(referer || '/trade/BTC'));
 
 	return (
 		<Backdrop>

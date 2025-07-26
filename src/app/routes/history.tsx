@@ -3,12 +3,14 @@ import { data, isRouteErrorResponse, redirect } from 'react-router';
 
 import { TradingHistory, api as profileApi } from '~/features/profile';
 import ErrorComponent from '~/shared/ui/Error';
+import { getCustomReferer } from '~/shared/utils';
 import { checkLogin } from '~/shared/utils/util.server';
 import type { Route } from './+types/history';
 
 const FETCH_SIZE = 10;
 
 export async function loader({ request }: Route.LoaderArgs) {
+	const referer = getCustomReferer(request.url);
 	const rawCookie = request.headers.get('Cookie');
 	const isLoggedIn = checkLogin(rawCookie);
 
