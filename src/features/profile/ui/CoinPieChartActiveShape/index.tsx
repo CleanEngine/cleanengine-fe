@@ -82,7 +82,7 @@ export default function CoinPieChartActiveShape({
 				textAnchor={textAnchor}
 				fill="#333"
 				fontSize={14}
-			>{`${((percent ?? 1) * 100).toFixed(2)}%`}</text>
+			>{`${((percent ?? 1) * 100).toFixed(0)}%`}</text>
 		</g>
 	);
 }
