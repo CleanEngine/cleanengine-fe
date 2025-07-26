@@ -25,7 +25,11 @@ export async function loader({ request }: Route.LoaderArgs) {
 	}
 
 	try {
-		const response = await profileApi.getHistory(page, FETCH_SIZE, settled);
+		const response = await profileApi.getHistory(page, FETCH_SIZE, settled, {
+			headers: {
+				Cookie: rawCookie as string,
+			},
+		});
 		const { data } = await response.json();
 		return data;
 	} catch (error) {

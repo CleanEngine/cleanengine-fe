@@ -2,7 +2,12 @@ import ApiClient from '~/shared/api/httpClient';
 import type { HistoryResponse } from '../types/tradingHistory.type';
 
 export default {
-	getHistory: (page?: number, size?: number, settled?: boolean) => {
+	getHistory: (
+		page?: number,
+		size?: number,
+		settled?: boolean,
+		init?: RequestInit,
+	) => {
 		const params = new URLSearchParams();
 
 		if (page) params.set('page', page.toString());
@@ -13,9 +18,10 @@ export default {
 
 		return ApiClient.get<HistoryResponse>(
 			`api/userinfo/trades?${params.toString()}`,
+			init,
 		);
 	},
-	deleteHistory: (orderId: string) => {
-		return ApiClient.delete(`api/userinfo/trades?orderId=${orderId}`);
+	deleteHistory: (orderId: string, init?: RequestInit) => {
+		return ApiClient.delete(`api/userinfo/trades?orderId=${orderId}`, init);
 	},
 };

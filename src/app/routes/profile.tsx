@@ -16,7 +16,11 @@ export async function loader({ request }: Route.LoaderArgs) {
 	}
 
 	try {
-		const response = await userApi.getUserInfo();
+		const response = await userApi.getUserInfo({
+			headers: {
+				Cookie: rawCookie as string,
+			},
+		});
 		const { data } = await response.json();
 
 		return data;
