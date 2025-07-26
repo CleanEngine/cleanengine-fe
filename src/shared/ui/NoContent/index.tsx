@@ -1,4 +1,5 @@
 import Lottie from 'lottie-react';
+import type { CSSProperties } from 'react';
 
 import NoContentAnimation from '~/assets/lotties/no-content.json';
 import ClientOnly from '../ClientOnly';
@@ -6,11 +7,19 @@ import ClientOnly from '../ClientOnly';
 export type NoContentProps = {
 	title: string;
 	description?: string;
+	style?: CSSProperties;
 };
 
-export default function NoContent({ title, description }: NoContentProps) {
+export default function NoContent({
+	title,
+	description,
+	style,
+}: NoContentProps) {
 	return (
-		<div className="flex h-full w-full flex-col items-center justify-center">
+		<div
+			className="flex h-full w-full flex-col items-center justify-center"
+			style={style}
+		>
 			<ClientOnly>
 				<Lottie
 					animationData={NoContentAnimation}
