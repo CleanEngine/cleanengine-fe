@@ -14,6 +14,11 @@ export default function IncrementingNumber({
 	duration = 1,
 }: IncrementingNumberProps) {
 	const number = Number(children);
+
+	if (typeof children !== 'number' || Number.isNaN(number)) {
+		throw new Error('children must be a number');
+	}
+
 	const value = useMotionValue(0);
 	const rounded = useTransform(() =>
 		formatToCurrencyKr
@@ -29,10 +34,6 @@ export default function IncrementingNumber({
 
 		return () => control.stop();
 	}, [number, value, duration]);
-
-	if (typeof children !== 'number' || Number.isNaN(number)) {
-		throw new Error('children must be a number');
-	}
 
 	return <motion.span>{rounded}</motion.span>;
 }
