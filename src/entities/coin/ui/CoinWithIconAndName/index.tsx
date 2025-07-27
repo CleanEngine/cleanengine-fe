@@ -1,3 +1,4 @@
+import { convertBase64ToSvg } from '~/shared/utils';
 import type { CoinInfo } from '../../types/coin.type';
 
 export type CoinWithIconAndNameProps = Omit<
@@ -15,7 +16,11 @@ export default function CoinWithIconAndName({
 			<div className="flex gap-1">
 				<span className="inline-block h-fit w-fit overflow-visible">
 					{svgIconBase64 ? (
-						<img src={svgIconBase64} alt={name} className="h-6 w-6" />
+						<img
+							src={convertBase64ToSvg(svgIconBase64)}
+							alt={name}
+							className="h-6 w-6"
+						/>
 					) : (
 						'🪙'
 					)}

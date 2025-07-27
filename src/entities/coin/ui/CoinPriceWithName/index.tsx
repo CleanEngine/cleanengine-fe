@@ -1,4 +1,5 @@
 import { formatCurrencyKR } from '~/shared/utils';
+import { convertBase64ToSvg } from '~/shared/utils';
 import useCurrentPrice from '../../hooks/useCurrentPrice';
 import type { CoinInfo } from '../../types/coin.type';
 
@@ -18,7 +19,11 @@ export default function CoinPriceWithName({
 	return (
 		<div className="flex h-14 items-center gap-4 px-4">
 			{svgIconBase64 ? (
-				<img src={svgIconBase64} alt={name} className="h-6 w-6" />
+				<img
+					src={convertBase64ToSvg(svgIconBase64)}
+					alt={name}
+					className="h-6 w-6"
+				/>
 			) : (
 				<span>🪙</span>
 			)}

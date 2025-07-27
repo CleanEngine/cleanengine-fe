@@ -42,3 +42,7 @@ export function getCustomReferer(url: string | URL) {
 
 	return searchParams.get('referer');
 }
+
+export function convertBase64ToSvg(base64: string) {
+	return `data:image/svg+xml;base64,${base64}`;
+}
