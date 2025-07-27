@@ -80,7 +80,7 @@ export default function ToolTip() {
 		<div
 			id="tooltip"
 			ref={toolTipElementRef}
-			className="absolute z-40 hidden h-auto w-aut bg-white text-left text-gray-800 text-xs"
+			className="absolute z-40 hidden h-auto w-auto bg-white text-left text-gray-800 text-xs"
 		/>
 	);
 }
