@@ -41,7 +41,7 @@ export type TradingHistory = BaseOrder &
 		| { side: Side.BID; orderType: OrderType.MARKET }
 	);
 
-export type HistoryResonseData = {
+export type HistoryResponseData = {
 	orderList: TradingHistory[];
 	totalPages: number;
 	currentPage: number;
@@ -49,4 +49,4 @@ export type HistoryResonseData = {
 	totalElements: number;
 };
 
-export type HistoryResponse = Response<HistoryResonseData>;
+export type HistoryResponse = Response<HistoryResponseData>;

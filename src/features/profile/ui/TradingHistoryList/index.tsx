@@ -4,11 +4,11 @@ import useScrollTo from '~/shared/hooks/useScrollTo';
 import NoContent from '~/shared/ui/NoContent';
 import Pagination from '~/shared/ui/Pagination';
 import Tab from '~/shared/ui/Tab';
-import type { HistoryResonseData } from '../../types/tradingHistory.type';
+import type { HistoryResponseData } from '../../types/tradingHistory.type';
 import TradingHistoryListItem from '../TradingHistoryListItem';
 
 type TradingHistoryListProps = {
-	historyData: HistoryResonseData;
+	historyData: HistoryResponseData;
 };
 
 export default function TradingHistoryList({

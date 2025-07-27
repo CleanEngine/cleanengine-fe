@@ -1,7 +1,7 @@
 /* v8 ignore start */
 import { http, HttpResponse } from 'msw';
 import {
-	type HistoryResonseData,
+	type HistoryResponseData,
 	OrderStatus,
 } from '~/features/profile/types/tradingHistory.type';
 import type { Response } from '~/shared/types/api';
@@ -50,7 +50,7 @@ export const handlers = [
 		const firstItemIndex = (page - 1) * size;
 		const lastItemIndex = page * size - 1;
 
-		const historyData: HistoryResonseData = {
+		const historyData: HistoryResponseData = {
 			orderList: filteredOrderlist.slice(firstItemIndex, lastItemIndex + 1),
 			totalPages: Math.ceil(filteredOrderlist.length / size),
 			currentPage: page,
