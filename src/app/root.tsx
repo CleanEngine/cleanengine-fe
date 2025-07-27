@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import { preload } from 'react-dom';
 import {
 	Links,
@@ -129,3 +130,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
 	return <ErrorComponent title={errorTitle} description={errorDescription} />;
 }
+
+/* v8 ignore end */
