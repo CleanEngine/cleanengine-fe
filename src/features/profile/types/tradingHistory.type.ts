@@ -23,7 +23,6 @@ type BaseOrder = {
 	orderId: string;
 	ticker: string;
 	name: string;
-	orderSize: number;
 	remainingSize: number;
 	displaySize: number;
 	tradeTime: string;
@@ -35,10 +34,20 @@ type BaseOrder = {
 
 export type TradingHistory = BaseOrder &
 	(
-		| { side: Side.ASK; orderType: OrderType.LIMIT; price: number }
-		| { side: Side.ASK; orderType: OrderType.MARKET }
-		| { side: Side.BID; orderType: OrderType.LIMIT; price: number }
-		| { side: Side.BID; orderType: OrderType.MARKET }
+		| {
+				side: Side.ASK;
+				orderType: OrderType.LIMIT;
+				price: number;
+				orderSize: number;
+		  }
+		| { side: Side.ASK; orderType: OrderType.MARKET; orderSize: number }
+		| {
+				side: Side.BID;
+				orderType: OrderType.LIMIT;
+				price: number;
+				orderSize: number;
+		  }
+		| { side: Side.BID; orderType: OrderType.MARKET; price: number }
 	);
 
 export type HistoryResponseData = {
