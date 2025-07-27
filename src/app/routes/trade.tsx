@@ -102,7 +102,11 @@ export default function TradeRouteComponent({
 			/>
 			<div className="h-[calc(100dvh-60px)]">
 				{coinInfo && (
-					<CoinPriceWithName name={coinInfo?.name} ticker={coinInfo?.ticker} />
+					<CoinPriceWithName
+						key={coinInfo?.ticker}
+						name={coinInfo?.name}
+						ticker={coinInfo?.ticker}
+					/>
 				)}
 				<div className="scrollbar-hide relative flex h-[calc(100dvh-116px)] flex-col gap-4 overflow-y-scroll p-4 md:grid md:grid-cols-2 md:grid-rows-5 xl:grid-cols-3 xl:grid-rows-2 2xl:grid-cols-4 2xl:grid-rows-2">
 					<div className="h-auto min-h-75 md:col-span-full md:row-span-2 md:row-start-1 xl:col-span-full xl:row-span-1 xl:row-start-1 2xl:col-span-2 2xl:col-start-2 2xl:row-start-1">
