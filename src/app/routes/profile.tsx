@@ -19,7 +19,7 @@ export async function loader({ request, context, params }: Route.LoaderArgs) {
 	try {
 		const response = await userApi.getUserInfo({
 			headers: {
-				Cookie: rawCookie as string,
+				Cookie: rawCookie || '',
 			},
 		});
 		const { data } = await response.json();
