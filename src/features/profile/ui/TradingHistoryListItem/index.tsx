@@ -5,7 +5,7 @@ import {
 	Side,
 	type TradingHistory,
 } from '../../types/tradingHistory.type';
-import TradingHistoryCancelButton from '../TradingHistoryCancleButton';
+import TradingHistoryCancelButton from '../TradingHistoryCancelButton';
 
 type TradingHistoryListItemProps = TradingHistory;
 
