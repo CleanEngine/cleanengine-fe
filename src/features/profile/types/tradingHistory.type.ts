@@ -19,71 +19,27 @@ export enum OrderStatus {
 	IN_PROGRESS = 'IN_PROGRESS',
 }
 
-export type TradingHistory =
-	| {
-			// 지정가 매도
-			side: Side.ASK;
-			orderStatus:
-				| OrderStatus.UNSETTLED
-				| OrderStatus.SETTLED
-				| OrderStatus.IN_PROGRESS;
-			orderType: OrderType.LIMIT;
-			orderId: string;
-			ticker: string;
-			name: string;
-			price: number;
-			orderSize: number;
-			remainingSize: number;
-			displaySize: number;
-			tradeTime: string;
-	  }
-	| {
-			// 시장가 매도
-			side: Side.ASK;
-			orderStatus:
-				| OrderStatus.UNSETTLED
-				| OrderStatus.SETTLED
-				| OrderStatus.IN_PROGRESS;
-			orderType: OrderType.MARKET;
-			orderId: string;
-			ticker: string;
-			name: string;
-			orderSize: number;
-			remainingSize: number;
-			displaySize: number;
-			tradeTime: string;
-	  }
-	| {
-			// 지정가 매수
-			side: Side.BID;
-			orderStatus:
-				| OrderStatus.UNSETTLED
-				| OrderStatus.SETTLED
-				| OrderStatus.IN_PROGRESS;
-			orderType: OrderType.LIMIT;
-			orderId: string;
-			ticker: string;
-			name: string;
-			price: number;
-			orderSize: number;
-			remainingSize: number;
-			displaySize: number;
-			tradeTime: string;
-	  }
-	| {
-			// 시장가 매수
-			side: Side.BID;
-			orderStatus:
-				| OrderStatus.UNSETTLED
-				| OrderStatus.SETTLED
-				| OrderStatus.IN_PROGRESS;
-			orderType: OrderType.MARKET;
-			orderId: string;
-			ticker: string;
-			name: string;
-			price: number;
-			tradeTime: string;
-	  };
+type BaseOrder = {
+	orderId: string;
+	ticker: string;
+	name: string;
+	orderSize: number;
+	remainingSize: number;
+	displaySize: number;
+	tradeTime: string;
+	orderStatus:
+		| OrderStatus.UNSETTLED
+		| OrderStatus.SETTLED
+		| OrderStatus.IN_PROGRESS;
+};
+
+export type TradingHistory = BaseOrder &
+	(
+		| { side: Side.ASK; orderType: OrderType.LIMIT; price: number }
+		| { side: Side.ASK; orderType: OrderType.MARKET }
+		| { side: Side.BID; orderType: OrderType.LIMIT; price: number }
+		| { side: Side.BID; orderType: OrderType.MARKET }
+	);
 
 export type HistoryResonseData = {
 	orderList: TradingHistory[];
