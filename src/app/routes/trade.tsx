@@ -103,9 +103,11 @@ export default function TradeRouteComponent({
 			<div className="h-[calc(100dvh-60px)]">
 				{coinInfo && (
 					<CoinPriceWithName
-						key={coinInfo?.ticker}
-						name={coinInfo?.name}
-						ticker={coinInfo?.ticker}
+						key={coinInfo.ticker}
+						name={coinInfo.name}
+						ticker={coinInfo.ticker}
+						currentPrice={coinInfo.currentPrice}
+						svgIconBase64={coinInfo.svgIconBase64}
 					/>
 				)}
 				<div className="scrollbar-hide relative flex h-[calc(100dvh-116px)] flex-col gap-4 overflow-y-scroll p-4 md:grid md:grid-cols-2 md:grid-rows-5 xl:grid-cols-3 xl:grid-rows-2 2xl:grid-cols-4 2xl:grid-rows-2">
@@ -119,7 +121,7 @@ export default function TradeRouteComponent({
 							</Suspense>
 						</Container>
 					</div>
-					<div className="md:col-span-1 md:col-start-2 md:row-span-2 md:row-start-3 xl:col-span-1 xl:col-start-3 xl:row-span-1 xl:row-start2 2xl:col-start-4 2xl:row-span-1 2xl:row-start-1">
+					<div className="md:col-span-1 md:col-start-2 md:row-span-2 md:row-start-3 xl:col-span-1 xl:col-start-3 xl:row-span-1 xl:row-start-2 2xl:col-start-4 2xl:row-span-1 2xl:row-start-1">
 						<Container>
 							<ContainerTitle>주문 하기</ContainerTitle>
 							{isLoggedIn && coinInfo ? (
@@ -133,7 +135,12 @@ export default function TradeRouteComponent({
 						<Container>
 							<ContainerTitle>실시간 호가</ContainerTitle>
 							<Suspense fallback={null}>
-								{coinInfo && <LazyOrderBook ticker={coinInfo.ticker} />}
+								{coinInfo && (
+									<LazyOrderBook
+										key={coinInfo.ticker}
+										ticker={coinInfo.ticker}
+									/>
+								)}
 							</Suspense>
 						</Container>
 					</div>

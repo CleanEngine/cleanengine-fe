@@ -1,8 +1,8 @@
 import { type LinkProps, useNavigate } from 'react-router';
 
 import {
+	type CoinInfo,
 	CoinWithIconAndName,
-	type CoinWithIconAndNameProps,
 	useCurrentPrice,
 } from '~/entities/coin';
 import { formatCurrencyKR } from '~/shared/utils';
@@ -10,21 +10,26 @@ import { formatCurrencyKR } from '~/shared/utils';
 export type CoinListItemProps = {
 	to: LinkProps['to'];
 	onClick?: () => void;
-} & CoinWithIconAndNameProps;
+} & CoinInfo;
 
 export default function CoinListItem({
 	name,
 	ticker,
-	coinIcon: CoinIcon,
+	svgIconBase64,
+	currentPrice: lastPrice,
+	changeRate,
 	to,
 	onClick,
 }: Readonly<CoinListItemProps>) {
 	const navigate = useNavigate();
 	const currentPriceData = useCurrentPrice(ticker);
-	const isBull = currentPriceData && currentPriceData.changeRate > 0;
-	const formatedPrice = `${formatCurrencyKR(
-		+(currentPriceData?.currentPrice ?? 0).toFixed(2),
-	)}원`;
+	const displayPrice = currentPriceData
+		? currentPriceData.currentPrice
+		: lastPrice || 0;
+	const displayChangeRate = currentPriceData
+		? currentPriceData.changeRate
+		: changeRate || 0;
+	const isBull = displayChangeRate > 0;
 
 	const handleClickCoinItem = async () => {
 		onClick?.();
@@ -38,16 +43,20 @@ export default function CoinListItem({
 			onClick={handleClickCoinItem}
 		>
 			<div className="flex-1">
-				<CoinWithIconAndName name={name} ticker={ticker} coinIcon={CoinIcon} />
+				<CoinWithIconAndName
+					name={name}
+					ticker={ticker}
+					svgIconBase64={svgIconBase64}
+				/>
 			</div>
 			<div className="flex-1 text-right text-sm">
 				<span className={isBull ? 'text-red-600' : 'text-blue-700'}>
-					{formatedPrice}
+					{formatCurrencyKR(Number(displayPrice.toFixed(2)))}원
 				</span>
 			</div>
 			<div className="flex-1 text-right text-sm">
 				<span className={isBull ? 'text-red-600' : 'text-blue-700'}>
-					{(currentPriceData?.changeRate ?? 0).toFixed(2)}%
+					{displayChangeRate.toFixed(2)}%
 				</span>
 			</div>
 			<div className="flex-1 text-right text-sm">
