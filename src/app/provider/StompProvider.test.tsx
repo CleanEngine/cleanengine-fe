@@ -1,21 +1,28 @@
-import { Client } from '@stomp/stompjs';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import StompProvider, { useStompClient } from './StompProvider';
 
 const brokerURL = 'ws://localhost:8080';
 
-vi.mock('@stomp/stompjs', () => ({
-	Client: vi.fn(function (this: any, config: any) {
-		this.brokerURL = config.brokerURL;
-		this.activate = vi.fn();
-		this.deactivate = vi.fn();
-		this.onConnect = null;
-		this.onDisconnect = null;
-		this.onWebSocketError = null;
-		this.onStompError = null;
-	}),
-}));
+const { MockClient } = vi.hoisted(() => {
+	return {
+		MockClient: vi.fn(function (this: any, config: any) {
+			this.brokerURL = config.brokerURL;
+			this.activate = vi.fn();
+			this.deactivate = vi.fn();
+			this.onConnect = null;
+			this.onDisconnect = null;
+			this.onWebSocketError = null;
+			this.onStompError = null;
+		}),
+	};
+});
+
+vi.mock('@stomp/stompjs', () => {
+	return {
+		Client: MockClient,
+	};
+});
 
 describe('useStompClient 테스트', () => {
 	beforeEach(() => {
@@ -49,7 +56,7 @@ describe('useStompClient 테스트', () => {
 		expect(result.current.connected).toBe(false);
 
 		act(() => {
-			const clientInstance = vi.mocked(Client).mock.instances[0] as any;
+			const clientInstance = MockClient.mock.instances[0] as any;
 			clientInstance?.onConnect?.();
 		});
 
@@ -63,7 +70,7 @@ describe('useStompClient 테스트', () => {
 			),
 		});
 
-		const clientInstance = vi.mocked(Client).mock.instances[0] as any;
+		const clientInstance = MockClient.mock.instances[0] as any;
 		act(() => {
 			clientInstance?.onConnect?.();
 		});
@@ -83,7 +90,7 @@ describe('useStompClient 테스트', () => {
 			),
 		});
 
-		const clientInstance = vi.mocked(Client).mock.instances[0] as any;
+		const clientInstance = MockClient.mock.instances[0] as any;
 		act(() => {
 			clientInstance?.onConnect?.();
 		});
