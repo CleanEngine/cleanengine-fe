@@ -1,14 +1,10 @@
-import {
-	render,
-	screen,
-	waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import userEvent from '@testing-library/user-event';
 import AIChatBot from '.';
 
-vi.mock('~/shared/hooks/useScrollToBottom', () => ({
+vi.mock('~/shared/hooks/useScrollIntoView', () => ({
 	default: () => ({ current: { scrollIntoView: vi.fn() } }),
 }));
 
@@ -53,8 +49,11 @@ describe('AIChatBot 컴포넌트 테스트', () => {
 
 		await user.click(closeButton);
 
-		await waitForElementToBeRemoved(() => screen.queryByTestId('chat-window'));
+		await waitFor(() => {
+			expect(screen.queryByTestId('chat-window')).not.toBeInTheDocument();
+		});
 
-		expect(chatWindow).not.toBeInTheDocument();
+		const newChatButton = screen.getByTestId('chat-button');
+		expect(newChatButton).toBeInTheDocument();
 	});
 });

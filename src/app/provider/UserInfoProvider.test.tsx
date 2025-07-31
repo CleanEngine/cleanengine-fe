@@ -2,9 +2,9 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import UserIdProvider, { useUserId } from './UserInfoProvider';
 
-const mockStore = new Map();
-
 vi.mock('window', () => {
+	const mockStore = new Map();
+
 	return {
 		localStorage: {
 			getItem: vi.fn((key) => mockStore.get(key)),
