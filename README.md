@@ -13,12 +13,12 @@
 ---
 
 ### 📊 프로젝트 개요
-- **개발 기간**: 2025.04 ~ 2025.08 (4개월)
-- **총 커밋**: 331개 (14개 feature branch 병합)
-- **테스트 커버리지**: 96%
+- **개발 기간**: 2025.05.02 ~ 2025.06.25 (2개월, 1차 mvp + 2차 테스트 + 3차 성능개선), 이후 유지보수 및 기능 추가 ~
+- **총 커밋**: 331개
+- **테스트 커버리지**: 60% (3차 기준)
 - **핵심 기술**: React 19, TypeScript, React Router v7, XState, STOMP WebSocket
 - **아키텍처**: Feature-Sliced Design (FSD)
-- **배포**: Docker 컨테이너화
+- **배포**: AWS + Github Action + Docker
 
 ## 🎯 핵심 혁신: "멀티버스 문제" 해결
 
@@ -58,15 +58,13 @@
 
 ### 📊 고급 차트 기능
 - **무한 스크롤**: 과거 데이터 자동 로딩으로 히스토리 분석 가능
-- **기술적 지표**: 볼린저 밴드, 이동평균선 등 차트 분석 도구
 - **인터랙티브 툴팁**: 마우스 호버 시 상세 정보 표시
 - **실시간 업데이트**: WebSocket을 통한 지연 없는 가격 반영
 
 ### 👤 포트폴리오 관리
-- **자산 현황**: 실시간 포트폴리오 가치 계산 및 수익률 표시
+- **자산 현황**: 포트폴리오 가치 계산 및 수익률 표시
 - **파이 차트**: 자산 배분 시각화 (클릭 시 해당 코인으로 스크롤)
 - **거래 내역**: 체결/미체결 주문 관리 및 주문 취소 기능
-- **페이지네이션**: 대량 거래 내역의 효율적 탐색
 
 ### 🤖 AI 채팅 도우미
 - **채팅 상담**: 투자 관련 질문 및 시장 분석 지원
@@ -90,13 +88,13 @@ Styling              → Tailwind CSS v4 + Pretendard Font
 Build Tool           → Vite 6
 Testing              → Vitest + React Testing Library + MSW
 Code Quality         → Biome (Linting & Formatting)
-CI/CD                → GitHub Actions + Docker
+CI/CD                → AWS + GitHub Actions + Docker
 ```
 
 ### 🏗️ 아키텍처 설계 원칙
 
 #### 1. **Feature-Sliced Design (FSD)**
-엔터프라이즈급 확장성을 위한 계층형 아키텍처
+확장성을 위한 계층형 아키텍처
 
 ```
 src/
@@ -115,7 +113,7 @@ src/
 복잡한 UI 플로우를 위한 유한 상태 머신
 
 <img width="1131" alt="XState 상태 다이어그램" src="https://github.com/user-attachments/assets/1a1acee9-aab4-48ac-80eb-82b6f8da30af" />
-
+   
 ```typescript
 // 주문 폼 상태 머신 예시
 const formMachine = setup({
@@ -149,7 +147,6 @@ const formMachine = setup({
 
 **현재 렌더링 전략:**
 - **SSR (Server-Side Rendering)**: 모든 페이지가 서버에서 초기 렌더링
-- **Client-Side Hydration**: 클라이언트에서 React 상호작용 활성화
 - **Client-Side Navigation**: 페이지 간 이동은 클라이언트에서 처리
 - **데이터 로더**: 서버사이드 데이터 페칭으로 초기 로딩 성능 최적화
 
@@ -194,7 +191,7 @@ const StompProvider = ({ children }) => {
 4. **상태 업데이트** → React 상태 관리와 연동
 5. **UI 반영** → 지연 없는 실시간 업데이트
 
-#### 5. **차트 기술 진화**
+#### 5. **차트 기술 구현**
 ```
 AmCharts 5 → Lightweight Charts
 (무한스크롤 구현 실패) → (무한스크롤 구현 성공)
@@ -221,13 +218,14 @@ AmCharts 5 → Lightweight Charts
 - **거래 엔진**: XState 기반 주문 폼 상태 관리 및 실시간 체결 시스템
 - **인증 시스템**: 카카오 OAuth 로그인 및 JWT 세션 관리
 - **거래 기능**: 시장가/지정가 주문, 실시간 호가창, 체결 목록
+- **배포 선행**: EC2 + Github Action + Docker를 사용하여 CD 파이프라인을 선행한 후 개발 시작
 
 https://github.com/user-attachments/assets/779b77f1-e778-4a53-b37f-d79a2dc187e8
 
 ### 🧪 2차 테스트 강화 (2025.05.16 - 2025.06.06)
 **품질 보증 및 테스트 커버리지 확대**
 - **단위 테스트**: 60% 커버리지 달성, React Testing Library + Vitest
-- **CI/CD 파이프라인**: SonarQube 코드 품질 관리, GitHub Actions 워크플로우
+- **CI 파이프라인**: SonarQube 코드 품질 관리, GitHub Actions 워크플로우
 - **AI 채팅봇**: XState 기반 채팅 상태 머신 및 메시지 컴포넌트
 - **다중 코인**: BTC, ETH 등 주요 암호화폐 거래 지원
 - **실시간 알림**: 체결 완료 시 토스트 알림 시스템
