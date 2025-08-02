@@ -10,6 +10,14 @@
 
 **🌐 서비스 URL:** https://investfuture.my
 
+## 📚 개발 후기 및 기술 블로그
+
+프로젝트 개발 과정에서 겪은 기술적 도전과 해결 과정을 정리한 문서들입니다:
+
+- **[배포 및 인프라 구축 후기](./docs/[개발후기]CI-CD.md)** - Docker, GitHub Actions, AWS EC2를 활용한 CI/CD 파이프라인 구축 과정
+- **[차트 성능 개선 후기](./docs/[개발후기]-차트성능개선.md)** - AmCharts에서 TradingView Lightweight Charts로 마이그레이션하여 성능 최적화한 과정
+- **[웹소켓 개선 후기](./docs/[개발후기]-웹소켓개선.md)** - 개별 STOMP 연결에서 단일 인스턴스 공유로 리팩토링한 실시간 통신 최적화 과정
+
 ---
 
 ### 📊 프로젝트 개요
