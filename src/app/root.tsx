@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/react-router';
+/* v8 ignore start */
 import { preload } from 'react-dom';
 import {
 	Links,
@@ -12,6 +12,7 @@ import { Slide } from 'react-toastify';
 import { ToastContainer } from 'react-toastify/unstyled';
 
 import './app.css';
+import ErrorComponent from '~/shared/ui/Error';
 import type { Route } from './+types/root';
 import StompProvider from './provider/StompProvider';
 import UserIdProvider from './provider/UserInfoProvider';
@@ -112,33 +113,22 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-	let message = 'Oops!';
-	let details = 'An unexpected error occurred.';
-	let stack: string | undefined;
-
+	let errorTitle = '에러발생';
+	let errorDescription = '예상하지 못한 에러가 발생했습니다.';
 	if (isRouteErrorResponse(error)) {
-		message = error.status === 404 ? '404' : 'Error';
-		details =
-			error.status === 404
-				? 'The requested page could not be found.'
-				: error.statusText || details;
-	} else if (error && error instanceof Error) {
-		Sentry.captureException(error);
+		errorTitle = `${error.status} ${error.statusText}`;
+		errorDescription = error.data;
+	}
+	if (error instanceof Error) {
+		errorTitle = error.name;
+		errorDescription = error.message;
+
 		if (import.meta.env.DEV) {
-			details = error.message;
-			stack = error.stack;
+			errorDescription += `\n\n${error.stack}`;
 		}
 	}
 
-	return (
-		<main className="container mx-auto p-4 pt-16">
-			<h1>{message}</h1>
-			<p>{details}</p>
-			{stack && (
-				<pre className="w-full overflow-x-auto p-4">
-					<code>{stack}</code>
-				</pre>
-			)}
-		</main>
-	);
+	return <ErrorComponent title={errorTitle} description={errorDescription} />;
 }
+
+/* v8 ignore end */

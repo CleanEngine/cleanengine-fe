@@ -1,20 +1,22 @@
 import type { Response } from '~/shared/types/api';
 
-type Wallet = {
-	accountId: number;
-	buyPrice: string;
-	id: number;
-	roi: string;
-	size: string;
+export type Wallet = {
+	name: string;
 	ticker: string;
+	accountId: number;
+	buyPrice: number;
+	currentPrice: number;
+	roi: number;
+	size: number;
 };
 
-type UserInfoResponseData = {
+export type UserInfoResponseData = {
 	userId: number;
 	email: string;
 	nickname: string;
 	provider: string;
 	cash: number;
+	totalAssetAmount: number;
 	wallets: Wallet[];
 };
 

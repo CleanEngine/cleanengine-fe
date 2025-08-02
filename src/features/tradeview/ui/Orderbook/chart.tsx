@@ -1,167 +1,65 @@
-import * as am5 from '@amcharts/amcharts5';
-import * as am5xy from '@amcharts/amcharts5/xy';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import clsx from 'clsx';
+import {
+	Bar,
+	BarChart,
+	LabelList,
+	ResponsiveContainer,
+	XAxis,
+	YAxis,
+} from 'recharts';
 import { formatCurrencyKR } from '~/shared/utils';
-import type { OrderBookUnit } from '../../types/orderbook.type';
-
-const THEME = {
-	bull: {
-		barColor: am5.color('#e12343'),
-		textColor: am5.color('#fff'),
-	},
-	bear: {
-		barColor: am5.color('#1772f8'),
-		textColor: am5.color('#fff'),
-	},
-};
+import type { OrderBookChartData } from '../../types/orderbook.type';
 
 export type OrderbookChartProps = {
-	data: OrderBookUnit[];
+	data: OrderBookChartData[];
 	type?: 'bull' | 'bear';
+	layout?: 'vertical' | 'horizontal';
 };
 
 export default function OrderbookChart({
 	data,
 	type = 'bull',
+	layout = 'vertical',
 }: Readonly<OrderbookChartProps>) {
-	const xAxisRef = useRef<am5xy.ValueAxis<am5xy.AxisRenderer>>(null);
-	const yAxisRef = useRef<am5xy.CategoryAxis<am5xy.AxisRenderer>>(null);
-	const seriesRef = useRef<am5xy.ColumnSeries>(null);
-	const chartRef = useRef<am5xy.XYChart>(null);
-	const rootRef = useRef<am5.Root>(null);
-
-	useEffect(() => {
-		if (!chartRef.current || !yAxisRef.current || !seriesRef.current) return;
-
-		const formattedData = data.map((item) => ({
-			price: formatCurrencyKR(+item.price),
-			size: item.size,
-			priceY: item.price,
-			sizeX: item.size,
-		}));
-
-		yAxisRef.current.data.setAll(formattedData);
-		seriesRef.current.data.setAll(formattedData);
-	}, [data]);
-
-	useLayoutEffect(() => {
-		rootRef.current = am5.Root.new(`orderbook-${type}`);
-
-		chartRef.current = rootRef.current.container.children.push(
-			am5xy.XYChart.new(rootRef.current, {
-				panX: false,
-				panY: false,
-				wheelX: 'none',
-				wheelY: 'none',
-				layout: rootRef.current.verticalLayout,
-				paddingBottom: 0,
-				paddingLeft: 0,
-				paddingRight: 0,
-				paddingTop: 0,
-			}),
-		);
-
-		chartRef.current.set(
-			'background',
-			am5.Rectangle.new(rootRef.current, {
-				stroke: am5.color('#fff'),
-				strokeOpacity: 0,
-				fillOpacity: 0.05,
-			}),
-		);
-		const yRenderer = am5xy.AxisRendererY.new(rootRef.current, {
-			inversed: type === 'bull',
-			cellStartLocation: 0,
-			cellEndLocation: 1,
-		});
-
-		yRenderer.labels.template.setAll({
-			textAlign: 'center',
-			centerY: am5.p50,
-		});
-
-		yAxisRef.current = chartRef.current.yAxes.push(
-			am5xy.CategoryAxis.new(rootRef.current, {
-				categoryField: 'price',
-				renderer: yRenderer,
-			}),
-		);
-
-		xAxisRef.current = chartRef.current.xAxes.push(
-			am5xy.ValueAxis.new(rootRef.current, {
-				renderer: am5xy.AxisRendererX.new(rootRef.current, {
-					strokeOpacity: 1,
-					stroke: am5.color('#cccccc'),
-					strokeWidth: 1,
-				}),
-				min: 0,
-				visible: false,
-				strictMinMax: true,
-				max: undefined,
-				autoZoom: true,
-			}),
-		);
-
-		seriesRef.current = chartRef.current.series.push(
-			am5xy.ColumnSeries.new(rootRef.current, {
-				name: '실시간 호가',
-				xAxis: xAxisRef.current,
-				yAxis: yAxisRef.current,
-				valueXField: 'size',
-				categoryYField: 'price',
-				sequencedInterpolation: true,
-				tooltip: am5.Tooltip.new(rootRef.current, {
-					pointerOrientation: 'horizontal',
-					labelText: "[bold]{priceY.formatNumber('#,###.##')}원 {sizeX}개",
-				}),
-				paddingBottom: 0,
-				paddingTop: 0,
-				visible: true,
-			}),
-		);
-
-		seriesRef.current.columns.template.setAll({
-			height: am5.p100,
-			strokeOpacity: 1,
-			stroke: THEME[type].barColor,
-			strokeWidth: 0.5,
-			fillOpacity: 0.8,
-			fill: THEME[type].barColor,
-			width: am5.p100,
-		});
-
-		seriesRef.current?.bullets.push(() => {
-			if (!rootRef.current) return;
-			return am5.Bullet.new(rootRef.current, {
-				locationX: 0,
-				locationY: 0.5,
-				sprite: am5.Label.new(rootRef.current, {
-					centerY: am5.p50,
-					text: '{sizeX}',
-					populateText: true,
-					fill: THEME[type].textColor,
-				}),
-			});
-		});
-
-		const cursor = chartRef.current?.set(
-			'cursor',
-			am5xy.XYCursor.new(rootRef.current, {}),
-		);
-		cursor?.lineY.set('forceHidden', true);
-		cursor?.lineX.set('forceHidden', true);
-
-		return () => {
-			chartRef.current?.dispose();
-			rootRef.current?.dispose();
-		};
-	}, [type]);
+	const color = type === 'bull' ? '#FDD2D7' : '#CDE0FE';
+	// 매도는 price 기준 내림차순 정렬
+	const displayData =
+		type === 'bear' ? [...data].sort((a, b) => b.price - a.price) : data;
 
 	return (
 		<div
-			id={`orderbook-${type}`}
-			className="h-full w-full"
-			style={{ minHeight: '200px' }}
-		/>
+			className={clsx(
+				'flex h-full min-h-full w-full px-1',
+				type === 'bull' ? 'bg-red-50' : 'bg-blue-50',
+			)}
+		>
+			<div className="flex h-full min-h-full flex-col justify-around">
+				{displayData.map((item) => (
+					<div
+						key={item.price + item.size}
+						className="text-[#4287F9]"
+						style={{ overflowAnchor: 'none' }}
+					>
+						{formatCurrencyKR(item.price)}
+					</div>
+				))}
+			</div>
+			<div className="h-full min-h-full w-full">
+				<ResponsiveContainer width="100%">
+					<BarChart
+						layout={layout}
+						data={displayData}
+						barGap={0}
+						barCategoryGap={0}
+					>
+						<XAxis type="number" dataKey="size" hide={true} />
+						<YAxis type="category" dataKey="price" hide={true} />
+						<Bar dataKey="size" fill={color} barSize="100%">
+							<LabelList dataKey="size" position="insideLeft" />
+						</Bar>
+					</BarChart>
+				</ResponsiveContainer>
+			</div>
+		</div>
 	);
 }

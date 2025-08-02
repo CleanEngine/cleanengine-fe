@@ -36,3 +36,13 @@ export function preventNonNumericInput(event: React.KeyboardEvent): void {
 export function isNullish(value: unknown): value is null | undefined {
 	return value === null || value === undefined;
 }
+
+export function getCustomReferer(url: string | URL) {
+	const { searchParams } = new URL(url);
+
+	return searchParams.get('referer');
+}
+
+export function convertBase64ToSvg(base64: string) {
+	return `data:image/svg+xml;base64,${base64}`;
+}

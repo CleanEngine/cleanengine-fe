@@ -1,20 +1,29 @@
-import type { ReactElement } from 'react';
+import { convertBase64ToSvg } from '~/shared/utils';
 import type { CoinInfo } from '../../types/coin.type';
 
-export type CoinWithIconAndNameProps = {
-	coinIcon: ReactElement;
-} & CoinInfo;
+export type CoinWithIconAndNameProps = Omit<
+	CoinInfo,
+	'changeRate' | 'currentPrice'
+>;
 
 export default function CoinWithIconAndName({
 	name,
 	ticker,
-	coinIcon,
+	svgIconBase64,
 }: CoinWithIconAndNameProps) {
 	return (
 		<div className="flex w-fit flex-col" data-testid="coin-with-icon-and-name">
 			<div className="flex gap-1">
 				<span className="inline-block h-fit w-fit overflow-visible">
-					{coinIcon}
+					{svgIconBase64 ? (
+						<img
+							src={convertBase64ToSvg(svgIconBase64)}
+							alt={name}
+							className="h-6 w-6"
+						/>
+					) : (
+						'🪙'
+					)}
 				</span>
 				<span className="font-semibold">{ticker}</span>
 			</div>

@@ -1,11 +1,8 @@
 /* v8 ignore start */
 import { PassThrough } from 'node:stream';
+import { server } from '~/mocks/server';
 
 import { createReadableStreamFromReadable } from '@react-router/node';
-import {
-	getMetaTagTransformer,
-	wrapSentryHandleRequest,
-} from '@sentry/react-router';
 import { isbot } from 'isbot';
 import type { RenderToPipeableStreamOptions } from 'react-dom/server';
 import { renderToPipeableStream } from 'react-dom/server';
@@ -13,6 +10,15 @@ import type { AppLoadContext, EntryContext } from 'react-router';
 import { ServerRouter } from 'react-router';
 
 export const streamTimeout = 5_000;
+
+if (process.env.NODE_ENV === 'development') {
+	server.listen();
+
+	server.events.on('request:start', ({ request }) => {
+		// biome-ignore lint/suspicious/noConsole: <explanation>
+		console.log('MSW intercepted:', request.method, request.url);
+	});
+}
 
 function handleRequest(
 	request: Request,
@@ -51,7 +57,9 @@ function handleRequest(
 						}),
 					);
 
-					pipe(getMetaTagTransformer(body));
+					/* Sentry 설정 제외 */
+					// pipe(getMetaTagTransformer(body));
+					pipe(body);
 				},
 				onShellError(error: unknown) {
 					reject(error);
@@ -75,5 +83,7 @@ function handleRequest(
 	});
 }
 
-export default wrapSentryHandleRequest(handleRequest);
+/* Sentry 설정 제외 */
+// export default wrapSentryHandleRequest(handleRequest);
+export default handleRequest;
 /* v8 ignore end */

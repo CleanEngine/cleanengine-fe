@@ -8,7 +8,7 @@ import {
 	useState,
 } from 'react';
 
-import useScrollToBottom from '~/shared/hooks/useScrollToBottom';
+import useScrollIntoView from '~/shared/hooks/useScrollIntoView';
 import { chatMachine } from '../../model/chat.machine';
 import ChatButton from '../ChatButton';
 import MessageBox from '../MessageBox';
@@ -18,7 +18,10 @@ const LazyChatWindow = lazy(() => import('~/features/chat/ui/ChatWindow'));
 export default function AIChatBot() {
 	const [state, send] = useMachine(chatMachine);
 	const [isOpen, setIsOpen] = useState(false);
-	const messagesEndRef = useScrollToBottom([state.context.messageList]);
+	const messagesEndRef = useScrollIntoView([...state.context.messageList], {
+		block: 'end',
+		behavior: 'smooth',
+	});
 
 	const handleOpenChatWindow = () => {
 		setIsOpen(true);

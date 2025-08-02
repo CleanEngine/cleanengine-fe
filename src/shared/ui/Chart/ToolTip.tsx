@@ -1,10 +1,13 @@
 import type { CandlestickData } from 'lightweight-charts';
 import { useLayoutEffect, useRef } from 'react';
 import { formatCurrencyKR } from '~/shared/utils';
-import { formatDateKr } from '../../utils';
+import { formatDateKr } from '../../../features/tradeview/utils';
 import { useChartContainer } from './ChartContainer';
 import { useChartRoot } from './ChartRoot';
 import { useSeries } from './Series';
+
+const HOUR = 60 * 60 * 1000;
+const TIME_OFFSET = 9;
 
 const TOOLTIP_WIDTH = 80;
 const TOOLTIP_HEIGHT = 80;
@@ -38,7 +41,7 @@ export default function ToolTip() {
 					chartSeries,
 				) as CandlestickData;
 				const date = new Date((time as number) * 1000);
-				const koreanDate = new Date(date.setHours(date.getHours() - 9));
+				const koreanDate = new Date(date.getTime() + HOUR * TIME_OFFSET);
 
 				toolTipElementRef.current.style.display = 'block';
 				toolTipElementRef.current.innerHTML = `<div style="border: 1px solid #d1d5db; background-color: white; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); color: #1f2937; z-index: 40;">
@@ -77,7 +80,7 @@ export default function ToolTip() {
 		<div
 			id="tooltip"
 			ref={toolTipElementRef}
-			className="absolute z-40 hidden h-auto w-aut bg-white text-left text-gray-800 text-xs"
+			className="absolute z-40 hidden h-auto w-auto bg-white text-left text-gray-800 text-xs"
 		/>
 	);
 }

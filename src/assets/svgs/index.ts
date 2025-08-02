@@ -6,3 +6,5 @@ export { ReactComponent as IconMinus } from './minus-solid.svg';
 export { ReactComponent as IconHeadset } from './headset-solid.svg';
 export { ReactComponent as IconBars } from './bars-solid.svg';
 export { ReactComponent as IconXmark } from './xmark-solid.svg';
+export { ReactComponent as IconArrowLeft } from './chevron-left.svg';
+export { ReactComponent as IconArrowRight } from './chevron-right.svg';

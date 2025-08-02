@@ -1,36 +1,106 @@
-import { renderHook } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-
+import { act, renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import StompProvider, { useStompClient } from './StompProvider';
 
-vi.mock('@stomp/stompjs', () => {
+const brokerURL = 'ws://localhost:8080';
+
+const { MockClient } = vi.hoisted(() => {
 	return {
-		Client: vi.fn().mockImplementation(() => {
-			return {
-				activate: vi.fn(),
-				deactivate: vi.fn(),
-				onConnect: null,
-				onDisconnect: null,
-				onWebSocketError: null,
-				onStompError: null,
-			};
+		MockClient: vi.fn(function (this: any, config: any) {
+			this.brokerURL = config.brokerURL;
+			this.activate = vi.fn();
+			this.deactivate = vi.fn();
+			this.onConnect = null;
+			this.onDisconnect = null;
+			this.onWebSocketError = null;
+			this.onStompError = null;
 		}),
 	};
 });
 
+vi.mock('@stomp/stompjs', () => {
+	return {
+		Client: MockClient,
+	};
+});
+
 describe('useStompClient 테스트', () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
 	it('useStompClient hook은 StompProvider 외부에서 사용하면 에러를 던진다.', () => {
 		expect(() => renderHook(() => useStompClient())).toThrowError();
 	});
 
-	it('useStompClient hook은 StompProvider 내부에서 사용하면 정상 작동한다.', () => {
+	it('초기 상태에서는 connected가 false이다.', () => {
 		const { result } = renderHook(() => useStompClient(), {
 			wrapper: ({ children }) => (
-				<StompProvider brokerURL="">{children}</StompProvider>
+				<StompProvider brokerURL={brokerURL}>{children}</StompProvider>
 			),
 		});
 
 		expect(result.current).toHaveProperty('client');
+		expect(result.current.client).toBeTruthy();
 		expect(result.current).toHaveProperty('connected');
+		expect(result.current.connected).toBe(false);
+	});
+
+	it('onConnect 콜백이 호출되면 connected가 true가 된다.', () => {
+		const { result } = renderHook(() => useStompClient(), {
+			wrapper: ({ children }) => (
+				<StompProvider brokerURL={brokerURL}>{children}</StompProvider>
+			),
+		});
+
+		expect(result.current.connected).toBe(false);
+
+		act(() => {
+			const clientInstance = MockClient.mock.instances[0] as any;
+			clientInstance?.onConnect?.();
+		});
+
+		expect(result.current.connected).toBe(true);
+	});
+
+	it('onDisconnect 콜백이 호출되면 connected가 false가 된다.', () => {
+		const { result } = renderHook(() => useStompClient(), {
+			wrapper: ({ children }) => (
+				<StompProvider brokerURL={brokerURL}>{children}</StompProvider>
+			),
+		});
+
+		const clientInstance = MockClient.mock.instances[0] as any;
+		act(() => {
+			clientInstance?.onConnect?.();
+		});
+		expect(result.current.connected).toBe(true);
+
+		act(() => {
+			clientInstance?.onDisconnect?.();
+		});
+
+		expect(result.current.connected).toBe(false);
+	});
+
+	it('onWebSocketError 콜백이 호출되면 connected가 false가 된다.', () => {
+		const { result } = renderHook(() => useStompClient(), {
+			wrapper: ({ children }) => (
+				<StompProvider brokerURL={brokerURL}>{children}</StompProvider>
+			),
+		});
+
+		const clientInstance = MockClient.mock.instances[0] as any;
+		act(() => {
+			clientInstance?.onConnect?.();
+		});
+		expect(result.current.connected).toBe(true);
+
+		act(() => {
+			const mockError = new Error('WebSocket connection failed');
+			clientInstance?.onWebSocketError?.(mockError);
+		});
+
+		expect(result.current.connected).toBe(false);
 	});
 });

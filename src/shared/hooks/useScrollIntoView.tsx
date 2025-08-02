@@ -1,19 +1,16 @@
 import { useEffect, useRef } from 'react';
 import type { DependencyList } from 'react';
 
-export default function useScrollToBottom<
+export default function useScrollIntoView<
 	T extends HTMLElement = HTMLDivElement,
->(dependencies: DependencyList = []) {
+>(dependencies: DependencyList = [], options?: ScrollIntoViewOptions) {
 	const bottomElementRef = useRef<T>(null);
 
 	useEffect(() => {
 		if (!bottomElementRef.current) return;
 
-		bottomElementRef.current.scrollIntoView({
-			behavior: 'smooth',
-			block: 'end',
-		});
-	}, dependencies);
+		bottomElementRef.current.scrollIntoView(options);
+	}, [...dependencies, options]);
 
 	return bottomElementRef;
 }

@@ -1,4 +1,10 @@
-import { Link, type LinkProps, NavLink, useSubmit } from 'react-router';
+import {
+	Link,
+	type LinkProps,
+	NavLink,
+	useLocation,
+	useSubmit,
+} from 'react-router';
 import { useUserId } from '~/app/provider/UserInfoProvider';
 
 import type { CoinTicker } from '~/entities/coin';
@@ -23,6 +29,7 @@ export default function NavBar({
 	ticker,
 	onClickMenuButton,
 }: NavBarProps) {
+	const location = useLocation();
 	const submit = useSubmit();
 	const { setUserId } = useUserId();
 
@@ -32,12 +39,24 @@ export default function NavBar({
 	};
 
 	const LoginButton = () => (
-		<NavLink to={`/trade/${ticker}/login`}>
+		<NavLink to={`/trade/${ticker}/login?referer=${location.pathname}`}>
 			<Button>로그인</Button>
 		</NavLink>
 	);
 
-	const LogoutButton = () => <Button onClick={handleLogout}>로그아웃</Button>;
+	const LogoutButton = () => (
+		<Button buttonStyle="secondary" onClick={handleLogout}>
+			로그아웃
+		</Button>
+	);
+
+	const ProfileButton = () => (
+		<NavLink
+			to={`/trade/${ticker}/profile/history?referer=${location.pathname}`}
+		>
+			<Button>프로필</Button>
+		</NavLink>
+	);
 
 	return (
 		<>
@@ -48,7 +67,10 @@ export default function NavBar({
 				<Link to={to}>
 					<LogoWithTitle serviceName={serviceName} isBlack={isBlack} />
 				</Link>
-				{isLoggedIn ? <LogoutButton /> : <LoginButton />}
+				<div className="flex items-center gap-1">
+					{isLoggedIn ? <ProfileButton /> : null}
+					{isLoggedIn ? <LogoutButton /> : <LoginButton />}
+				</div>
 			</nav>
 			<div className="h-[60px]" />
 		</>

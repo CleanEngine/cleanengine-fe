@@ -1,7 +1,7 @@
 import * as cookie from 'cookie';
 import { AnimatePresence } from 'motion/react';
 import { Suspense, lazy, useMemo, useState } from 'react';
-import { Outlet, redirect } from 'react-router';
+import { Outlet, isRouteErrorResponse, redirect } from 'react-router';
 
 import { CoinPriceWithName, api as coinApi } from '~/entities/coin';
 import { api } from '~/entities/session';
@@ -10,11 +10,13 @@ import { CoinListWithSearchBar } from '~/features/coin-search-list';
 import { OrderForm, OrderFormFallback } from '~/features/order';
 import { ExecutionList } from '~/features/order-execution-list';
 import useTradeNotification from '~/features/trade/hooks/useTradeNotification';
+import ClientOnly from '~/shared/ui/ClientOnly';
 import Container from '~/shared/ui/Container';
 import ContainerTitle from '~/shared/ui/ContainerTitle';
+import ErrorComponent from '~/shared/ui/Error';
 import { NavBar, SideBar } from '~/widgets/navbar';
 import { useUserId } from '../provider/UserInfoProvider';
-import type { Route } from './+types/trade.$ticker';
+import type { Route } from './+types/trade';
 
 const LazyStockChart = lazy(() => import('~/features/tradeview/ui/StockChart'));
 const LazyOrderBook = lazy(() => import('~/features/tradeview/ui/Orderbook'));
@@ -40,6 +42,26 @@ export async function clientAction() {
 		console.error(error);
 	}
 	return redirect('/trade/BTC');
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+	if (isRouteErrorResponse(error)) {
+		const errorTitle = `${error.status} ${error.statusText}`;
+		const errorDescription = error.data;
+		return <ErrorComponent title={errorTitle} description={errorDescription} />;
+	}
+	if (error instanceof Error) {
+		const errorTitle = error.name;
+		const errorDescription = error.message;
+		return <ErrorComponent title={errorTitle} description={errorDescription} />;
+	}
+
+	return (
+		<ErrorComponent
+			title="Error"
+			description="예상하지 못한 에러가 발생했습니다."
+		/>
+	);
 }
 
 export default function TradeRouteComponent({
@@ -80,18 +102,26 @@ export default function TradeRouteComponent({
 			/>
 			<div className="h-[calc(100dvh-60px)]">
 				{coinInfo && (
-					<CoinPriceWithName name={coinInfo?.name} ticker={coinInfo?.ticker} />
+					<CoinPriceWithName
+						key={coinInfo.ticker}
+						name={coinInfo.name}
+						ticker={coinInfo.ticker}
+						currentPrice={coinInfo.currentPrice}
+						svgIconBase64={coinInfo.svgIconBase64}
+					/>
 				)}
 				<div className="scrollbar-hide relative flex h-[calc(100dvh-116px)] flex-col gap-4 overflow-y-scroll p-4 md:grid md:grid-cols-2 md:grid-rows-5 xl:grid-cols-3 xl:grid-rows-2 2xl:grid-cols-4 2xl:grid-rows-2">
 					<div className="h-auto min-h-75 md:col-span-full md:row-span-2 md:row-start-1 xl:col-span-full xl:row-span-1 xl:row-start-1 2xl:col-span-2 2xl:col-start-2 2xl:row-start-1">
 						<Container>
 							<ContainerTitle>실시간 차트</ContainerTitle>
 							<Suspense fallback="차트데이터를 가져오고 있습니다.">
-								<LazyStockChart ticker={coinInfo?.ticker || 'BTC'} />
+								<ClientOnly fallback="차트데이터를 가져오고 있습니다.">
+									<LazyStockChart ticker={coinInfo?.ticker || 'BTC'} />
+								</ClientOnly>
 							</Suspense>
 						</Container>
 					</div>
-					<div className="md:col-span-1 md:col-start-2 md:row-span-2 md:row-start-3 xl:col-span-1 xl:col-start-3 xl:row-span-1 xl:row-start2 2xl:col-start-4 2xl:row-span-1 2xl:row-start-1">
+					<div className="md:col-span-1 md:col-start-2 md:row-span-2 md:row-start-3 xl:col-span-1 xl:col-start-3 xl:row-span-1 xl:row-start-2 2xl:col-start-4 2xl:row-span-1 2xl:row-start-1">
 						<Container>
 							<ContainerTitle>주문 하기</ContainerTitle>
 							{isLoggedIn && coinInfo ? (
@@ -105,7 +135,12 @@ export default function TradeRouteComponent({
 						<Container>
 							<ContainerTitle>실시간 호가</ContainerTitle>
 							<Suspense fallback={null}>
-								{coinInfo && <LazyOrderBook ticker={coinInfo.ticker} />}
+								{coinInfo && (
+									<LazyOrderBook
+										key={coinInfo.ticker}
+										ticker={coinInfo.ticker}
+									/>
+								)}
 							</Suspense>
 						</Container>
 					</div>

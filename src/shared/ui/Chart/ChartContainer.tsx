@@ -17,7 +17,7 @@ import {
 	useRef,
 } from 'react';
 
-import { INTERVAL_SELECTOR_HEIGHT } from '../../const/chart.const';
+import { INTERVAL_SELECTOR_HEIGHT } from '../../../features/tradeview/const/chart.const';
 import { useChartRoot } from './ChartRoot';
 
 type ChartContainerProps = PropsWithChildren<{
