@@ -309,6 +309,7 @@ docker run -p 3000:3000 invest-future
 
 ### 🔧 환경 변수 설정
 ```env
+# 예시 코드입니다.
 VITE_API_URL=https://api.investfuture.my
 VITE_STOMP_URL=wss://api.investfuture.my
 VITE_OAUTH_URL=https://kauth.kakao.com/oauth/authorize
