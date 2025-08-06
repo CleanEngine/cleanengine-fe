@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { beforeEach, describe, expect } from 'vitest';
-import { it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { StompContext } from '~/app/provider/StompProvider';
 import {
 	StompTestWrapper,
@@ -107,7 +107,10 @@ describe('useCurrentPrice 훅 테스트', () => {
 
 	it('컴포넌트가 언마운트되면 구독을 해제한다', () => {
 		const mockUnsubscribe = vi.fn();
-		mockClient.subscribe.mockReturnValue({ unsubscribe: mockUnsubscribe });
+		mockClient.subscribe.mockReturnValue({
+			unsubscribe: mockUnsubscribe,
+			id: 'testId',
+		});
 
 		const { unmount } = renderHook(() => useCurrentPrice(TICKER_FIRST), {
 			wrapper: StompTestWrapper,
