@@ -1,8 +1,12 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { beforeEach, describe, expect } from 'vitest';
-import { it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { StompContext } from '~/app/provider/StompProvider';
+import {
+	StompTestWrapper,
+	mockClient,
+} from '~/app/provider/testing/stompTestUtils';
 import useCurrentPrice, { type CurrentPriceData } from './useCurrentPrice';
 
 const TICKER_FIRST = 'BTC';
@@ -15,25 +19,6 @@ function generateDestinationEndPoint(ticker: string) {
 function generateTopicEndPoint(ticker: string) {
 	return `/topic/prevRate/${ticker}`;
 }
-
-const mockClient = {
-	publish: vi.fn(),
-	subscribe: vi.fn(() => ({
-		unsubscribe: vi.fn(),
-		id: 'testId',
-	})),
-} as any;
-
-const mockStompContextValue = {
-	client: mockClient,
-	connected: true,
-};
-
-const wrapper = ({ children }: { children: ReactNode }) => (
-	<StompContext.Provider value={mockStompContextValue}>
-		{children}
-	</StompContext.Provider>
-);
 
 describe('useCurrentPrice 훅 테스트', () => {
 	beforeEach(() => {
@@ -56,7 +41,9 @@ describe('useCurrentPrice 훅 테스트', () => {
 	});
 
 	it('클라이언트가 연결되면 올바른 destination으로 publish한다', () => {
-		renderHook(() => useCurrentPrice(TICKER_FIRST), { wrapper });
+		renderHook(() => useCurrentPrice(TICKER_FIRST), {
+			wrapper: StompTestWrapper,
+		});
 
 		expect(mockClient.publish).toHaveBeenCalledWith({
 			destination: generateDestinationEndPoint(TICKER_FIRST),
@@ -65,7 +52,9 @@ describe('useCurrentPrice 훅 테스트', () => {
 	});
 
 	it('올바른 topic으로 subscribe한다', () => {
-		renderHook(() => useCurrentPrice(TICKER_FIRST), { wrapper });
+		renderHook(() => useCurrentPrice(TICKER_FIRST), {
+			wrapper: StompTestWrapper,
+		});
 
 		expect(mockClient.subscribe).toHaveBeenCalledWith(
 			generateTopicEndPoint(TICKER_FIRST),
@@ -94,7 +83,7 @@ describe('useCurrentPrice 훅 테스트', () => {
 		);
 
 		const { result } = renderHook(() => useCurrentPrice(TICKER_FIRST), {
-			wrapper,
+			wrapper: StompTestWrapper,
 		});
 
 		await waitFor(() => {
@@ -104,7 +93,7 @@ describe('useCurrentPrice 훅 테스트', () => {
 
 	it('ticker가 변경되면 새로운 구독을 생성한다', () => {
 		const { rerender } = renderHook(({ ticker }) => useCurrentPrice(ticker), {
-			wrapper,
+			wrapper: StompTestWrapper,
 			initialProps: { ticker: TICKER_FIRST },
 		});
 
@@ -118,10 +107,13 @@ describe('useCurrentPrice 훅 테스트', () => {
 
 	it('컴포넌트가 언마운트되면 구독을 해제한다', () => {
 		const mockUnsubscribe = vi.fn();
-		mockClient.subscribe.mockReturnValue({ unsubscribe: mockUnsubscribe });
+		mockClient.subscribe.mockReturnValue({
+			unsubscribe: mockUnsubscribe,
+			id: 'testId',
+		});
 
 		const { unmount } = renderHook(() => useCurrentPrice(TICKER_FIRST), {
-			wrapper,
+			wrapper: StompTestWrapper,
 		});
 
 		unmount();

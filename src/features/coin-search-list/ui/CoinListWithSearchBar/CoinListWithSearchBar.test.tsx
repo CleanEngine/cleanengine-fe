@@ -25,22 +25,28 @@ vi.mock('@stomp/stompjs', () => {
 const props: CoinListWithSearchBarProps = {
 	coinList: [
 		{
-			coinIcon: <span>🪙</span>,
 			name: '비트코인',
 			ticker: 'BTC',
 			to: '/coin/BTC',
+			currentPrice: 0,
+			changeRate: 0,
+			svgIconBase64: '',
 		},
 		{
-			coinIcon: <span>🪙</span>,
 			name: '이더리움',
 			ticker: 'ETH',
 			to: '/coin/ETH',
+			currentPrice: 0,
+			changeRate: 0,
+			svgIconBase64: '',
 		},
 		{
-			coinIcon: <span>🪙</span>,
 			name: '트럼프',
 			ticker: 'TRUMP',
 			to: '/coin/TRUMP',
+			currentPrice: 0,
+			changeRate: 0,
+			svgIconBase64: '',
 		},
 	],
 };
@@ -65,7 +71,7 @@ describe('CoinListWithSearchBar 컴포넌트 테스트', () => {
 		);
 
 		expect(coinListWithSearchBar).toBeInTheDocument();
-		expect(screen.getAllByRole('link')).toHaveLength(3);
+		expect(screen.getAllByRole('button')).toHaveLength(3);
 	});
 
 	it('사용자가 검색창에 티커를 입력하면 필터링된 리스트가 렌더링 된다.', async () => {
@@ -81,7 +87,7 @@ describe('CoinListWithSearchBar 컴포넌트 테스트', () => {
 		const input = screen.getByRole('textbox');
 		await user.type(input, 'BTC');
 
-		expect(screen.getAllByRole('link')).toHaveLength(1);
-		expect(screen.getAllByRole('link')[0]).toHaveTextContent('비트코인');
+		expect(screen.getAllByRole('button')).toHaveLength(1);
+		expect(screen.getAllByRole('button')[0]).toHaveTextContent('비트코인');
 	});
 });
