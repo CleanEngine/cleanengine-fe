@@ -10,6 +10,27 @@
 
 **🌐 서비스 URL:** ~~https://investfuture.my~~ AWS 지원 중단으로 로컬실행만 가능합니다.
 
+## 🖥️ 로컬 실행 방법
+
+### 📋 Prerequisite
+- **Git** 
+- **Node.js**
+- **Yarn**
+- **Docker**
+
+아래 명령어를 터미널에 붙여넣기 하세요.
+```bash
+git clone https://github.com/CleanEngine/cleanengine-fe.git
+cd cleanengine-fe
+
+chmod +x scripts/demo.sh
+
+./scripts/demo.sh
+```
+
+스크립트가 실행된 후 다음주소에 접속하세요.
+- **프론트엔드**: http://localhost:3000
+
 ## 📚 개발 후기 및 기술 블로그
 
 프로젝트 개발 과정에서 겪은 기술적 도전과 해결 과정을 정리한 문서들입니다:
