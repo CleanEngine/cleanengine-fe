@@ -8,7 +8,7 @@
 > **Invest Future(IF)**에서는 **실제 시장과 동일한 영향력을 체험**할 수 있는 모의투자를 통해 
 > 안전하게 투자 경험을 쌓고 전문성을 기를 수 있습니다.
 
-**🌐 서비스 URL:** https://investfuture.my
+**🌐 서비스 URL:** ~~https://investfuture.my~~ AWS 지원 중단으로 로컬실행만 가능합니다.
 
 ## 📚 개발 후기 및 기술 블로그
 
