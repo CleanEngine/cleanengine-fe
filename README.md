@@ -8,7 +8,16 @@
 > **Invest Future(IF)**에서는 **실제 시장과 동일한 영향력을 체험**할 수 있는 모의투자를 통해 
 > 안전하게 투자 경험을 쌓고 전문성을 기를 수 있습니다.
 
+### 📊 프로젝트 개요
+- **개발 기간**: 2025.05.02 ~ 2025.06.25 (2개월, 1차 mvp + 2차 테스트 + 3차 성능개선), 이후 유지보수 및 기능 추가 ~
+- **총 커밋**: 331개
+- **테스트 커버리지**: 60% (3차 기준)
+- **기술 스택**: React 19, TypeScript, React Router v7, XState, STOMP WebSocket
+- **아키텍처**: Feature-Sliced Design (FSD)
+- **배포**: AWS + Github Action + Docker
+
 **🌐 서비스 URL:** ~~https://investfuture.my~~ AWS 지원 중단으로 로컬실행만 가능합니다.
+
 
 ## 📚 개발 후기 및 기술 블로그
 
@@ -40,17 +49,7 @@ chmod +x scripts/demo.sh
 #### 스크립트가 실행된 후 다음주소에 접속하세요.
 - **프론트엔드**: http://localhost:3000
 
-
-
-### 📊 프로젝트 개요
-- **개발 기간**: 2025.05.02 ~ 2025.06.25 (2개월, 1차 mvp + 2차 테스트 + 3차 성능개선), 이후 유지보수 및 기능 추가 ~
-- **총 커밋**: 331개
-- **테스트 커버리지**: 60% (3차 기준)
-- **핵심 기술**: React 19, TypeScript, React Router v7, XState, STOMP WebSocket
-- **아키텍처**: Feature-Sliced Design (FSD)
-- **배포**: AWS + Github Action + Docker
-
-## 🎯 핵심 혁신: "멀티버스 문제" 해결
+## 🎯 기존 모의투자 서비스와의 차별점: "멀티버스 문제" 해결
 
 ### 기존 모의투자 서비스의 한계
 기존 모의투자 서비스는 3가지 주요 한계가 있었습니다:
