@@ -30,7 +30,7 @@ function build_backend(){
     echo "SPRING_DATASOURCE_PASSWORD=${DEMO_SPRING_DATASOURCE_PASSWORD}" >> local.properties
   fi
 
-  ./gradlew clean build
+  ./gradlew clean bootJar
 }
 
 function run_docker(){
